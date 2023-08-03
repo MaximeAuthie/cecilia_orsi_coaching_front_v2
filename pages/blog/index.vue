@@ -89,24 +89,24 @@ import { useCategoriesStore } from '@/store/category'
                 const store = useArticlesStore();
 
                 //? Vérifier si les articles sont toujours présents dans le store
-                if (store.articles.length > 0) {
-                    this.articles           = store.articles;
+                if (store.validatedArticles.length > 0) {
+                    this.articles           = store.validatedArticles;
                     this.frontPageArticle   = store.frontPageArticle;
                     this.loading            = false;
                 } else {
 
                 //? Si les articles ne sont pas déjà présents dans le store, effectuer l'appel API
-                store.getAllArticles()
+                store.getValidatedArticles()
                     .then(() => {
-                    this.articles           = store.articles;
-                    this.frontPageArticle   = store.frontPageArticle;
-                    this.loading            = false;
+                        this.articles           = store.validatedArticles;
+                        this.frontPageArticle   = store.frontPageArticle;
+                        this.loading            = false;
                     })
 
                     //? En cas d'erreur inattendue, capter l'erreur rencontrée
                     .catch((error) => {
-                    console.error('Erreur lors de la récupération des articles :', error);
-                    this.loading            = false;
+                        console.error('Erreur lors de la récupération des articles :', error);
+                        this.loading            = false;
                     });
                 }
 

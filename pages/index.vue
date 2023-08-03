@@ -34,7 +34,7 @@
     export default {
         setup() {
             const articlesStore = useArticlesStore();
-            articlesStore.getAllArticles();
+            articlesStore.getValidatedArticles();
 
             const pagesStore = usePagesStore();
             pagesStore.getAllPages();
@@ -53,25 +53,6 @@
             }
         },
         methods: {
-            getAllArticles() {
-                const store = useArticlesStore();
-                this.$nextTick( async () => {
-                    const { data:articles, error } = await useFetch('https://127.0.0.1:8000/api/article/validated/all', {
-                        method:'GET',
-                        headers: {
-                            "Accept": "application/json",
-                            "Content-Type": "application/json",
-                            "Access-Control-Allow-Origin": "*"
-                        }
-                    })
-                    if (error.value) {
-                        console.error('Erreur lors de la récupération des articles :', error);
-                    } else {
-                        store.updateArticle(articles.value);
-                    }
-                });
-
-            },
             getPageData() {
                 const store = usePagesStore();
 
@@ -85,15 +66,15 @@
                 //? Si les articles ne sont pas déjà présents dans le store, effectuer l'appel API
                 store.getAllPages()
                     .then(() => {
-                    this.pageData       = store.pages[this.pageId];
-                    this.addTilesWidth();
-                    this.pageDataDownload   = true;
+                        this.pageData       = store.pages[this.pageId];
+                        this.addTilesWidth();
+                        this.pageDataDownload   = true;
                     })
 
                     //? En cas d'erreur inattendue, capter l'erreur rencontrée
                     .catch((error) => {
-                    console.error('Erreur lors de la récupération des articles :', error);
-                    this.pageDataDownload   = false;
+                        console.error('Erreur lors de la récupération des articles :', error);
+                        this.pageDataDownload   = false;
                     });
                 }
             },
@@ -115,7 +96,6 @@
 
             //? Exécution de la méthode récupérant les données de la page dans la BDD et qui les place dans l'objet this.pageData
             this.getPageData();
-            this.getAllArticles();
            
             //? Renseigner les balises HTML de <head> pour le SEO
             useHead({
