@@ -85,6 +85,11 @@ h6 {
 }
 
 /* BOUTONS */
+
+a {
+    text-decoration: none;
+}
+
 a:visited {
     text-decoration: none;
 }
@@ -440,6 +445,7 @@ form {
 
 .admin_content_filters_message {
     padding-top: 2vh;
+    padding-bottom: 2vh;
 }
 
 .admin_content_filters_message_success {
@@ -462,14 +468,17 @@ form {
 
 .admin_content_form_bloc {
     width: 100%;
-    margin-bottom: 3vh;
 }
 
 .admin_button {
-    padding: 0 2vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    /* padding: 0 2vw; */
     border-radius: 10px;
     height: 4vh;
-    width: 10vw;
+    width: 8vw;
     cursor: pointer;
     margin: 0 0.5vh;
     border: 1px solid #E04F5F;
@@ -496,6 +505,7 @@ form {
     border-radius: 10px;
     text-align: center;
     font-size: 1.3em ;
+    
 }
 
 .admin_option {
@@ -524,6 +534,41 @@ form {
     text-align: start;
     font-size: 1.3em ;
 }
+.bad_admin_input_form {
+    width: 98%;
+    height: 3.5vh;
+    padding: 0.5% 1%;
+    border: #E04F5F solid 2px;
+    border-radius: 10px;
+    text-align: start;
+    font-size: 1.3em ;
+    margin-bottom: 1vh;
+}
+
+.admin_textarea_form {
+    width: 98%;
+    height: 9vh;
+    padding: 0.5% 1%;
+    border: #C6C5C5 solid 1px;
+    border-radius: 10px;
+    text-align: start;
+    font-size: 1.3em ;
+    font-family: Arial, Helvetica, sans-serif;
+    resize: none;
+}
+
+.bad_admin_textarea_form {
+    width: 98%;
+    height: 9vh;
+    padding: 0.5% 1%;
+    border: #E04F5F solid 2px;
+    border-radius: 10px;
+    text-align: start;
+    font-size: 1.3em ;
+    font-family: Arial, Helvetica, sans-serif;
+    resize: none;
+    margin-bottom: 1vh;
+}
 
 .admin_select_multiple {
     width: 100%;
@@ -533,6 +578,9 @@ form {
     font-size: 1.3em ;
 }
 
+.admin_error_message_form {
+    color: #E04F5F;
+}
 .ProseMirror {
     min-height: 49vh;
     padding-top: 1vh;
