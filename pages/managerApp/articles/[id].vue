@@ -1,22 +1,29 @@
 <template>
     <div class="admin_content">
+        <NuxtLink to="/managerApp/articles">
+            <div class="admin_content_link">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                    <path fill-rule="evenodd" d="M20.25 12a.75.75 0 01-.75.75H6.31l5.47 5.47a.75.75 0 11-1.06 1.06l-6.75-6.75a.75.75 0 010-1.06l6.75-6.75a.75.75 0 111.06 1.06l-5.47 5.47H19.5a.75.75 0 01.75.75z" clip-rule="evenodd" />
+                </svg>
+                Retour à la liste des articles
+            </div>
+        </NuxtLink>
         <h1>Article N° {{ id }} :<br> {{ article.title_article }}</h1>
-        <div class="admin_content_filters_message">
-           <span v-if="formErrorMessage" class="admin_content_filters_message_error">{{ formErrorMessage }}</span>
-           <span v-if="formSuccessMessage" class="admin_content_filters_message_success">{{ formSuccessMessage }}</span>
-       </div>
+
         <div class="admin_content_form">
+            <div class="admin_content_form_bloc">
+                <label for="title" class="admin_label">Titre  : </label>
+                <input v-model="article.title_article" @keyup="ckeckTitleLength" type="text" name="title" class="admin_input_form" :class=" errorMessages.titleLength!='' || errorMessages.titleEmpty!='' ? 'bad_admin_input_form' : 'admin_input_form'">
+                <span class="admin_error_message_form">{{ errorMessages.titleLength }}</span>
+            </div>
             <div class="admin_content_form_bloc">
                 <label for="url" class="admin_label">URL de la bannière : </label>
                 <input v-model="article.banner_url_article" type="text" name="url" class="admin_input_form">
             </div>
-            <div class="admin_content_form_bloc">
-                <label for="title" class="admin_label">Titre  : </label>
-                <input v-model="article.title_article" type="text" name="title" class="admin_input_form">
-            </div>
             <div class="admin_content_form_bloc"> <!-- //!MAX 160c -->
                 <label for="description" class="admin_label">Description : </label>
-                <input v-model="article.description_article" type="text" name="description" class="admin_input_form">
+                <textarea v-model="article.description_article" @keyup="ckeckDescriptionLength"  type="text" name="description" :class=" errorMessages.description!='' ? 'bad_admin_textarea_form' : 'admin_textarea_form'"></textarea>
+                <span class="admin_error_message_form">{{ errorMessages.description }}</span>
             </div>
             <div class="admin_content_form_bloc">
                <label for="status" class="admin_label">Mot clés pour SEO : </label>
@@ -38,9 +45,18 @@
                 <label for="description" class="admin_label">Contenu : </label>
                 <ArticleEditor v-model="article.content_article"></ArticleEditor>
             </div>
+            <div class="admin_content_filters_message">
+                <span v-if="errorMessages.form" class="admin_content_filters_message_error">{{ errorMessages.form }}</span>
+                <span v-if="errorMessages.titleEmpty" class="admin_content_filters_message_error">{{ errorMessages.titleEmpty }}</span>
+                <span v-if="formSuccessMessage" class="admin_content_filters_message_success">{{ formSuccessMessage }}</span>
+            </div>
 
-            <button @click="updateArticle" class="admin_button admin_button_main">Modifier</button>
+            <div class="admin_content_form_buttons">
+                <button @click="updateArticle" class="admin_button admin_button_main">Modifier</button>
+                <button @click="publishArticle" class="admin_button admin_button_secondary">{{article.isPublished_article ? 'Dépublier' : 'Publier'}}</button>
+            </div>
             
+
         </div>
     </div>
 </template>
@@ -48,7 +64,6 @@
 <script>
     import { useArticlesStore } from "@/store/article";
     import { useCategoriesStore } from '@/store/category';
-
     import ArticleEditor from '../../../components/Manager/articles/editorComponent.vue';
 
     definePageMeta({
@@ -59,12 +74,18 @@
         components: {ArticleEditor},
         data() {
             return {
-                id:                     0,
-                article:                {},
-                categories:             [],
-                selectedCategories:     [],
-                formSuccessMessage:     '',
-                formErrorMessage:       ''
+                id:                         0,
+                article:                    {},
+                categories:                 [],
+                selectedCategories:         [],
+                formSuccessMessage:         '',
+                errorMessages: {
+                    form:                   '',
+                    titleEmpty:             '',
+                    titleLength:            '',
+                    description:            ''
+                },
+                isError:                    true
             }
         },
         methods: {
@@ -128,8 +149,24 @@
                this.article.kewords_list.splice(indexToDelete,1);
             },
             async updateArticle() {
+
+                //? Vérifier si le titre est au moins renseigné 
+                if (this.article.title_article == '') {
+                    this.errorMessages.titleEmpty = 'Veuillez renseigner au moins un titre pour cet article.';
+                    return;
+                }
+
+                //? Vérifier si les longueurs de caractères pour titre et description sont respectées
+                if (this.errorMessages.titleLength!='' || this.errorMessages.description !="") {
+                    this.errorMessages.form = 'Veuillez respecter le nombre de caractères maximum pour le titre et/ou la description.';
+                    return;
+                }
+
+                //? Réinitialiser les éventuels précédents messages d'erreurs
+                this.errorMessages.form =           '';
+                this.errorMessages.titleEmpty =     '';
+
                 //? Mettre à jour la liste des catégories de l'article
-               
                 this.article.categories_list = [];
                 this.selectedCategories.forEach(category => {
                     const cat = this.categories.find( item => item.id == category);
@@ -139,6 +176,7 @@
                 //? Transformer l'objet selectedPageData en json
                 const bodyJson = JSON.stringify(this.article);
                 console.log(bodyJson);
+
                 //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
                 await fetch('https://127.0.0.1:8000/api/article/update', {
                     method:'PATCH',
@@ -151,20 +189,68 @@
                 })
                 .then(async response => {
                     const body = await response.json()
-                    console.log(body);
-                    console.log(response);
                     if (response.status == 200) {
                         this.formSuccessMessage     = body.message;
                         const store = useArticlesStore();
                         store.getAllArticles();
                     } else {
-                        this.formErrorMessage       = body.message;
+                        this.errorMessages.form       = body.message;
                     }
                 })
                 .catch(error => {
-                    this.formErrorMessage = "Une erreur est survenue. Veuillez réessayer plus tard.";
+                    this.errorMessages.form = "Une erreur est survenue. Veuillez réessayer plus tard.";
                 });
             },
+            async publishArticle() {
+
+                //? Transformer id en json
+                const body = {
+                        id: this.id,
+                };
+                const bodyJson  = JSON.stringify(body);
+                
+                //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
+                await fetch('https://127.0.0.1:8000/api/article/publish', {
+                    method:'PATCH',
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json",
+                        "Access-Control-Allow-Origin": "*"
+                    },
+                    body: bodyJson,
+                })
+                .then(async response => {
+                    const body = await response.json()
+                    if (response.status == 200) {
+                        this.formSuccessMessage     = body.message;
+                        this.article.isPublished_article = !this.article.isPublished_article;
+                        const store = useArticlesStore();
+                        store.getAllArticles();
+                    } else {
+                        this.errorMessages.form       = body.message;
+                    }
+                })
+                .catch(error => {
+                    this.errorMessages.form = "Une erreur est survenue. Veuillez réessayer plus tard.";
+                });
+            },
+            ckeckTitleLength() {
+                if (this.article.title_article.length >= 40) {
+                    this.errorMessages.titleLength = 'La limite de 40 caractères est dépassée';
+                } else {
+                    this.errorMessages.titleLength = '';
+                }
+            },
+            ckeckDescriptionLength() {
+                if (this.article.description_article.length >= 160) {
+                    this.errorMessages.description = 'La limite de 160 caractères est dépassée';
+                } else {
+                    this.errorMessages.description = '';
+                }
+            },
+            checkInputSubmit() {
+                
+            }
         },
         mounted() {
             //? Récupération de l'id de l'article dans la route à l'ouverture de la page
@@ -184,6 +270,24 @@
         color: #4B453F;
         text-shadow: none;
     }
+
+    .admin_content_link {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        text-decoration:none;
+        color: #4B453F;
+    }
+
+    .admin_content_link:hover {
+        color: #E04F5F;
+    }
+
+    .admin_content_link svg {
+        height: 3vh;
+        width: auto;
+
+    }
     .admin_content_form_bloc_banner_text {
        display: flex;
        flex-direction: row;
@@ -198,6 +302,12 @@
    .admin_content_form_bloc_add_banner_text {
        font-size: 0.7em;
        cursor: pointer;
+   }
+
+   .admin_content_form_buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
    }
 
    option:active {
