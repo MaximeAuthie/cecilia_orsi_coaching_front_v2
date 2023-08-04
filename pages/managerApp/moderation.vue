@@ -28,6 +28,7 @@
             :content="comment.content_comment"
             :isValidated="comment.isValidated_comment">
         </ManagerCommentComposant>
+        <div v-if="comments.length == 0" class="admin_content_no_comment">Aucun commentaire à afficher</div>
     </div>
 </template>
 
@@ -165,5 +166,13 @@
         font-size: 2.2em;
         color: #4B453F;
         text-shadow: none;
+    }
+
+    .admin_content_no_comment {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 55vh;
+        font-size: 1.5em;
     }
 </style>
