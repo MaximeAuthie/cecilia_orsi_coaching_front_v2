@@ -11,6 +11,7 @@
           :isPublished="article.isPublished_article"
         ></ManagerArticlesArticleComponent>
       </div>
+      <div v-if="articles.length == 0" class="articles_list_card_no_article">Aucun article à afficher</div>
     </div>
 </template>
   
@@ -88,9 +89,20 @@
   .articles_list_card_content {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     font-size: 3em;
+    min-height: 45vh;
   }
+
+  .articles_list_card_no_article {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 45vh;
+        font-size: 1.5em;
+    }
 </style>
   

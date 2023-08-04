@@ -6,6 +6,7 @@
         <div class="categories_list_card_content">
             <ManagerCategoriesCategoryComponent v-for="category in categories" @update="updateCategory" :id="category.id" :name="category.name_category" :color="category.color_category"></ManagerCategoriesCategoryComponent>
         </div>
+        <div v-if="categories.length == 0" class="categories_list_card_no_categories">Aucune catégorie à afficher</div>
     </div>
 </template>
 
@@ -80,12 +81,21 @@ export default {
         padding: 1vh 0;
     }
     .categories_list_card_content {
-
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
         font-size: 3em;
+        min-height: 45vh;
     }
 
+    .categories_list_card_no_categories {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 45vh;
+        font-size: 1.5em;
+    }
 </style>
