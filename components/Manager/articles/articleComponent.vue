@@ -19,75 +19,65 @@
 </template>
   
 <script>
-      import { useArticlesStore } from "@/store/article";
-  
-      export default {
-      emits: ["update"],
-      props: {
-          id: {
-              type: Number,
-              required: true,
-          },
-          title: {
-              type: String,
-              required: true,
-          },
-          date: {
-              type: String,
-              required: true,
-          },
-          isPublished: {
-              type: Boolean,
-              required: true,
-          },
-      },
-      methods: {
-          updateArticle() {
-          //! A MODIFIER
-          this.$emit("update", this.id, this.name, this.color);
-          console.log("niv 1 activé, " + this.name + this.color);
-          },
-          async deleteCategory() {
-          //! A MODIFIER
-          const store = useCategoriesStore();
-          if (
-              confirm('Etes-vous sûr de vouloir supprimer la catégorie "' + this.name + '" ?')
-          ) {
-              //? Transformer id en json
-              const body = {
-              id: this.id,
-              name: this.name,
-              };
-              const bodyJson = JSON.stringify(body);
-  
-              //? Exécuter l'appel API
-              await fetch("https://127.0.0.1:8000/api/category/delete", {
-              method: "DELETE",
-              headers: {
-                  Accept: "application/json",
-                  "Content-Type": "application/json",
-                  "Access-Control-Allow-Origin": "*",
-              },
-              body: bodyJson,
-              })
-              .then(async (response) => {
-                  const body = await response.json();
-  
-                  if (response.status == 200) {
-                  store.getAllCategories();
-                  alert("La catégorie " + this.name + " a été supprimée avec succès.");
-                  } else {
-                  console.log(body.message);
-                  }
-              })
-              .catch((error) => {
-                  this.formErrorMessage =
-                  "Une erreur est survenue. Veuillez réessayer plus tard.";
-              });
-          }
-          },
-      },
-      };
+    import { useArticlesStore } from "@/store/article";
+    
+    export default {
+        props: {
+            id: {
+                type: Number,
+                required: true,
+            },
+            title: {
+                type: String,
+                required: true,
+            },
+            date: {
+                type: String,
+                required: true,
+            },
+            isPublished: {
+                type: Boolean,
+                required: true,
+            },
+        },
+        methods: {
+            async deleteArticle() {
+                const store = useArticlesStore();
+                if (confirm('L\'article "' + this.title + '" sera conservé dans la base de donnée mais n\'apparaitra plus dans l\'espace d\'administration. Voulez-vous poursuivre?')) {
+                    //? Transformer id en json
+                    const body = {
+                        id: this.id,
+                        title: this.title,
+                    };
+                    const bodyJson = JSON.stringify(body);
+        
+                    //? Exécuter l'appel API
+                    await fetch("https://127.0.0.1:8000/api/article/disable", {
+                        method: "PATCH",
+                        headers: {
+                            Accept: "application/json",
+                            "Content-Type": "application/json",
+                            "Access-Control-Allow-Origin": "*",
+                        },
+                        body: bodyJson,
+                    })
+                    .then(async (response) => {
+                        const body = await response.json();
+        
+                        if (response.status == 200) {
+                            store.getAllArticles();
+                            alert("L'article " + this.title + " a été supprimé avec succès.");
+                        } else {
+                            alert(body.message);
+                        }
+                    })
+                    .catch((error) => {
+                        alert("Une erreur est survenue. Veuillez réessayer plus tard.");
+                    });
+                }
+            },
+        },
+    };
 </script>
   
 
