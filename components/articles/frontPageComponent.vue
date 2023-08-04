@@ -9,7 +9,7 @@
         <div class="front_page_article_title">
             <h5>{{ title }}</h5>
         </div>
-        <NuxtLink class="front_page_article_link" to="/"><input class="button button_secondary" type="button" value="Lire l'article"></NuxtLink>
+        <NuxtLink class="front_page_article_link" :to="tileRoute"><input class="button button_secondary" type="button" value="Lire l'article"></NuxtLink>
     </div>
 </template>
 
