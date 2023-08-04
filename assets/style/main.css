@@ -468,6 +468,7 @@ form {
 
 .admin_content_form_bloc {
     width: 100%;
+    margin-bottom: 2vh;
 }
 
 .admin_button {
@@ -492,6 +493,13 @@ form {
 .admin_button_secondary {
     background-color: none;
     color: #E04F5F;
+}
+
+.admin_content_form_buttons_container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 3vh;
 }
 
 .admin_label {
@@ -534,6 +542,7 @@ form {
     text-align: start;
     font-size: 1.3em ;
 }
+
 .bad_admin_input_form {
     width: 98%;
     height: 3.5vh;
@@ -542,7 +551,6 @@ form {
     border-radius: 10px;
     text-align: start;
     font-size: 1.3em ;
-    margin-bottom: 1vh;
 }
 
 .admin_textarea_form {
@@ -567,7 +575,15 @@ form {
     font-size: 1.3em ;
     font-family: Arial, Helvetica, sans-serif;
     resize: none;
-    margin-bottom: 1vh;
+}
+
+.admin_select_form {
+    width: 100%;
+    padding: 0.5% 1%;
+    border: #C6C5C5 solid 1px;
+    border-radius: 10px;
+    text-align: start;
+    font-size: 1.3em ;
 }
 
 .admin_select_multiple {
