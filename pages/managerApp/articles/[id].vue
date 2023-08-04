@@ -12,12 +12,12 @@
 
         <div class="admin_content_form">
             <div class="admin_content_form_bloc">
-                <label for="title" class="admin_label">Titre  : </label>
-                <input v-model="article.title_article" @keyup="ckeckTitleLength" type="text" name="title" class="admin_input_form" :class=" errorMessages.titleLength!='' || errorMessages.titleEmpty!='' ? 'bad_admin_input_form' : 'admin_input_form'">
+                <label for="title" class="admin_label">Titre (40 caractères maximum)* : </label>
+                <input v-model="article.title_article" @keyup="ckeckTitleLength" type="text" name="title" :class=" errorMessages.titleLength!='' || errorMessages.titleEmpty!='' ? 'bad_admin_input_form' : 'admin_input_form'">
                 <span class="admin_error_message_form">{{ errorMessages.titleLength }}</span>
             </div>
             <div class="admin_content_form_bloc">
-                <label for="url" class="admin_label">URL de la bannière : </label>
+                <label for="url" class="admin_label">URL de la bannière (160 caractères maximum) : </label>
                 <input v-model="article.banner_url_article" type="text" name="url" class="admin_input_form">
             </div>
             <div class="admin_content_form_bloc"> <!-- //!MAX 160c -->
@@ -45,6 +45,7 @@
                 <label for="description" class="admin_label">Contenu : </label>
                 <ArticleEditor v-model="article.content_article"></ArticleEditor>
             </div>
+            * champs obligatoires
             <div class="admin_content_filters_message">
                 <span v-if="errorMessages.form" class="admin_content_filters_message_error">{{ errorMessages.form }}</span>
                 <span v-if="errorMessages.titleEmpty" class="admin_content_filters_message_error">{{ errorMessages.titleEmpty }}</span>

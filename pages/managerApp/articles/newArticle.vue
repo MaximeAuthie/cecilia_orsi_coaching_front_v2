@@ -12,12 +12,12 @@
 
         <div class="admin_content_form">
             <div class="admin_content_form_bloc">
-                <label for="title" class="admin_label">Titre  : </label>
+                <label for="title" class="admin_label">Titre (40 caractères maximum) * : </label>
                 <input v-model="article.title_article" @keyup="ckeckTitleLength" type="text" name="title" class="admin_input_form" :class=" errorMessages.titleLength!='' || errorMessages.titleEmpty!='' ? 'bad_admin_input_form' : 'admin_input_form'">
                 <span class="admin_error_message_form">{{ errorMessages.titleLength }}</span>
             </div>
             <div class="admin_content_form_bloc">
-                <label for="url" class="admin_label">URL de la bannière : </label>
+                <label for="url" class="admin_label">URL de la bannière (160 caractères maximum) : </label>
                 <input v-model="article.banner_url_article" type="text" name="url" class="admin_input_form">
             </div>
             <div class="admin_content_form_bloc">
@@ -32,7 +32,7 @@
                    <svg @click="deleteBannerText(keyword.id)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" >
                        <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
                    </svg>
-               </div> <br>
+               </div>
                <span @click="addKeyword" class="admin_content_form_bloc_add_banner_text">Ajouter un mot clé</span>
            </div>
            <div class="admin_content_form_bloc">
@@ -45,13 +45,14 @@
                 <label for="description" class="admin_label">Contenu : </label>
                 <ArticleEditor v-model="article.content_article"></ArticleEditor>
             </div>
+            * champs obligatoires
             <div class="admin_content_filters_message">
                 <span v-if="errorMessages.form" class="admin_content_filters_message_error">{{ errorMessages.form }}</span>
                 <span v-if="errorMessages.titleEmpty" class="admin_content_filters_message_error">{{ errorMessages.titleEmpty }}</span>
                 <span v-if="formSuccessMessage" class="admin_content_filters_message_success">{{ formSuccessMessage }}</span>
             </div>
 
-            <div class="admin_content_form_buttons">
+            <div class="admin_content_form_buttons_container">
                 <button @click="addArticle" class="admin_button admin_button_main">Créer</button>
             </div>
             
@@ -79,7 +80,7 @@
                     description_article:    '',
                     kewords_list:           [],
                     categories_list:        [],
-                    content_article:        [],
+                    content_article:        '',
                     user_id:                1
                 },
                 categories:                 [],
@@ -231,29 +232,24 @@
 
     }
     .admin_content_form_bloc_banner_text {
-       display: flex;
-       flex-direction: row;
-   }
-   .admin_content_form_bloc_banner_text svg{
-       width: 3vh;
-       height: auto;
-   }
-   .admin_content_form_bloc_banner_text svg:hover{
-       fill:#E04F5F;
-   }
-   .admin_content_form_bloc_add_banner_text {
-       font-size: 0.7em;
-       cursor: pointer;
-   }
+        display: flex;
+        flex-direction: row;
+    }
+    .admin_content_form_bloc_banner_text svg{
+        width: 3vh;
+        height: auto;
+    }
+    .admin_content_form_bloc_banner_text svg:hover{
+        fill:#E04F5F;
+    }
+    .admin_content_form_bloc_add_banner_text {
+        font-size: 0.7em;
+        cursor: pointer;
+    }  
+  
 
-   .admin_content_form_buttons {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-   }
-
-   option:active {
-    background-color: #E04F5F;
-   }
+    option:active {
+        background-color: #E04F5F;
+    }
 
 </style>
