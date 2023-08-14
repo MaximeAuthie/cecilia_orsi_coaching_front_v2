@@ -586,6 +586,15 @@ form {
     font-size: 1.3em ;
 }
 
+.bad_admin_select_form {
+    width: 100%;
+    padding: 0.5% 1%;
+    border: #E04F5F solid 2px;
+    border-radius: 10px;
+    text-align: start;
+    font-size: 1.3em ;
+}
+
 .admin_select_multiple {
     width: 100%;
     padding: 0.5% 1%;
