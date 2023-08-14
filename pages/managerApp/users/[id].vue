@@ -1,3 +1,10 @@
+<script setup>
+    definePageMeta({
+        layout: "admin",
+        middleware: "auth"
+    });
+</script>
+
 <template>
     <div class="admin_content">
         <NuxtLink to="/managerApp/users">
@@ -60,6 +67,7 @@
                     <option value="ROLE_USER" class="admin_option">Utilisateur</option>
                     <option value="ROLE_ADMIN" class="admin_option">Administrateur</option>
                 </select>
+                <span class="admin_error_message_form">{{ errorMessages.rolesEmpty }}</span>
             </div>
             * champs obligatoires
             <div class="admin_content_filters_message">
@@ -78,10 +86,6 @@
 <script>
     import { useUsersStore } from "@/store/user";
 
-    definePageMeta({
-        layout: "admin"
-    });
-
     export default {
         data() {
             return {
@@ -98,6 +102,7 @@
                     firstNameEmpty:         '',
                     lastNameEmpty:          '',
                     emailEmpty:             '',
+                    rolesEmpty:             '',
                     emailFormat:            '',
                     passwordIdentical:      '',
                     passwordUppercase:      '',
@@ -109,13 +114,13 @@
             }
         },
         methods: {
+
             getUser() {
                 const store = useUsersStore();
 
                 //? Vérifier si les utilisateurs sont toujours présents dans le store
                 if (store.users.length > 0) {
                     this.user = store.users.find( user => user.id == this.id);
-                    console.log(this.user.roles.lenght-1);
                     this.selectedRole = this.user.roles[this.user.roles.length-1];
                 } else {
                     //? Si les utilisateurs ne sont pas déjà présents dans le store, effectuer l'appel API
@@ -131,18 +136,23 @@
                         });
                 }    
             },
+
             checkInputBeforeSubmit() {
                 if (this.user.first_name_user == '') {
                     this.errorMessages.firstNameEmpty   = "Veuillez saisir un prénom";
-                    this.errorMessages.form             = "Veuillez remplir tous les champs du formulaire";
+                    this.errorMessages.form             = "Veuillez remplir tous les champs obligatoires du formulaire";
                 }
                 if (this.user.last_name_user == '') {
                     this.errorMessages.lastNameEmpty    = "Veuillez saisir un nom";
-                    this.errorMessages.form             = "Veuillez remplir tous les champs du formulaire"
+                    this.errorMessages.form             = "Veuillez remplir tous les champs obligatoires du formulaire"
                 }
                 if (this.user.email == '') {
                     this.errorMessages.emailEmpty       = "Veuillez saisir une adresse email";
-                    this.errorMessages.form             = "Veuillez remplir tous les champs du formulaire"
+                    this.errorMessages.form             = "Veuillez remplir tous les champs obligatoires du formulaire"
+                }
+                if (this.user.roles == '') {
+                    this.errorMessages.rolesEmpty       = "Veuillez renseigner un rôle";
+                    this.errorMessages.form             = "Veuillez remplir tous les champs obligatoires du formulaire"
                 }
             },
             
@@ -157,11 +167,13 @@
                     this.errorMessages.emailEmpty       = "";
                 }
             },
+
             checkPasswordKeyUp() { //Vérifie si les champs sont remplis lors de la saisir et vérifie le format du password
                 this.checkInputKeyUp();
                 this.checkPasswordFormat();
                 this.isPasswordIdentical();
             },
+
             isPasswordIdentical() {
                 if (this.passwords.firstInput != '' && this.passwords.secondInput != '') {
                     if(this.passwords.firstInput != this.passwords.secondInput) {
@@ -171,6 +183,7 @@
                     }
                 }
             },
+
             checkMailFormat() { // Vérifie si le format du mail est correct
 
                 //? Définir le regex pour le format mail
@@ -187,6 +200,7 @@
                     }
                 }
             },
+
             checkPasswordFormat() {
                 
                 //? Réinitialiser les message d'erreur
@@ -194,6 +208,7 @@
                 this.errorMessages.passwordLowercase = "";
                 this.errorMessages.passwordNumber = "";
                 this.errorMessages.passwordCaracters = "";
+
                 //? Définir les pattern des regex
                 const upperCasePattern          = new RegExp(/[A-Z]/g);
                 const lowerCasePattern          = new RegExp(/[a-z]/g);
@@ -225,15 +240,16 @@
             checkErrorMessages() {
                 if (
                     this.errorMessages.form !='' 
-                    || this.errorMessages.firstNameEmpty!='' 
-                    || this.errorMessages.lastNameEmpty!='' 
-                    || this.errorMessages.emailEmpty!='' 
-                    || this.errorMessages.emailFormat!='' 
-                    || this.errorMessages.passwordIdentical!='' 
-                    || this.errorMessages.passwordUppercase!='' 
-                    || this.errorMessages.passwordLowercase!='' 
-                    || this.errorMessages.passwordNumber!='' 
-                    || this.errorMessages.passwordCaracters!='' 
+                    || this.errorMessages.firstNameEmpty != '' 
+                    || this.errorMessages.lastNameEmpty != '' 
+                    || this.errorMessages.emailEmpty != ''
+                    || this.errorMessages.rolesEmpty != ''
+                    || this.errorMessages.emailFormat != '' 
+                    || this.errorMessages.passwordIdentical != '' 
+                    || this.errorMessages.passwordUppercase != '' 
+                    || this.errorMessages.passwordLowercase != '' 
+                    || this.errorMessages.passwordNumber != '' 
+                    || this.errorMessages.passwordCaracters != '' 
                 ) {
                     return false;
                 } else {
@@ -252,49 +268,63 @@
                 //? Vérifier si le format de l'adresse mail est correct
                 this.checkMailFormat();
 
-                if (this.checkErrorMessages) {
-                    console.log("update!")
+                //? Déclaration de l'objet utilisateur à envoyer avec l'appel API
+                let userToUpdate = {
+                            id:             this.user.id,
+                            firstName:      this.user.first_name_user,
+                            lastName:       this.user.last_name_user,
+                            email:          this.user.email,
+                            roles:          [],
+                            password:       ''
+                        }
+
+                if (this.checkErrorMessages()) {
+
+                    //? Mettre à jour les rôles de l'utilisateur
+                    console.log('rôles');
+                    this.user.roles = [];
+                    if (this.selectedRole == "ROLE_USER") {
+                        userToUpdate.roles.push("ROLE_USER");
+                    } else if (this.selectedRole == "ROLE_ADMIN") {
+                        userToUpdate.roles.push("ROLE_USER");
+                        userToUpdate.roles.push("ROLE_ADMIN");
+                    }
+
+                    //? Mettre à jours le password si renseigné
+                    if (this.passwords.firstInput != '' && this.passwords.secondInput !='') {
+                        userToUpdate.password = this.passwords.firstInput;
+                    }
+
+                    //? Transformer l'objet selectedPageData en json
+                    const bodyJson = JSON.stringify(userToUpdate);
+
+                    //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
+                    await fetch('https://127.0.0.1:8000/api/user/update', {
+                        method:'PATCH',
+                        headers: {
+                            "Accept": "application/json",
+                            "Content-Type": "application/json",
+                            "Access-Control-Allow-Origin": "*"
+                        },
+                        body: bodyJson,
+                    })
+                    .then(async response => {
+                        const body = await response.json()
+                        
+                        if (response.status == 200) {
+                            this.formSuccessMessage     = body.message;
+                            const store = useUsersStore();
+                            store.getAllUsers();
+                        } else {
+                            console.log(body);
+                            this.errorMessages.form       = body.message;
+                        }
+                    })
+                    .catch(error => {
+                        this.errorMessages.form = "Une erreur est survenue. Veuillez réessayer plus tard.";
+                    });
+
                 }
-                
-                // //? Mettre à jour les rôles de l'utilisateur
-                // this.user.roles = [];
-                // if (this.selectedRole == "ROLE_USER") {
-                //     this.user.roles.push(ROLE_USER);
-                // } else if (this.selectedRole == "ROLE_USER") {
-                //     this.user.roles.push(ROLE_USER);
-                //     this.user.roles.push(ROLE_ADMIN);
-                // }
-                
-                //? Mettre à jours le password si renseigné
-                
-
-            //     //? Transformer l'objet selectedPageData en json
-            //     const bodyJson = JSON.stringify(this.article);
-            //     console.log(bodyJson);
-
-            //     //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
-            //     await fetch('https://127.0.0.1:8000/api/article/update', {
-            //         method:'PATCH',
-            //         headers: {
-            //             "Accept": "application/json",
-            //             "Content-Type": "application/json",
-            //             "Access-Control-Allow-Origin": "*"
-            //         },
-            //         body: bodyJson,
-            //     })
-            //     .then(async response => {
-            //         const body = await response.json()
-            //         if (response.status == 200) {
-            //             this.formSuccessMessage     = body.message;
-            //             const store = useArticlesStore();
-            //             store.getAllArticles();
-            //         } else {
-            //             this.errorMessages.form       = body.message;
-            //         }
-            //     })
-            //     .catch(error => {
-            //         this.errorMessages.form = "Une erreur est survenue. Veuillez réessayer plus tard.";
-            //     });
             },
         },
         mounted() {

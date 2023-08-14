@@ -1,3 +1,10 @@
+<script setup>
+    definePageMeta({
+        layout: "admin",
+        middleware: "auth"
+    });
+</script>
+
 <template>
     <div class="admin_content">
         <NuxtLink to="/managerApp/articles">
@@ -66,10 +73,6 @@
     import { useArticlesStore } from "@/store/article";
     import { useCategoriesStore } from '@/store/category';
     import ArticleEditor from '../../../components/Manager/articles/editorComponent.vue';
-
-    definePageMeta({
-        layout: "admin"
-    });
 
     export default {
         components: {ArticleEditor},

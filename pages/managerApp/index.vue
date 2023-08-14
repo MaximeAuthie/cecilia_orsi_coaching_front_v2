@@ -1,3 +1,10 @@
+<script setup>
+    definePageMeta({
+        layout: "admin",
+        middleware: "auth"
+    });
+</script>
+
 <template>
     <div class="admin_content">
         <h1>Bienvenue dans l’espace d’administration Cécilia Orsi</h1>
@@ -8,15 +15,8 @@
             <ManagerIndexStatCardComponent title="Visites 24h" content="25" color="#6C89B4"></ManagerIndexStatCardComponent>
         </div>
         <ManagerIndexLastCommentsCardComponent></ManagerIndexLastCommentsCardComponent>
-
     </div>
 </template>
-
-<script>
-    definePageMeta({
-        layout: "admin"
-    });
-</script>
 
 <style scoped>
 

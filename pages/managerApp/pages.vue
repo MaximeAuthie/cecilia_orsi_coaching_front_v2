@@ -1,3 +1,10 @@
+<script setup>
+    definePageMeta({
+        layout: "admin",
+        middleware: "auth"
+    });
+</script>
+
 <template>
     <div class="admin_content">
         <h1>Gestion du contenu des pages</h1>
@@ -44,10 +51,6 @@
 
 <script>
    import { usePagesStore } from '@/store/page';
-
-   definePageMeta({
-       layout: "admin"
-   });
 
    export default {
        data() {

@@ -1,3 +1,10 @@
+<script setup>
+    definePageMeta({
+        layout: "admin",
+        middleware: "auth"
+    });
+</script>
+
 <template>
     <div class="admin_content">
         <h1>Gestion des articles</h1>
@@ -16,13 +23,6 @@
         <ManagerArticlesListComponent></ManagerArticlesListComponent>
     </div>
 </template>
-
-<script>
-
-    definePageMeta({
-        layout: "admin"
-    });
-</script>
 
 <style scoped>
     h1 {

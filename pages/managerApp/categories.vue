@@ -1,3 +1,10 @@
+<script setup>
+    definePageMeta({
+        layout: "admin",
+        middleware: "auth"
+    });
+</script>
+
 <template>
     <div class="admin_content">
         <h1>Gestion des catégories</h1>
@@ -28,10 +35,6 @@
 <script>
     import { useCategoriesStore } from '@/store/category';
     
-    definePageMeta({
-            layout: "admin"
-        });
-
     export default {
         data() {
             return {

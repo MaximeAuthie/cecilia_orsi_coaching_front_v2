@@ -1,3 +1,10 @@
+<script setup>
+    definePageMeta({
+        layout: "admin",
+        middleware: "auth"
+    });
+</script>
+
 <template>
     <div class="admin_content">
         <h1>Modération des commentaires</h1>
@@ -35,10 +42,6 @@
 <script>
     import { useCommentsStore } from '@/store/comment';
     import { useArticlesStore } from '@/store/article';
-
-    definePageMeta({
-        layout: "admin"
-    });
 
     export default {
         data() {
