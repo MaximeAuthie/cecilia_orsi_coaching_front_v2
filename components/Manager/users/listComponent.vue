@@ -4,7 +4,7 @@
             Liste des utilisateurs
         </div>
         <div class="users_list_card_content">
-            <ManagerUsersItemComponent v-for="user in users" :id="user.id" :name="user.first_name_user + ' ' + user.last_name_user" :role="user.roles[1]"></ManagerUsersItemComponent>
+            <ManagerUsersItemComponent v-for="user in users" :id="user.id" :name="user.first_name_user + ' ' + user.last_name_user" :role="user.roles[user.roles.length - 1]"></ManagerUsersItemComponent>
         </div>
         <div v-if="users.length == 0" class="users_list_card_no_user">Aucun utilisateur à afficher</div>
     </div>
