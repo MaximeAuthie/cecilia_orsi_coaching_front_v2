@@ -6,7 +6,7 @@
 </script>
 
 <template>
-    <div class="admin_content">
+    <div @click="formErrorMessage = ''" class="admin_content">
         <h1>Modération des commentaires</h1>
         <div class="admin_content_filters">
             <div class="admin_content_filters_bloc">
@@ -22,12 +22,20 @@
                     <option v-for="article in articles" :value="article.id" class="admin_option">{{article.title_article}}</option>
                 </select>
             </div>
-            <div class="admin_content_filters_bloc">
+            <div @mouseout="" class="admin_content_filters_bloc">
                 <br>
                 <button @click="getComments" class="admin_button admin_button_main">Filtrer</button>
             </div>
-        </div>    
-        <ManagerCommentComposant v-if="displayComments" v-for="comment in comments"
+            
+        </div>
+        <div class="admin_content_filters_message">
+            <span v-if="formErrorMessage" class="admin_content_filters_message_error">{{ formErrorMessage }}</span>
+        </div>
+            
+        <ManagerCommentComposant
+            v-if="displayComments"
+            v-for="comment in comments"
+            @error="errorOnComment"
             :id="comment.id"
             :title="comment.article.title_article"
             :author="comment.author_name_comment"
@@ -50,7 +58,8 @@
                 article:            0,
                 articles:           [],
                 comments:           [],
-                displayComments:    false
+                displayComments:    false,
+                formErrorMessage:   ''
             }
         },
         methods: {
@@ -135,6 +144,9 @@
                         this.loading            = false;
                     });
                 }
+            },
+            errorOnComment(message) {
+                this.formErrorMessage = message;
             }
         },
         mounted() {
