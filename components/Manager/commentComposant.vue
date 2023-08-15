@@ -26,8 +26,10 @@
 
 <script>
     import { useCommentsStore } from '@/store/comment';
+    import { useUsersStore } from "@/store/user";
 
     export default {
+        emits: ['error'],
         props: {
             id: {
                 type:       Number,
@@ -62,49 +64,86 @@
         methods: {
             async validateComment() {
 
+                //? Définir le cntenu du body de la requête
                 let body = {
                     commentId:  this.id,
                     userId:     1
                 }
 
-                body = JSON.stringify(body);
-                console.log(body);
+                //? Transformer l'objet selectedPageData en json
+                let bodyJson = JSON.stringify(body);
+                
+                //? Récupérer le jwt pour le header de la requête
+                const userStore = useUsersStore();
+                const jwt       = userStore.token;
+
                 await fetch('https://127.0.0.1:8000/api/comment/validate', {
                         method:'PATCH',
                         headers: {
                             "Accept": "application/json",
                             "Content-Type": "application/json",
-                            "Access-Control-Allow-Origin": "*"
+                            "Access-Control-Allow-Origin": "*",
+                            "Authorization": `Bearer ${jwt}`
                         },
-                        body: body
+                        body: bodyJson
                     })
                     .then(async response => {
-                        this.updateStore();
+                        const body = await response.json()
+                        console.log(body);
+                        if (response.status == 200) {
+                            this.updateStore();
+                        } else if (response.status == 498) {
+                            userStore.token = '';
+                            this.$router.push('/managerApp/logIn/expired-session'); 
+                        } else {
+                            this.$emit('error', 'Une erreur est survenue. Veuillez réessayer plus tard');
+                        }
+                    })
+                    .catch(error => {
+                        this.$emit('error', 'Une erreur est survenue. Veuillez réessayer plus tard');
                     })
 
             },
             async rejectComment() {
 
+                //? Définir le cntenu du body de la requête
                 let body = {
                     commentId:  this.id,
                     userId:     1
                 }
 
+                //? Transformer l'objet selectedPageData en json
                 body = JSON.stringify(body);
-                console.log(body);
+                
+                //? Récupérer le jwt pour le header de la requête
+                const userStore = useUsersStore();
+                const jwt       = userStore.token;
+
                 await fetch('https://127.0.0.1:8000/api/comment/reject', {
                         method:'PATCH',
                         headers: {
                             "Accept": "application/json",
                             "Content-Type": "application/json",
-                            "Access-Control-Allow-Origin": "*"
+                            "Access-Control-Allow-Origin": "*",
+                            "Authorization": `Bearer ${jwt}`
                         },
                         body: body
                     })
                     .then(async response => {
-                        this.updateStore();
+                        const body = await response.json()
+                        console.log(body);
+                        if (response.status == 200) {
+                            this.updateStore();
+                        } else if (response.status == 498) {
+                            userStore.token = '';
+                            this.$router.push('/managerApp/logIn/expired-session'); 
+                        } else {
+                            this.$emit('error', 'Une erreur est survenue. Veuillez réessayer plus tard');
+                        }
                     })
-
+                    .catch(error => {
+                        this.$emit('error', 'Une erreur est survenue. Veuillez réessayer plus tard');
+                    })
             },
             updateStore() {
                 const store = useCommentsStore();

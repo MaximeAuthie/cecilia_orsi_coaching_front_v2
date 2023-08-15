@@ -50,98 +50,108 @@
 </template>
 
 <script>
-   import { usePagesStore } from '@/store/page';
+    import { usePagesStore } from '@/store/page';
+    import { useUsersStore } from "@/store/user";
 
-   export default {
-       data() {
-           return {
-              pages: [],
-              selectedPageId: 0,
-              selectedPageData: [],
-              formSuccessMessage: '',
-              formErrorMessage: ''
-           }
-       },
-       methods: {
-           getPages() {
-               const store = usePagesStore();
+    export default {
+        data() {
+            return {
+                pages: [],
+                selectedPageId: 0,
+                selectedPageData: [],
+                formSuccessMessage: '',
+                formErrorMessage: ''
+            }
+        },
+        methods: {
+            getPages() {
+                const store = usePagesStore();
 
-               //? Vérifier si les articles sont toujours présents dans le store
-               if (store.pages.length > 0) {
-                   console.log("store déjà plein")
-                   this.pages           = store.pages;
-               } else {
+                //? Vérifier si les articles sont toujours présents dans le store
+                if (store.pages.length > 0) {
+                    console.log("store déjà plein")
+                    this.pages           = store.pages;
+                } else {
 
-               //? Si les articles ne sont pas déjà présents dans le store, effectuer l'appel API
-               store.getAllPages()
-                   .then(() => {
-                       console.log("store à remplir")
-                       this.pages           = store.pages;
-                   })
+                //? Si les articles ne sont pas déjà présents dans le store, effectuer l'appel API
+                store.getAllPages()
+                    .then(() => {
+                        console.log("store à remplir")
+                        this.pages           = store.pages;
+                    })
 
-                   //? En cas d'erreur inattendue, capter l'erreur rencontrée
-                   .catch((error) => {
-                       console.error('Erreur lors de la récupération des articles :', error);
+                    //? En cas d'erreur inattendue, capter l'erreur rencontrée
+                    .catch((error) => {
+                        console.error('Erreur lors de la récupération des articles :', error);
+                    });
+                }
+            },
+            displayPageData(event) { //! A MODIFIER
+                const index = event.target.selectedIndex;
+                this.selectedPageData = this.pages[index];
+                this.formErrorMessage ='';
+                this.formSuccessMessage = '';
+            },
+            addBannerText() {
+                this.selectedPageData.BannerTextsList.push({
+                    id: '',
+                    content_banner_text: ''
+                })
+            },
+            async updatePage() {
+                //? Rénitialiser les messages d'erreur
+                this.formErrorMessage ='';
+                this.formSuccessMessage = '';
 
-                   });
-               }
-           },
-           displayPageData(event) { //! A MODIFIER
-               const index = event.target.selectedIndex;
-               this.selectedPageData = this.pages[index];
-               this.formErrorMessage ='';
-               this.formSuccessMessage = '';
-           },
-           addBannerText() {
-               this.selectedPageData.BannerTextsList.push({
-                   id: '',
-                   content_banner_text: ''
-               })
-           },
-           async updatePage() {
-              
-               //? Transformer l'objet selectedPageData en json
-               const bodyJson = JSON.stringify(this.selectedPageData);
-               console.log(bodyJson);
-               //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
-               await fetch('https://127.0.0.1:8000/api/page/update', {
-                   method:'PATCH',
-                   headers: {
-                       "Accept": "application/json",
-                       "Content-Type": "application/json",
-                       "Access-Control-Allow-Origin": "*"
-                   },
-                   body: bodyJson,
-               })
-               .then(async response => {
-                   const body = await response.json()
-                   console.log(body);
-                   if (response.status == 200) {
-                       this.formSuccessMessage     = body.message;
-                       const store = usePagesStore();
-                       store.getAllPages();
-                   } else {
-                       this.formErrorMessage       = body.message;
-                   }
-               })
-               .catch(error => {
-                   this.formErrorMessage = "Une erreur est survenue. Veuillez réessayer plus tard.";
-               });
-           },
-           deleteBannerText(id) {
-               //? Rechercher l'objet dans le tableau pour récupérer son index
-               const textToDelete = this.selectedPageData.BannerTextsList.find(item => item.id == id);
-               const indexToDelete = this.selectedPageData.BannerTextsList.indexOf(textToDelete);
+                //? Transformer l'objet selectedPageData en json
+                const bodyJson  = JSON.stringify(this.selectedPageData);
 
-               //? Suppression de l'objet dans le tableau
-               this.selectedPageData.BannerTextsList.splice(indexToDelete,1);
-           },
- 
-       },
-       mounted() {
-           this.getPages();
-       },
-   }
+                //? Récupérer le jwt pour le header de la requête
+                const userStore = useUsersStore();
+                const jwt       = userStore.token;
+                    
+                //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
+                await fetch('https://127.0.0.1:8000/api/page/update', {
+                    method:'PATCH',
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json",
+                        "Access-Control-Allow-Origin": "*",
+                        "Authorization": `Bearer ${jwt}`
+                    },
+                    body: bodyJson,
+                })
+                .then(async response => {
+                    const body = await response.json()
+                    if (response.status == 200) {
+                        this.formSuccessMessage     = body.message;
+                        const store = usePagesStore();
+                        store.getAllPages();
+                    } else if (response.status == 498) {
+                        userStore.token = '';
+                        this.$router.push('/managerApp/logIn/expired-session'); 
+                    } else {
+                        this.formErrorMessage       = body.message;
+                    }
+                })
+                .catch(error => {
+                    this.formErrorMessage = "Une erreur est survenue. Veuillez réessayer plus tard.";
+                });
+            },
+            deleteBannerText(id) {
+                //? Rechercher l'objet dans le tableau pour récupérer son index
+                const textToDelete = this.selectedPageData.BannerTextsList.find(item => item.id == id);
+                const indexToDelete = this.selectedPageData.BannerTextsList.indexOf(textToDelete);
+
+                //? Suppression de l'objet dans le tableau
+                this.selectedPageData.BannerTextsList.splice(indexToDelete,1);
+            },
+    
+        },
+        mounted() {
+            this.getPages();
+        },
+    }
 </script>
 
 <style scoped>
