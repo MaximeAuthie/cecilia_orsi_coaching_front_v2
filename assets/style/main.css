@@ -471,6 +471,23 @@ form {
     margin-bottom: 2vh;
 }
 
+.admin_content_link {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-decoration:none;
+    color: #4B453F;
+}
+
+.admin_content_link:hover {
+    color: #E04F5F;
+}
+
+.admin_content_link svg {
+    height: 3vh;
+    width: auto;
+}
+
 .admin_button {
     display: flex;
     flex-direction: row;
