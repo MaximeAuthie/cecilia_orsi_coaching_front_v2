@@ -1,7 +1,6 @@
 <script setup>
     definePageMeta({
-        layout: "admin",
-        middleware: "auth"
+        layout: "admin"
     });
 </script>
 
@@ -27,7 +26,7 @@
                 <label for="url" class="admin_label">URL de la bannière (160 caractères maximum) : </label>
                 <input v-model="article.banner_url_article" type="text" name="url" class="admin_input_form">
             </div>
-            <div class="admin_content_form_bloc"> <!-- //!MAX 160c -->
+            <div class="admin_content_form_bloc">
                 <label for="description" class="admin_label">Description : </label>
                 <textarea v-model="article.description_article" @keyup="ckeckDescriptionLength"  type="text" name="description" :class=" errorMessages.description!='' ? 'bad_admin_textarea_form' : 'admin_textarea_form'"></textarea>
                 <span class="admin_error_message_form">{{ errorMessages.description }}</span>
@@ -63,8 +62,6 @@
                 <button @click="updateArticle" class="admin_button admin_button_main">Modifier</button>
                 <button @click="publishArticle" class="admin_button admin_button_secondary">{{article.isPublished_article ? 'Dépublier' : 'Publier'}}</button>
             </div>
-            
-
         </div>
     </div>
 </template>
@@ -72,6 +69,7 @@
 <script>
     import { useArticlesStore } from "@/store/article";
     import { useCategoriesStore } from '@/store/category';
+    import { useUsersStore } from "@/store/user";
     import ArticleEditor from '../../../components/Manager/articles/editorComponent.vue';
 
     export default {
@@ -95,48 +93,48 @@
         methods: {
             getArticle() {
                 const store = useArticlesStore();
+                const storeUser= useUsersStore();
+                // //? Vérifier si les catégories sont toujours présentes dans le store
+                // if (store.articles.length > 0) {
+                //     this.article = store.articles.find( article => article.id == this.id);
+                //     this.article.categories_list.forEach(category => {
+                //         this.selectedCategories.push(category.id);
+                //     });
+                // } else {
+                //     //? Si les catégories ne sont pas déjà présents dans le store, effectuer l'appel API
+                //     store.getAllArticles()
+                //         .then(() => {
+                //             this.article = store.articles.find( article => article.id == this.id);
+                //             this.article.categories_list.forEach(category => {
+                //                 this.selectedCategories.push(category.id);
+                //             });
+                //         })
 
-                //? Vérifier si les catégories sont toujours présentes dans le store
-                if (store.articles.length > 0) {
-                    this.article = store.articles.find( article => article.id == this.id);
-                    this.article.categories_list.forEach(category => {
-                        this.selectedCategories.push(category.id);
-                    });
-                } else {
-                    //? Si les catégories ne sont pas déjà présents dans le store, effectuer l'appel API
-                    store.getAllArticles()
-                        .then(() => {
-                            this.article = store.articles.find( article => article.id == this.id);
-                            this.article.categories_list.forEach(category => {
-                                this.selectedCategories.push(category.id);
-                            });
-                        })
-
-                        //? En cas d'erreur inattendue, capter l'erreur rencontrée
-                        .catch((error) => {
-                            console.error("Erreur lors de la récupération des catégories :", error);
-                        });
-                }    
+                //         //? En cas d'erreur inattendue, capter l'erreur rencontrée
+                //         .catch((error) => {
+                //             console.error("Erreur lors de la récupération des catégories :", error);
+                //         });
+                // }    
             },
             getCategories() {
                 const store = useCategoriesStore();
 
-                //? Vérifier si les catégories sont toujours présentes dans le store
-                if (store.categories.length > 0) {
-                    this.categories         = store.categories;
-                } else {
+                // //? Vérifier si les catégories sont toujours présentes dans le store
+                // if (store.categories.length > 0) {
+                //     this.categories         = store.categories;
+                // } else {
 
-                //? Si les catégories ne sont pas déjà présents dans le store, effectuer l'appel API
-                store.getAllCategories()
-                    .then(() => {
-                        this.categories       = store.categories;
-                    })
+                // //? Si les catégories ne sont pas déjà présents dans le store, effectuer l'appel API
+                // store.getAllCategories()
+                //     .then(() => {
+                //         this.categories       = store.categories;
+                //     })
 
-                    //? En cas d'erreur inattendue, capter l'erreur rencontrée
-                    .catch((error) => {
-                        console.error('Erreur lors de la récupération des catégories :', error);
-                    });
-                }
+                //     //? En cas d'erreur inattendue, capter l'erreur rencontrée
+                //     .catch((error) => {
+                //         console.error('Erreur lors de la récupération des catégories :', error);
+                //     });
+                // }
             },
             addKeyword() {
                this.article.kewords_list.push({
@@ -275,23 +273,6 @@
         text-shadow: none;
     }
 
-    .admin_content_link {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        text-decoration:none;
-        color: #4B453F;
-    }
-
-    .admin_content_link:hover {
-        color: #E04F5F;
-    }
-
-    .admin_content_link svg {
-        height: 3vh;
-        width: auto;
-
-    }
     .admin_content_form_bloc_banner_text {
        display: flex;
        flex-direction: row;
