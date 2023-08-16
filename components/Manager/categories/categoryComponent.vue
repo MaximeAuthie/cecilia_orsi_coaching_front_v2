@@ -14,7 +14,8 @@
 </template>
 
 <script>
-    import { useCategoriesStore } from '@/store/category'
+    import { useCategoriesStore } from '@/store/category';
+    import { useUsersStore } from "@/store/user";
 
     export default {
         emits: ['update'],
@@ -39,14 +40,22 @@
             },
             async deleteCategory() {
                 const store = useCategoriesStore();
+
+                //? Demander une confirmation pour la suppression de la catégorie
                 if (confirm("Etes-vous sûr de vouloir supprimer la catégorie \"" + this.name + "\" ?")) {
 
-                    //? Transformer id en json
+                    //? Définir le contenu du body de la requête
                     const body = {
                         id: this.id,
                         name: this.name
                     };
+
+                    //? Transformer l'objet body en json
                     const bodyJson  = JSON.stringify(body);
+
+                    //? Récupérer le jwt pour le header de la requête
+                    const userStore = useUsersStore();
+                    const jwt       = userStore.token;
 
                     //? Exécuter l'appel API
                     await fetch('https://127.0.0.1:8000/api/category/delete', {
@@ -54,7 +63,8 @@
                         headers: {
                             "Accept": "application/json",
                             "Content-Type": "application/json",
-                            "Access-Control-Allow-Origin": "*"
+                            "Access-Control-Allow-Origin": "*",
+                            "Authorization": `Bearer ${jwt}`
                         },
                         body: bodyJson,
                     })
@@ -65,6 +75,9 @@
                         if (response.status == 200) {
                             store.getAllCategories();
                             alert("La catégorie " + this.name + " a été supprimée avec succès.");
+                        } else if (response.status == 498) {
+                            userStore.token = '';
+                            this.$router.push('/managerApp/logIn/expired-session'); 
                         } else {
                             alert(body.message);
                         }

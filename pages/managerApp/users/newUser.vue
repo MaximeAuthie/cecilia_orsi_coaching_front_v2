@@ -78,7 +78,7 @@
             </div>
 
             <div class="admin_content_form_buttons">
-                <button @click="updateUser" class="admin_button admin_button_main">Modifier</button>
+                <button @click="addUser" class="admin_button admin_button_main">Créer</button>
             </div>
         </div>
     </div>
@@ -263,7 +263,7 @@
                 }
                       
             },
-            async updateUser() {
+            async addUser() {
 
                 //? Réinitialiser les éventuels précédents messages d'erreurs
                 this.errorMessages.form = '';
@@ -287,10 +287,12 @@
                     //? Mettre à jours le password
                     this.user.password = this.passwords.firstInput;
 
-
                     //? Transformer l'objet selectedPageData en json
                     const bodyJson = JSON.stringify(this.user);
-                    console.log(bodyJson);
+                    
+                    //? Récupérer le jwt pour le header de la requête
+                    const userStore = useUsersStore();
+                    const jwt       = userStore.token;
 
                     //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
                     await fetch('https://127.0.0.1:8000/api/user/add', {
@@ -298,7 +300,8 @@
                         headers: {
                             "Accept": "application/json",
                             "Content-Type": "application/json",
-                            "Access-Control-Allow-Origin": "*"
+                            "Access-Control-Allow-Origin": "*",
+                            "Authorization": `Bearer ${jwt}`
                         },
                         body: bodyJson,
                     })
@@ -309,6 +312,9 @@
                             this.formSuccessMessage     = body.message;
                             const store = useUsersStore();
                             store.getAllUsers();
+                        } else if (response.status == 498) {
+                            userStore.token = '';
+                            this.$router.push('/managerApp/logIn/expired-session'); 
                         } else {
                             console.log(body);
                             this.errorMessages.form       = body.message;

@@ -26,18 +26,23 @@ export default {
 
             //? Vérifier si les catégories sont toujours présentes dans le store
             if (store.users.length > 0) {
+                console.log("user store 9000");
                 this.users         = store.users;
             } else {
 
             //? Si les catégories ne sont pas déjà présents dans le store, effectuer l'appel API
             store.getAllUsers()
-                .then(() => {
+                .then(response => {
                     this.users       = store.users;
                 })
 
                 //? En cas d'erreur inattendue, capter l'erreur rencontrée
                 .catch((error) => {
                     console.error('Erreur lors de la récupération des catégories :', error);
+                    if (error.status == 498) {
+                            store.token = '';
+                            this.$router.push('/managerApp/logIn/expired-session'); 
+                        } 
                 });
             }
         },
@@ -47,8 +52,8 @@ export default {
         this.getUsers();
 
         const store = useUsersStore();
-            store.$subscribe(state => {
-                this.user = store.users;
+            store.$subscribe((state) => {
+                this.users = store.users;
                 console.log("update store users")
             })
     }

@@ -1,6 +1,7 @@
 <script setup>
     definePageMeta({
-        layout: "admin"
+        layout: "admin",
+        middleware: "auth"
     });
 </script>
 
@@ -94,47 +95,48 @@
             getArticle() {
                 const store = useArticlesStore();
                 const storeUser= useUsersStore();
-                // //? Vérifier si les catégories sont toujours présentes dans le store
-                // if (store.articles.length > 0) {
-                //     this.article = store.articles.find( article => article.id == this.id);
-                //     this.article.categories_list.forEach(category => {
-                //         this.selectedCategories.push(category.id);
-                //     });
-                // } else {
-                //     //? Si les catégories ne sont pas déjà présents dans le store, effectuer l'appel API
-                //     store.getAllArticles()
-                //         .then(() => {
-                //             this.article = store.articles.find( article => article.id == this.id);
-                //             this.article.categories_list.forEach(category => {
-                //                 this.selectedCategories.push(category.id);
-                //             });
-                //         })
 
-                //         //? En cas d'erreur inattendue, capter l'erreur rencontrée
-                //         .catch((error) => {
-                //             console.error("Erreur lors de la récupération des catégories :", error);
-                //         });
-                // }    
+                //? Vérifier si les catégories sont toujours présentes dans le store
+                if (store.articles.length > 0) {
+                    this.article = store.articles.find( article => article.id == this.id);
+                    this.article.categories_list.forEach(category => {
+                        this.selectedCategories.push(category.id);
+                    });
+                } else {
+                    //? Si les catégories ne sont pas déjà présents dans le store, effectuer l'appel API
+                    store.getAllArticles()
+                        .then(() => {
+                            this.article = store.articles.find( article => article.id == this.id);
+                            this.article.categories_list.forEach(category => {
+                                this.selectedCategories.push(category.id);
+                            });
+                        })
+
+                        //? En cas d'erreur inattendue, capter l'erreur rencontrée
+                        .catch((error) => {
+                            console.error("Erreur lors de la récupération des catégories :", error);
+                        });
+                }    
             },
             getCategories() {
                 const store = useCategoriesStore();
 
-                // //? Vérifier si les catégories sont toujours présentes dans le store
-                // if (store.categories.length > 0) {
-                //     this.categories         = store.categories;
-                // } else {
+                //? Vérifier si les catégories sont toujours présentes dans le store
+                if (store.categories.length > 0) {
+                    this.categories         = store.categories;
+                } else {
 
-                // //? Si les catégories ne sont pas déjà présents dans le store, effectuer l'appel API
-                // store.getAllCategories()
-                //     .then(() => {
-                //         this.categories       = store.categories;
-                //     })
+                //? Si les catégories ne sont pas déjà présents dans le store, effectuer l'appel API
+                store.getAllCategories()
+                    .then(() => {
+                        this.categories       = store.categories;
+                    })
 
-                //     //? En cas d'erreur inattendue, capter l'erreur rencontrée
-                //     .catch((error) => {
-                //         console.error('Erreur lors de la récupération des catégories :', error);
-                //     });
-                // }
+                    //? En cas d'erreur inattendue, capter l'erreur rencontrée
+                    .catch((error) => {
+                        console.error('Erreur lors de la récupération des catégories :', error);
+                    });
+                }
             },
             addKeyword() {
                this.article.kewords_list.push({
@@ -175,9 +177,12 @@
                     this.article.categories_list.push(cat);
                 })
 
-                //? Transformer l'objet selectedPageData en json
+                //? Transformer l'objet article en json
                 const bodyJson = JSON.stringify(this.article);
-                console.log(bodyJson);
+                
+                //? Récupérer le jwt pour le header de la requête
+                const userStore = useUsersStore();
+                const jwt       = userStore.token;
 
                 //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
                 await fetch('https://127.0.0.1:8000/api/article/update', {
@@ -185,17 +190,21 @@
                     headers: {
                         "Accept": "application/json",
                         "Content-Type": "application/json",
-                        "Access-Control-Allow-Origin": "*"
+                        "Access-Control-Allow-Origin": "*",
+                        "Authorization": `Bearer ${jwt}`
                     },
                     body: bodyJson,
                 })
                 .then(async response => {
                     const body = await response.json()
                     if (response.status == 200) {
-                        this.formSuccessMessage     = body.message;
+                        this.formSuccessMessage = body.message;
                         const store = useArticlesStore();
                         store.getAllArticles();
-                    } else {
+                    } else if (response.status == 498) {
+                        userStore.token = '';
+                        this.$router.push('/managerApp/logIn/expired-session'); 
+                    }else {
                         this.errorMessages.form       = body.message;
                     }
                 })
@@ -205,20 +214,27 @@
             },
             async publishArticle() {
 
-                //? Transformer id en json
+                //? Définir le contenu du body de la requête
                 const body = {
                         id: this.id,
                 };
+
+                //? Transformer l'objet body en json
                 const bodyJson  = JSON.stringify(body);
+
+                //? Récupérer le jwt pour le header de la requête
+                const userStore = useUsersStore();
+                const jwt       = userStore.token;
                 
                 //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
                 await fetch('https://127.0.0.1:8000/api/article/publish', {
                     method:'PATCH',
                     headers: {
-                        "Accept": "application/json",
-                        "Content-Type": "application/json",
-                        "Access-Control-Allow-Origin": "*"
-                    },
+                            "Accept": "application/json",
+                            "Content-Type": "application/json",
+                            "Access-Control-Allow-Origin": "*",
+                            "Authorization": `Bearer ${jwt}`
+                        },
                     body: bodyJson,
                 })
                 .then(async response => {
@@ -228,6 +244,9 @@
                         this.article.isPublished_article = !this.article.isPublished_article;
                         const store = useArticlesStore();
                         store.getAllArticles();
+                    } else if (response.status == 498) {
+                        userStore.token = '';
+                        this.$router.push('/managerApp/logIn/expired-session'); 
                     } else {
                         this.errorMessages.form       = body.message;
                     }

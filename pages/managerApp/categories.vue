@@ -21,7 +21,7 @@
                 <br>
                 <button v-if="!categoryUpdate" @click="addNewCategory" class="admin_button admin_button_main">Créer</button>
                 <button v-if="categoryUpdate" @click="updateCategory" class="admin_button admin_button_main">Modifier</button>
-                <button v-if="categoryUpdate" @click="resetFetchedData" class="admin_button admin_button_secondary">Annuler</button>
+                <button v-if="categoryUpdate" @click="cancelUpdate" class="admin_button admin_button_secondary">Annuler</button>
             </div>
         </div>
         <div class="admin_content_filters_message">
@@ -34,7 +34,8 @@
 
 <script>
     import { useCategoriesStore } from '@/store/category';
-    
+    import { useUsersStore } from "@/store/user";
+
     export default {
         data() {
             return {
@@ -51,7 +52,7 @@
             }
         },
         methods: {
-            async addNewCategory() { //? Méthode pour ajouter une catégorie à la BDD
+            async addNewCategory() {
 
                 //? Appel des méthodes pour vérifier la conformité des données saisies
                 this.checkImputEmpty()
@@ -60,6 +61,9 @@
                 //? Transformer l'objet formData en json
                 const bodyJson = JSON.stringify(this.formData);
 
+                //? Récupérer le jwt pour le header de la requête
+                const userStore = useUsersStore();
+                const jwt       = userStore.token;
 
                 //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
                 if (this.isAnInputEmpty == false && this.isColorCorrect ==true) {
@@ -68,7 +72,8 @@
                         headers: {
                             "Accept": "application/json",
                             "Content-Type": "application/json",
-                            "Access-Control-Allow-Origin": "*"
+                            "Access-Control-Allow-Origin": "*",
+                            "Authorization": `Bearer ${jwt}`
                         },
                         body: bodyJson,
                     })
@@ -79,6 +84,9 @@
                             this.formSuccessMessage     = body.message;
                             const store = useCategoriesStore();
                             store.getAllCategories();
+                        } else if (response.status == 498) {
+                            userStore.token = '';
+                            this.$router.push('/managerApp/logIn/expired-session'); 
                         } else {
                             this.formErrorMessage       = body.message;
                         }
@@ -98,6 +106,10 @@
                 //? Transformer l'objet formData en json
                 const bodyJson = JSON.stringify(this.formData);
 
+                //? Récupérer le jwt pour le header de la requête
+                const userStore = useUsersStore();
+                const jwt       = userStore.token;
+
                 //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
                 if (this.isAnInputEmpty == false && this.isColorCorrect ==true) {
                     await fetch('https://127.0.0.1:8000/api/category/update', {
@@ -105,7 +117,8 @@
                         headers: {
                             "Accept": "application/json",
                             "Content-Type": "application/json",
-                            "Access-Control-Allow-Origin": "*"
+                            "Access-Control-Allow-Origin": "*",
+                            "Authorization": `Bearer ${jwt}`
                         },
                         body: bodyJson,
                     })
@@ -116,6 +129,9 @@
                             this.formSuccessMessage     = body.message;
                             const store = useCategoriesStore();
                             store.getAllCategories();
+                        } else if (response.status == 498) {
+                            userStore.token = '';
+                            this.$router.push('/managerApp/logIn/expired-session'); 
                         } else {
                             this.formErrorMessage       = body.message;
                         }
@@ -128,6 +144,10 @@
                         this.resetFetchedData();
                     });
                 }
+            },
+            cancelUpdate() {
+                this.resetMessages();
+                this.resetFetchedData();
             },
             resetMessages() { //? Remettre les datas à leur état initial
                 this.isAnInputEmpty         = true;
@@ -170,6 +190,9 @@
             },
             activateUpdateCategory(id, name, color) { //? Réagir à l'évènement "update" du composant "ManagerCategoriesListComponent"
 
+                //? Réinitialiser les écentuels messages
+                this.resetMessages();
+                
                 //? Renseigner les datas du composant aves les datas remontées des composants enfants
                 this.categoryUpdate     = true;
                 this.formData.id        = id;

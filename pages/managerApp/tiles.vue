@@ -38,6 +38,7 @@
 
 <script>
     import { useTilesStore } from '@/store/tile';
+    import { useUsersStore } from "@/store/user";
 
     export default {
         data() {
@@ -89,7 +90,10 @@
                 
                 //? Transformer l'objet selectedPageData en json
                 const bodyJson = JSON.stringify(this.selectedTileData);
-                console.log(bodyJson);
+               
+                //? Récupérer le jwt pour le header de la requête
+                const userStore = useUsersStore();
+                const jwt       = userStore.token;
 
                 //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
                 await fetch('https://127.0.0.1:8000/api/tile/update', {
@@ -97,7 +101,8 @@
                     headers: {
                         "Accept": "application/json",
                         "Content-Type": "application/json",
-                        "Access-Control-Allow-Origin": "*"
+                        "Access-Control-Allow-Origin": "*",
+                        "Authorization": `Bearer ${jwt}`
                     },
                     body: bodyJson,
                 })
@@ -108,6 +113,9 @@
                         this.formSuccessMessage     = body.message;
                         const store = useTilesStore();
                         store.getAllTiles();
+                    } else if (response.status == 498) {
+                        userStore.token = '';
+                        this.$router.push('/managerApp/logIn/expired-session'); 
                     } else {
                         this.formErrorMessage       = body.message;
                     }
