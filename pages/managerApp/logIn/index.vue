@@ -31,7 +31,6 @@
 </template>
 
 <script>
-    import { useUsersStore } from "@/store/user";
     
     export default {
         data() {
@@ -99,8 +98,6 @@
                         
                         if (response.status == 200) {
                             this.formSuccessMessage     = body.message;
-                            const store = useUsersStore();
-                            store.getAllUsers();
                         } else {
                             console.log(body);
                             this.errorMessages.form       = body.message;

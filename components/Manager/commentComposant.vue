@@ -64,13 +64,13 @@
         methods: {
             async validateComment() {
 
-                //? Définir le cntenu du body de la requête
+                //? Définir le contenu du body de la requête
                 let body = {
                     commentId:  this.id,
                     userId:     1
                 }
 
-                //? Transformer l'objet selectedPageData en json
+                //? Transformer l'objet body en json
                 let bodyJson = JSON.stringify(body);
                 
                 //? Récupérer le jwt pour le header de la requête
@@ -88,8 +88,7 @@
                         body: bodyJson
                     })
                     .then(async response => {
-                        const body = await response.json()
-                        console.log(body);
+                                                
                         if (response.status == 200) {
                             this.updateStore();
                         } else if (response.status == 498) {
