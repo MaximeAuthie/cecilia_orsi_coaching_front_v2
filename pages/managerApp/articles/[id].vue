@@ -93,20 +93,19 @@
         },
         methods: {
             getArticle() {
-                const store = useArticlesStore();
-                const storeUser= useUsersStore();
+                const articleStore = useArticlesStore();
 
                 //? Vérifier si les catégories sont toujours présentes dans le store
-                if (store.articles.length > 0) {
-                    this.article = store.articles.find( article => article.id == this.id);
+                if (articleStore.articles.length > 0) {
+                    this.article = articleStore.articles.find( article => article.id == this.id);
                     this.article.categories_list.forEach(category => {
                         this.selectedCategories.push(category.id);
                     });
                 } else {
                     //? Si les catégories ne sont pas déjà présents dans le store, effectuer l'appel API
-                    store.getAllArticles()
+                    articleStore.getAllArticles()
                         .then(() => {
-                            this.article = store.articles.find( article => article.id == this.id);
+                            this.article = articleStore.articles.find( article => article.id == this.id);
                             this.article.categories_list.forEach(category => {
                                 this.selectedCategories.push(category.id);
                             });
@@ -119,17 +118,17 @@
                 }    
             },
             getCategories() {
-                const store = useCategoriesStore();
+                const categorieStore = useCategoriesStore();
 
                 //? Vérifier si les catégories sont toujours présentes dans le store
-                if (store.categories.length > 0) {
-                    this.categories         = store.categories;
+                if (categorieStore.categories.length > 0) {
+                    this.categories         = categorieStore.categories;
                 } else {
 
                 //? Si les catégories ne sont pas déjà présents dans le store, effectuer l'appel API
-                store.getAllCategories()
+                categorieStore.getAllCategories()
                     .then(() => {
-                        this.categories       = store.categories;
+                        this.categories       = categorieStore.categories;
                     })
 
                     //? En cas d'erreur inattendue, capter l'erreur rencontrée
@@ -153,6 +152,9 @@
                this.article.kewords_list.splice(indexToDelete,1);
             },
             async updateArticle() {
+                const articleStore = useArticlesStore();
+                const userStore = useUsersStore();
+                const { verifyToken } = useAuthentification();
 
                 //? Vérifier si le titre est au moins renseigné 
                 if (this.article.title_article == '') {
@@ -180,11 +182,10 @@
                 //? Transformer l'objet article en json
                 const bodyJson = JSON.stringify(this.article);
                 
-                //? Récupérer le jwt pour le header de la requête
-                const userStore = useUsersStore();
-                const jwt       = userStore.token;
+                //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
+                const jwt = await verifyToken();
 
-                //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
+                //? Exécuter l'appel API si tous les champs sont remplis
                 await fetch('https://127.0.0.1:8000/api/article/update', {
                     method:'PATCH',
                     headers: {
@@ -196,23 +197,27 @@
                     body: bodyJson,
                 })
                 .then(async response => {
-                    const body = await response.json()
+                    const body = await response.json();
+
                     if (response.status == 200) {
                         this.formSuccessMessage = body.message;
-                        const store = useArticlesStore();
-                        store.getAllArticles();
+                        articleStore.getAllArticles();
                     } else if (response.status == 498) {
                         userStore.token = '';
-                        this.$router.push('/managerApp/logIn/expired-session'); 
+                        navigateTo('/managerApp/logIn/expired-session'); 
                     }else {
                         this.errorMessages.form       = body.message;
                     }
                 })
                 .catch(error => {
+                    console.error(error);
                     this.errorMessages.form = "Une erreur est survenue. Veuillez réessayer plus tard.";
                 });
             },
             async publishArticle() {
+                const { verifyToken } = useAuthentification();
+                const userStore = useUsersStore();
+                const articleStore = useArticlesStore();
 
                 //? Définir le contenu du body de la requête
                 const body = {
@@ -222,9 +227,8 @@
                 //? Transformer l'objet body en json
                 const bodyJson  = JSON.stringify(body);
 
-                //? Récupérer le jwt pour le header de la requête
-                const userStore = useUsersStore();
-                const jwt       = userStore.token;
+                //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
+                const jwt = await verifyToken();
                 
                 //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
                 await fetch('https://127.0.0.1:8000/api/article/publish', {
@@ -238,20 +242,21 @@
                     body: bodyJson,
                 })
                 .then(async response => {
-                    const body = await response.json()
+                    const body = await response.json();
+
                     if (response.status == 200) {
                         this.formSuccessMessage     = body.message;
                         this.article.isPublished_article = !this.article.isPublished_article;
-                        const store = useArticlesStore();
-                        store.getAllArticles();
+                        articleStore.getAllArticles();
                     } else if (response.status == 498) {
                         userStore.token = '';
-                        this.$router.push('/managerApp/logIn/expired-session'); 
+                        navigateTo('/managerApp/logIn/expired-session'); 
                     } else {
                         this.errorMessages.form       = body.message;
                     }
                 })
                 .catch(error => {
+                    console.error(error);
                     this.errorMessages.form = "Une erreur est survenue. Veuillez réessayer plus tard.";
                 });
             },
@@ -269,9 +274,6 @@
                     this.errorMessages.description = '';
                 }
             },
-            checkInputSubmit() {
-                
-            }
         },
         mounted() {
             //? Récupération de l'id de l'article dans la route à l'ouverture de la page
