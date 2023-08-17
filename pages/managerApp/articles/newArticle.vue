@@ -101,17 +101,18 @@
         },
         methods: {
             getCategories() {
-                const store = useCategoriesStore();
+                const categoryStore = useCategoriesStore();
+                const { verifyToken } = useAuthentification();
 
                 //? Vérifier si les catégories sont toujours présentes dans le store
-                if (store.categories.length > 0) {
-                    this.categories         = store.categories;
+                if (categoryStore.categories.length > 0) {
+                    this.categories         = categoryStore.categories;
                 } else {
 
                 //? Si les catégories ne sont pas déjà présents dans le store, effectuer l'appel API
-                store.getAllCategories()
+                categoryStore.getAllCategories()
                     .then(() => {
-                        this.categories       = store.categories;
+                        this.categories       = categoryStore.categories;
                     })
 
                     //? En cas d'erreur inattendue, capter l'erreur rencontrée
@@ -135,6 +136,9 @@
                this.article.kewords_list.splice(indexToDelete,1);
             },
             async addArticle() {
+                const articleStore = useArticlesStore();
+                const userStore = useUsersStore();
+                const { verifyToken } = useAuthentification();
 
                 //? Vérifier si le titre est au moins renseigné 
                 if (this.article.title_article == '') {
@@ -162,9 +166,8 @@
                 //? Transformer l'objet selectedPageData en json
                 const bodyJson = JSON.stringify(this.article);
                 
-                //? Récupérer le jwt pour le header de la requête
-                const userStore = useUsersStore();
-                const jwt       = userStore.token;
+                //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
+                const jwt = await verifyToken();
 
                 //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
                 await fetch('https://127.0.0.1:8000/api/article/add', {
@@ -178,19 +181,21 @@
                     body: bodyJson,
                 })
                 .then(async response => {
-                    const body = await response.json()
+                    const body = await response.json();
+
                     if (response.status == 200) {
                         this.formSuccessMessage = body.message;
-                        const store = useArticlesStore();
-                        store.getAllArticles();
+                        
+                        articleStore.getAllArticles();
                     } else if (response.status == 498) {
                         userStore.token = '';
-                        this.$router.push('/managerApp/logIn/expired-session'); 
+                        navigateTo('/managerApp/logIn/expired-session'); 
                     } else {
                         this.errorMessages.form = body.message;
                     }
                 })
                 .catch(error => {
+                    console.error(error);
                     this.errorMessages.form = "Une erreur est survenue. Veuillez réessayer plus tard.";
                 });
             },

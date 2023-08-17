@@ -52,19 +52,19 @@
         },
         methods: {
             getTiles() {
-                const store = useTilesStore();
+                const tileStore = useTilesStore();
 
                 //? Vérifier si les tuiles sont toujours présentes dans le store 
-                if (store.tiles.length > 0) {
+                if (tileStore.tiles.length > 0) {
                     console.log("store déjà plein")
-                    this.tiles           = store.tiles;
+                    this.tiles           = tileStore.tiles;
                 } else {
 
                 //? Si les articles ne sont pas déjà présents dans le store, effectuer l'appel API
-                store.getAllTiles()
+                tileStore.getAllTiles()
                     .then(() => {
                         console.log("store à remplir")
-                        this.tiles           = store.tiles;
+                        this.tiles           = tileStore.tiles;
                     })
 
                     //? En cas d'erreur inattendue, capter l'erreur rencontrée
@@ -82,6 +82,11 @@
                 this.formSuccessMessage = '';
             },
             async updateTile() {
+
+                const tileStore = useTilesStore();
+                const userStore = useUsersStore();
+                const { verifyToken } = useAuthentification();
+
                 //? Vérifier si tous les champs du formulaires sont remplis
                 if (this.selectedTileData.title_tile == '' || this.selectedTileData.img_url_tile == '') {
                     this.formErrorMessage = "Merci de compléter tous les champs du formulaire.";
@@ -91,9 +96,8 @@
                 //? Transformer l'objet selectedPageData en json
                 const bodyJson = JSON.stringify(this.selectedTileData);
                
-                //? Récupérer le jwt pour le header de la requête
-                const userStore = useUsersStore();
-                const jwt       = userStore.token;
+                //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
+                const jwt = await verifyToken();
 
                 //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
                 await fetch('https://127.0.0.1:8000/api/tile/update', {
@@ -108,19 +112,19 @@
                 })
                 .then(async response => {
                     const body = await response.json()
-                    console.log(body);
+                    
                     if (response.status == 200) {
                         this.formSuccessMessage     = body.message;
-                        const store = useTilesStore();
-                        store.getAllTiles();
+                        tileStore.getAllTiles();
                     } else if (response.status == 498) {
                         userStore.token = '';
-                        this.$router.push('/managerApp/logIn/expired-session'); 
+                        navigateTo('/managerApp/logIn/expired-session'); 
                     } else {
                         this.formErrorMessage       = body.message;
                     }
                 })
                 .catch(error => {
+                    console.error(error);
                     this.formErrorMessage = "Une erreur est survenue. Veuillez réessayer plus tard.";
                 });
             }

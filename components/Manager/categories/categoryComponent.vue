@@ -39,7 +39,9 @@
                 console.log("niv 1 activé, " + this.name + this.color);
             },
             async deleteCategory() {
-                const store = useCategoriesStore();
+                const categorieStore = useCategoriesStore();
+                const userStore = useUsersStore();
+                const { verifyToken } = useAuthentification();
 
                 //? Demander une confirmation pour la suppression de la catégorie
                 if (confirm("Etes-vous sûr de vouloir supprimer la catégorie \"" + this.name + "\" ?")) {
@@ -53,9 +55,8 @@
                     //? Transformer l'objet body en json
                     const bodyJson  = JSON.stringify(body);
 
-                    //? Récupérer le jwt pour le header de la requête
-                    const userStore = useUsersStore();
-                    const jwt       = userStore.token;
+                    //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
+                    const jwt = await verifyToken();
 
                     //? Exécuter l'appel API
                     await fetch('https://127.0.0.1:8000/api/category/delete', {
@@ -69,20 +70,20 @@
                         body: bodyJson,
                     })
                     .then(async response => {
-                        
                         const body = await response.json()
 
                         if (response.status == 200) {
-                            store.getAllCategories();
+                            categorieStore.getAllCategories();
                             alert("La catégorie " + this.name + " a été supprimée avec succès.");
                         } else if (response.status == 498) {
                             userStore.token = '';
-                            this.$router.push('/managerApp/logIn/expired-session'); 
+                            navigateTo('/managerApp/logIn/expired-session'); 
                         } else {
                             alert(body.message);
                         }
                     })
                     .catch(error => {
+                        console.error(error);
                         alert("Une erreur est survenue. Veuillez réessayer plus tard.");
                     });
                 }

@@ -35,21 +35,24 @@
         },
         methods: {
             async disableUser() { 
-                const store = useUsersStore();
+                const userStore = useUsersStore();
+                const { verifyToken } = useAuthentification();
+
+                //? Demander confirmation à l'utilisateur avant de désactiver l'autre tuilisateur
                 if (confirm('L\'utilisateur "' + this.name + '" sera conservé dans la base de donnée mais n\'apparaitra plus dans l\'espace d\'administration. Voulez-vous poursuivre?')) {
 
                     //? Définir le contenu du body de la requête
                     const body = {
                         id: this.id,
-                        name: this.name
-                    };
+                        name: this.name,
+                        idApplicant : userStore.id
+                    }
 
                     //? Transformer l'objet body en json
                     const bodyJson  = JSON.stringify(body);
 
-                    //? Récupérer le jwt pour le header de la requête
-                    const userStore = useUsersStore();
-                    const jwt       = userStore.token;
+                    //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
+                    const jwt = await verifyToken();
 
                     //? Exécuter l'appel API
                     await fetch('https://127.0.0.1:8000/api/user/disable', {
@@ -63,20 +66,20 @@
                         body: bodyJson,
                     })
                     .then(async response => {
-                        
                         const body = await response.json()
 
                         if (response.status == 200) {
-                            store.getAllUsers();
-                            alert("L'utilisateur " + this.name + " a été supprimée avec succès.");
+                            userStore.getAllUsers();
+                            alert("L'utilisateur " + this.name + " a été désactivé avec succès.");
                         } else if (response.status == 498) {
                             userStore.token = '';
-                            this.$router.push('/managerApp/logIn/expired-session'); 
+                            navigateTo('/managerApp/logIn/expired-session'); 
                         } else {
                             alert(body.message);
                         }
                     })
                     .catch(error => {
+                        console.error(error);
                         alert("Une erreur est survenue. Veuillez réessayer plus tard.");
                     });
                 }

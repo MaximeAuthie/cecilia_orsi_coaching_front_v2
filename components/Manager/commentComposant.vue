@@ -63,6 +63,8 @@
         },
         methods: {
             async validateComment() {
+                const userStore = useUsersStore();
+                const { verifyToken } = useAuthentification();
 
                 //? Définir le contenu du body de la requête
                 let body = {
@@ -73,9 +75,8 @@
                 //? Transformer l'objet body en json
                 let bodyJson = JSON.stringify(body);
                 
-                //? Récupérer le jwt pour le header de la requête
-                const userStore = useUsersStore();
-                const jwt       = userStore.token;
+                //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
+                const jwt = await verifyToken();
 
                 await fetch('https://127.0.0.1:8000/api/comment/validate', {
                         method:'PATCH',
@@ -88,14 +89,15 @@
                         body: bodyJson
                     })
                     .then(async response => {
-                                                
+                        const body = await response.json()
+
                         if (response.status == 200) {
                             this.updateStore();
                         } else if (response.status == 498) {
                             userStore.token = '';
-                            this.$router.push('/managerApp/logIn/expired-session'); 
+                            navigateTo('/managerApp/logIn/expired-session'); 
                         } else {
-                            this.$emit('error', 'Une erreur est survenue. Veuillez réessayer plus tard');
+                            this.$emit('error',  body.message);
                         }
                     })
                     .catch(error => {
@@ -104,6 +106,8 @@
 
             },
             async rejectComment() {
+                const userStore = useUsersStore();
+                const { verifyToken } = useAuthentification();
 
                 //? Définir le cntenu du body de la requête
                 let body = {
@@ -114,9 +118,8 @@
                 //? Transformer l'objet selectedPageData en json
                 body = JSON.stringify(body);
                 
-                //? Récupérer le jwt pour le header de la requête
-                const userStore = useUsersStore();
-                const jwt       = userStore.token;
+                //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
+                const jwt = await verifyToken();
 
                 await fetch('https://127.0.0.1:8000/api/comment/reject', {
                         method:'PATCH',
@@ -130,17 +133,18 @@
                     })
                     .then(async response => {
                         const body = await response.json()
-                        console.log(body);
+                        
                         if (response.status == 200) {
                             this.updateStore();
                         } else if (response.status == 498) {
                             userStore.token = '';
-                            this.$router.push('/managerApp/logIn/expired-session'); 
+                            navigateTo('/managerApp/logIn/expired-session'); 
                         } else {
-                            this.$emit('error', 'Une erreur est survenue. Veuillez réessayer plus tard');
+                            this.$emit('error', body.message);
                         }
                     })
                     .catch(error => {
+                        console.error(error);
                         this.$emit('error', 'Une erreur est survenue. Veuillez réessayer plus tard');
                     })
             },

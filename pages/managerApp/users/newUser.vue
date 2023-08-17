@@ -1,7 +1,7 @@
 <script setup>
     definePageMeta({
         layout: "admin",
-        middleware: "auth"
+        middleware: "auth-admin"
     });
 </script>
 
@@ -97,7 +97,8 @@
                     lastName:               '',
                     email:                  '',
                     password:               '',
-                    roles:                  []
+                    roles:                  [],
+                    idApplicant:            ''
                 },
                 passwords: {
                     firstInput:             '',
@@ -265,6 +266,9 @@
             },
             async addUser() {
 
+                const userStore = useUsersStore();
+                const { verifyToken } = useAuthentification();
+
                 //? Réinitialiser les éventuels précédents messages d'erreurs
                 this.errorMessages.form = '';
 
@@ -287,12 +291,14 @@
                     //? Mettre à jours le password
                     this.user.password = this.passwords.firstInput;
 
+                    //? Ajouter l'id de l'utilisateur demandeur à l'objet user
+                    this.user.idApplicant = userStore.id;
+
                     //? Transformer l'objet selectedPageData en json
                     const bodyJson = JSON.stringify(this.user);
                     
-                    //? Récupérer le jwt pour le header de la requête
-                    const userStore = useUsersStore();
-                    const jwt       = userStore.token;
+                    //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
+                    const jwt = await verifyToken();
 
                     //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
                     await fetch('https://127.0.0.1:8000/api/user/add', {
@@ -310,17 +316,16 @@
                         
                         if (response.status == 200) {
                             this.formSuccessMessage     = body.message;
-                            const store = useUsersStore();
-                            store.getAllUsers();
+                            userStore.getAllUsers();
                         } else if (response.status == 498) {
                             userStore.token = '';
-                            this.$router.push('/managerApp/logIn/expired-session'); 
+                            navigateTo('/managerApp/logIn/expired-session'); 
                         } else {
-                            console.log(body);
                             this.errorMessages.form       = body.message;
                         }
                     })
                     .catch(error => {
+                        console.error(error);
                         this.errorMessages.form = "Une erreur est survenue. Veuillez réessayer plus tard.";
                     });
 

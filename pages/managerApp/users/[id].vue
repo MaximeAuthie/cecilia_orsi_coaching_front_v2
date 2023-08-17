@@ -1,7 +1,7 @@
 <script setup>
     definePageMeta({
         layout: "admin",
-        middleware: "auth"
+        middleware: "auth-admin"
     });
 </script>
 
@@ -116,23 +116,23 @@
         methods: {
 
             getUser() {
-                const store = useUsersStore();
-
+                const userStore = useUsersStore();
+                
                 //? Vérifier si les utilisateurs sont toujours présents dans le store
-                if (store.users.length > 0) {
-                    this.user = store.users.find( user => user.id == this.id);
+                if (userStore.users.length > 0) {
+                    this.user = userStore.users.find( user => user.id == this.id);
                     this.selectedRole = this.user.roles[this.user.roles.length-1];
                 } else {
                     //? Si les utilisateurs ne sont pas déjà présents dans le store, effectuer l'appel API
-                    store.getAllUsers()
+                    userStore.getAllUsers()
                         .then(() => {
-                            this.user = store.users.find( user => user.id == this.id);
+                            this.user = userStore.users.find( user => user.id == this.id);
                             this.selectedRole = this.user.roles[this.user.roles.length-1];
                         })
 
                         //? En cas d'erreur inattendue, capter l'erreur rencontrée
                         .catch((error) => {
-                            console.error("Erreur lors de la récupération des catégories :", error);
+                            console.error("Erreur lors de la récupération des utilisateurs :", error);
                         });
                 }    
             },
@@ -150,7 +150,7 @@
                     this.errorMessages.emailEmpty       = "Veuillez saisir une adresse email";
                     this.errorMessages.form             = "Veuillez remplir tous les champs obligatoires du formulaire"
                 }
-                if (this.user.roles == '') {
+                if (this.selectedRole== '') {
                     this.errorMessages.rolesEmpty       = "Veuillez renseigner un rôle";
                     this.errorMessages.form             = "Veuillez remplir tous les champs obligatoires du formulaire"
                 }
@@ -258,9 +258,13 @@
                       
             },
             async updateUser() {
+                
+                const userStore = useUsersStore();
+                const { verifyToken } = useAuthentification();
 
-                //? Réinitialiser les éventuels précédents messages d'erreurs
+                //? Réinitialiser les éventuels précédents messages d'erreurs ou de succès
                 this.errorMessages.form = '';
+                this.formSuccessMessage = '';
 
                 //? Vérifier si les champs nécessaires sont bien renseignés
                 this.checkInputBeforeSubmit();
@@ -275,13 +279,14 @@
                             lastName:       this.user.last_name_user,
                             email:          this.user.email,
                             roles:          [],
-                            password:       ''
+                            password:       '',
+                            idApplicant:    userStore.id
                         }
 
                 if (this.checkErrorMessages()) {
 
                     //? Mettre à jour les rôles de l'utilisateur
-                    console.log('rôles');
+
                     this.user.roles = [];
                     if (this.selectedRole == "ROLE_USER") {
                         userToUpdate.roles.push("ROLE_USER");
@@ -298,9 +303,8 @@
                     //? Transformer l'objet userToUpdate en json
                     const bodyJson = JSON.stringify(userToUpdate);
 
-                    //? Récupérer le jwt pour le header de la requête
-                    const userStore = useUsersStore();
-                    const jwt       = userStore.token;
+                    //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
+                    const jwt = await verifyToken();
 
                     //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
                     await fetch('https://127.0.0.1:8000/api/user/update', {
@@ -314,20 +318,20 @@
                         body: bodyJson,
                     })
                     .then(async response => {
-                        const body = await response.json()
+                        const body = await response.json();
                         
                         if (response.status == 200) {
                             this.formSuccessMessage     = body.message;
-                            const store = useUsersStore();
-                            store.getAllUsers();
+                            userStore.getAllUsers();
                         } else if (response.status == 498) {
                             userStore.token = '';
-                            this.$router.push('/managerApp/logIn/expired-session'); 
+                            navigateTo('/managerApp/logIn/expired-session'); 
                         } else {
                             this.errorMessages.form       = body.message;
                         }
                     })
                     .catch(error => {
+                        console.error(error);
                         this.errorMessages.form = "Une erreur est survenue. Veuillez réessayer plus tard.";
                     });
 
@@ -335,7 +339,7 @@
             },
         },
         mounted() {
-            //? Récupération de l'id de l'article dans la route à l'ouverture de la page
+            //? Récupération de l'id de l'utilisateur dans la route à l'ouverture de la page
             this.id = this.$route.params.id.toString();
             this.getUser();
         }
