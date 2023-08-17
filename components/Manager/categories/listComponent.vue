@@ -22,17 +22,17 @@ export default {
     },
     methods: {
         getCategories() {
-            const store = useCategoriesStore();
+            const categoryStore = useCategoriesStore();
 
             //? Vérifier si les catégories sont toujours présentes dans le store
-            if (store.categories.length > 0) {
-                this.categories         = store.categories;
+            if (categoryStore.categories.length > 0) {
+                this.categories         = categoryStore.categories;
             } else {
 
             //? Si les catégories ne sont pas déjà présents dans le store, effectuer l'appel API
-            store.getAllCategories()
+            categoryStore.getAllCategories()
                 .then(() => {
-                    this.categories       = store.categories;
+                    this.categories       = categoryStore.categories;
                 })
 
                 //? En cas d'erreur inattendue, capter l'erreur rencontrée
@@ -50,11 +50,11 @@ export default {
     mounted() {
         this.getCategories();
 
-        const store = useCategoriesStore();
-            store.$subscribe(state => {
-                this.categories = store.categories;
-                console.log("update store categories")
-            })
+        const categoryStore = useCategoriesStore();
+        categoryStore.$subscribe(state => {
+            this.categories = categoryStore.categories;
+            console.log("update store categories")
+        })
     }
 }
 </script>

@@ -45,25 +45,25 @@
         },
         mounted() {
             //? Récupération du token dans la route à l'ouverture de la page
-            const store = useUsersStore();
+            const userStore = useUsersStore();
             let token = this.$route.params.token.toString();
 
             if (token == 'expired-token') {
                 this.errorMessage = 'Le token a expiré. Merci de renouveller votre demande de connexion';
-                store.token = 'expired-token';
+                userStore.token = 'expired-token';
             } else if (token == 'invalid-token') {
                 this.errorMessage = 'Une erreur est survenue: token invalide';
-                store.token = 'invalid-token';
+                userStore.token = 'invalid-token';
             } else if (token == 'expired-session') {
                 this.errorMessage = 'Votre session a expirée. Merci de vous reconnecter si vous souhaitez accéder à nouveau à l\'espace d\'administration.';
-                store.token = 'expired-session';
+                userStore.token = 'expired-session';
             } else {
-                store.token         = token.toString().split('!').slice(0, -1).join('!');
-                store.id            = token.toString().split('!').pop();
-                store.getRole().then(response => {
+                userStore.token         = token.toString().split('!').slice(0, -1).join('!');
+                userStore.id            = token.toString().split('!').pop();
+                userStore.getRole().then(response => {
                     console.log(response);
                 })
-                console.log(store.getRole);
+                console.log(userStore.getRole);
 
                 this.successMessage = 'Connexion réussie. Vous allez être redirigé vers la page d\'accueil';
 

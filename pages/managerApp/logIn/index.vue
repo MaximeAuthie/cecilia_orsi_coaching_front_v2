@@ -77,7 +77,7 @@
 
                 //? Vérifier si les champs nécessaires sont bien renseignés
                 this.checkInputBeforeSubmit();
-                console.log(this.checkErrorMessages());
+                
                 if (this.checkErrorMessages()) {
 
                     //? Transformer l'objet authentificationData en json
@@ -94,7 +94,7 @@
                         body: bodyJson,
                     })
                     .then(async response => {
-                        const body = await response.json()
+                        const body = await response.json();
                         
                         if (response.status == 200) {
                             this.formSuccessMessage     = body.message;
@@ -104,7 +104,7 @@
                         }
                     })
                     .catch(error => {
-                        console.log(error);
+                        console.error(error);
                         this.errorMessages.form = "Une erreur est survenue. Veuillez réessayer plus tard.";
                     });
                 }

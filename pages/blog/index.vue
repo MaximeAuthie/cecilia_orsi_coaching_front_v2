@@ -86,20 +86,20 @@ import { useCategoriesStore } from '@/store/category'
         },
         methods: {
             getArticles() {
-                const store = useArticlesStore();
+                const articleStore = useArticlesStore();
 
                 //? Vérifier si les articles sont toujours présents dans le store
-                if (store.validatedArticles.length > 0) {
-                    this.articles           = store.validatedArticles;
-                    this.frontPageArticle   = store.frontPageArticle;
+                if (articleStore.validatedArticles.length > 0) {
+                    this.articles           = articleStore.validatedArticles;
+                    this.frontPageArticle   = articleStore.frontPageArticle;
                     this.loading            = false;
                 } else {
 
                 //? Si les articles ne sont pas déjà présents dans le store, effectuer l'appel API
-                store.getValidatedArticles()
+                articleStore.getValidatedArticles()
                     .then(() => {
-                        this.articles           = store.validatedArticles;
-                        this.frontPageArticle   = store.frontPageArticle;
+                        this.articles           = articleStore.validatedArticles;
+                        this.frontPageArticle   = articleStore.frontPageArticle;
                         this.loading            = false;
                     })
 
@@ -112,22 +112,22 @@ import { useCategoriesStore } from '@/store/category'
 
             },
             getCategories() {
-                const store = useCategoriesStore();
+                const categoryStore = useCategoriesStore();
 
                 //? Vérifier si les articles sont toujours présents dans le store
-                if (store.categories.length > 0) {
-                    this.categories           = store.categories;
+                if (categoryStore.categories.length > 0) {
+                    this.categories           = categoryStore.categories;
                 } else {
 
                 //? Si les articles ne sont pas déjà présents dans le store, effectuer l'appel API
-                store.getAllCategories()
+                categoryStore.getAllCategories()
                     .then(() => {
-                    this.categories           = store.categories;
+                        this.categories           = categoryStore.categories;
                     })
 
                     //? En cas d'erreur inattendue, capter l'erreur rencontrée
                     .catch((error) => {
-                    console.error('Erreur lors de la récupération des articles :', error);
+                        console.error('Erreur lors de la récupération des articles :', error);
                     });
                 }
             },
@@ -138,21 +138,21 @@ import { useCategoriesStore } from '@/store/category'
 
             },
             getPageData() {
-                const store = usePagesStore();
+                const pageStore = usePagesStore();
 
                 //? Vérifier si les articles sont toujours présents dans le store
-                if (store.pages.length > 0) {
-                    this.pageData       = store.pages[this.pageId];
+                if (pageStore.pages.length > 0) {
+                    this.pageData       = pageStore.pages[this.pageId];
                     this.addTilesWidth();
                     this.pageDataDownload   = true;
                 } else {
 
                 //? Si les articles ne sont pas déjà présents dans le store, effectuer l'appel API
-                store.getAllPages()
+                pageStore.getAllPages()
                     .then(() => {
-                    this.pageData       = store.pages[this.pageId];
-                    this.addTilesWidth();
-                    this.pageDataDownload   = true;
+                        this.pageData       = pageStore.pages[this.pageId];
+                        this.addTilesWidth();
+                        this.pageDataDownload   = true;
                     })
 
                     //? En cas d'erreur inattendue, capter l'erreur rencontrée

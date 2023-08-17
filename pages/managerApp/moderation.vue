@@ -64,30 +64,30 @@
         },
         methods: {
             getComments() {
-                const store = useCommentsStore();
+                const commentStore = useCommentsStore();
                 if (this.commentStatus === 'already-validate') {
-                    this.comments = store.comments.filter( comment => comment.article.id == this.article);
+                    this.comments = commentStore.comments.filter( comment => comment.article.id == this.article);
                     this.comments.sort((a,b) => (a.id < b.id ? 1 : -1));
                 } else {
-                    this.comments = store.commentsToValidate.filter( comment => comment.article.id == this.article);
+                    this.comments = commentStore.commentsToValidate.filter( comment => comment.article.id == this.article);
                     this.comments.sort((a,b) => (a.id < b.id ? 1 : -1));
                 }
                 this.displayComments = true;
             },
             getValidatedComments() {
-                const store = useCommentsStore();
+                const commentStore = useCommentsStore();
 
                //? Vérifier si les articles validés sont toujours présents dans le store, récupérer les données de l'article
-               if (store.comments.length > 0) {
-                    this.comments                   = store.comments;
+               if (commentStore.comments.length > 0) {
+                    this.comments                   = commentStore.comments;
                     this.comments.sort((a,b) => (a.id < b.id ? 1 : -1));
                     this.isArticleLoaded            = true;
                 } else {
 
                 //? Si les articles ne sont pas déjà présents dans le store, effectuer l'appel API et récupérer les données de l'article
-                store.getValidatedComments()
+                commentStore.getValidatedComments()
                     .then(() => {
-                        this.comments            = store.comments;
+                        this.comments            = commentStore.comments;
                         this.comments.sort((a,b) => (a.id < b.id ? 1 : -1));
                     })
 
@@ -98,19 +98,19 @@
                 }
             },
             getCommentsToValidate() {
-                const store = useCommentsStore();
+                const commentStore = useCommentsStore();
 
                //? Vérifier si les articles validé sont toujours présents dans le store, récupérer les données de l'article
-               if (store.comments.length > 0) {
-                    this.comments               = store.commentsToValidate;
+               if (commentStore.comments.length > 0) {
+                    this.comments               = commentStore.commentsToValidate;
                     this.comments.sort((a,b) => (a.id < b.id ? 1 : -1));
                     this.isArticleLoaded        = true;
                 } else {
 
                 //? Si les articles ne sont pas déjà présents dans le store, effectuer l'appel API et récupérer les données de l'article
-                store.getCommentsToValidate()
+                commentStore.getCommentsToValidate()
                     .then(() => {
-                        this.comments               = store.commentsToValidate;
+                        this.comments               = commentStore.commentsToValidate;
                         this.comments.sort((a,b) => (a.id < b.id ? 1 : -1));
                     })
 
@@ -121,20 +121,20 @@
                 }
             },
             getArticles() {
-                const store = useArticlesStore();
+                const commentStore = useArticlesStore();
 
                 //? Vérifier si les articles sont toujours présents dans le store
-                if (store.articles.length > 0) {
-                    this.articles           = store.articles;
-                    this.frontPageArticle   = store.frontPageArticle;
+                if (commentStore.articles.length > 0) {
+                    this.articles           = commentStore.articles;
+                    this.frontPageArticle   = commentStore.frontPageArticle;
                     this.loading            = false;
                 } else {
 
                 //? Si les articles ne sont pas déjà présents dans le store, effectuer l'appel API
-                store.getAllArticles()
+                commentStore.getAllArticles()
                     .then(() => {
-                        this.articles           = store.articles;
-                        this.frontPageArticle   = store.frontPageArticle;
+                        this.articles           = commentStore.articles;
+                        this.frontPageArticle   = commentStore.frontPageArticle;
                         this.loading            = false;
                     })
 
@@ -150,22 +150,23 @@
             }
         },
         mounted() {
+            const commentStore = useCommentsStore();
+            const articleStore = useArticlesStore();
+
             this.getArticles();
             this.getValidatedComments();
             this.getCommentsToValidate();
-            const store = useCommentsStore();
-            store.$subscribe(state => {
-                
+            
+            commentStore.$subscribe(state => {
                 if (this.commentStatus === 'already-validate') {
                     console.log("changement store already-validate");
-                    this.comments = store.comments;
+                    this.comments = commentStore.comments;
                 } else if (this.commentStatus === "to-validate" ) {
                     console.log("changement store to-validate");
-                    this.comments = store.commentsToValidate;
+                    this.comments = commentStore.commentsToValidate;
                 }
             })
 
-            const articleStore = useArticlesStore();
             articleStore.$subscribe(state => {
                 console.log("changement store article");
                 this.articles = articleStore.articles;

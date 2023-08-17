@@ -59,19 +59,19 @@
         },
         methods: {
             getPageData() {
-                const store = usePagesStore();
+                const pageStore = usePagesStore();
 
                 //? Vérifier si les articles sont toujours présents dans le store
-                if (store.pages.length > 0) {
-                    this.pageData       = store.pages[this.pageId];
+                if (pageStore.pages.length > 0) {
+                    this.pageData       = pageStore.pages[this.pageId];
                     this.addTilesWidth();
                     this.pageDataDownload   = true;
                 } else {
 
                 //? Si les articles ne sont pas déjà présents dans le store, effectuer l'appel API
-                store.getAllPages()
+                pageStore.getAllPages()
                     .then(() => {
-                        this.pageData       = store.pages[this.pageId];
+                        this.pageData       = pageStore.pages[this.pageId];
                         this.addTilesWidth();
                         this.pageDataDownload   = true;
                     })

@@ -68,19 +68,19 @@
         },
         methods: {
             getArticleData() {
-                const store = useArticlesStore();
+                const articleStore = useArticlesStore();
 
                 //? Vérifier si les articles sont toujours présents dans le store, récupérer les données de l'article
-                if (store.articles.length > 0) {
-                    this.articleDataTest            = store.articles.find( article => article.id == this.id);
+                if (articleStore.articles.length > 0) {
+                    this.articleDataTest            = articleStore.articles.find( article => article.id == this.id);
                     this.isArticleLoaded            = true;
                 } else {
 
                 //? Si les articles ne sont pas déjà présents dans le store, effectuer l'appel API et récupérer les données de l'article
-                store.getAllArticles()
+                articleStore.getAllArticles()
                     .then(() => {
-                    this.articleDataTest            = store.articles.find( article => article.id == this.id);
-                    this.isArticleLoaded            = true;
+                        this.articleDataTest            = articleStore.articles.find( article => article.id == this.id);
+                        this.isArticleLoaded            = true;
                     })
 
                     //? En cas d'erreur inattendue, capter l'erreur rencontrée
@@ -92,25 +92,25 @@
 
             },
             getComments() {
-               const store = useCommentsStore();
+               const commentsStore = useCommentsStore();
 
                //? Vérifier si les articles sont toujours présents dans le store, récupérer les données de l'article
-               if (store.comments.length > 0) {
-                    this.comments                   = store.comments.filter( comment => comment.article.id == this.id);
+               if (commentsStore.comments.length > 0) {
+                    this.comments                   = commentsStore.comments.filter( comment => comment.article.id == this.id);
                     this.isArticleLoaded            = true;
                 } else {
 
                 //? Si les articles ne sont pas déjà présents dans le store, effectuer l'appel API et récupérer les données de l'article
-                store.getValidatedComments()
+                commentsStore.getValidatedComments()
                     .then(() => {
-                    this.comments            = store.comments.filter( comment => comment.article.id == this.id);;
-                    this.isArticleLoaded            = true;
+                        this.comments            = commentsStore.comments.filter( comment => comment.article.id == this.id);;
+                        this.isArticleLoaded            = true;
                     })
 
                     //? En cas d'erreur inattendue, capter l'erreur rencontrée
                     .catch((error) => {
-                    console.error('Erreur lors de la récupération des commentaires :', error);
-                    this.loading            = false;
+                        console.error('Erreur lors de la récupération des commentaires :', error);
+                        this.loading            = false;
                     });
                 }
             }
