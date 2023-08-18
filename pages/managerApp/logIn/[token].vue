@@ -35,6 +35,11 @@
 
 <script>
     import { useUsersStore } from "@/store/user";
+    import { useArticlesStore } from '@/store/article';
+    import { usePagesStore } from '@/store/page';
+    import { useCategoriesStore } from '@/store/category'
+    import { useCommentsStore } from '@/store/comment';
+    import { useTilesStore } from '@/store/tile';
 
     export default {
         data() {
@@ -58,18 +63,38 @@
                 this.errorMessage = 'Votre session a expirée. Merci de vous reconnecter si vous souhaitez accéder à nouveau à l\'espace d\'administration.';
                 userStore.token = 'expired-session';
             } else {
-                userStore.token         = token.toString().split('!').slice(0, -1).join('!');
-                userStore.id            = token.toString().split('!').pop();
-                userStore.getRole().then(response => {
-                    console.log(response);
-                })
-                console.log(userStore.getRole);
 
+                //? Récupérer le jwt dans le paramètre
+                userStore.token         = token.toString().split('!').slice(0, -1).join('!');
+
+                //? Récupérer l'id de l'utilisateur dans le paramètre
+                userStore.id            = token.toString().split('!').pop();
+
+               
+
+                //? Appel des méthodes get des autres stores pour précharcher les informations de tout l'espace admin
+                const commentsStore = useCommentsStore();
+                commentsStore.getCommentsToValidate();
+                commentsStore.getValidatedComments();
+                
+                const articlesStore = useArticlesStore();
+                articlesStore.getAllArticles();
+
+                const pagesStore = usePagesStore();
+                pagesStore.getAllPages();
+
+                const categoriesStore = useCategoriesStore();
+                categoriesStore.getAllCategories();
+
+
+                const tilesStore = useTilesStore();
+                tilesStore.getAllTiles();
+
+                //? Afficher le message de réussité à l'utilisateur
                 this.successMessage = 'Connexion réussie. Vous allez être redirigé vers la page d\'accueil';
 
-                setTimeout(() => {
-                    this.$router.push('/managerApp'); 
-                }, 2000);
+                //? Appel de la méthode getRole() du store User pour récupérer le rôle de l'utilisateur
+                userStore.getRole()
                 
             }
         }
