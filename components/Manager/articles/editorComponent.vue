@@ -22,6 +22,7 @@
     import StarterKit from '@tiptap/starter-kit';
     import Heading from '@tiptap/extension-heading';
     import ListItem from '@tiptap/extension-list-item';
+    import Underline from '@tiptap/extension-underline'
 
     export default {
         components: {
@@ -60,6 +61,7 @@
                 extensions: [
                     StarterKit,
                     ListItem,
+                    Underline,
                     Heading.configure({
                         levels: [1, 2, 3],
                     }),
