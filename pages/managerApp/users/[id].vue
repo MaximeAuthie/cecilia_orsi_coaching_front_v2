@@ -138,6 +138,8 @@
             },
 
             checkInputBeforeSubmit() {
+
+                //? Vérifier si chacun des champs obligatoires est bien complété
                 if (this.user.first_name_user == '') {
                     this.errorMessages.firstNameEmpty   = "Veuillez saisir un prénom";
                     this.errorMessages.form             = "Veuillez remplir tous les champs obligatoires du formulaire";
@@ -157,6 +159,8 @@
             },
             
             checkInputKeyUp() {
+
+                //? Vérfier si chacun des champs obligatoire à été complété après chaque frappe
                 if (this.user.first_name_user != '') {
                     this.errorMessages.firstNameEmpty   = "";
                 }
@@ -169,73 +173,53 @@
             },
 
             checkPasswordKeyUp() { //Vérifie si les champs sont remplis lors de la saisir et vérifie le format du password
+                const { isPasswordIdentical } = useUtils();
+                
+                //? Vérifie le remplissage des champs obligatoires à chaque frappe
                 this.checkInputKeyUp();
+
+                //? Vérifie le format du mot de passe
                 this.checkPasswordFormat();
-                this.isPasswordIdentical();
-            },
 
-            isPasswordIdentical() {
-                if (this.passwords.firstInput != '' && this.passwords.secondInput != '') {
-                    if(this.passwords.firstInput != this.passwords.secondInput) {
-                        this.errorMessages.passwordIdentical = "Les deux mots de passe ne sont pas identiques";
-                    } else {
-                        this.errorMessages.passwordIdentical = "";
-                    }
-                }
-            },
-
-            checkMailFormat() { // Vérifie si le format du mail est correct
-
-                //? Définir le regex pour le format mail
-                const pattern = new RegExp(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/i);
-
-                //? Vérifier le si le mail est saisi
-                if (this.user.email != '') {
-
-                    //? Vérifier si la saisie correspond au regex
-                    if (!pattern.test(this.user.email)) {
-                        this.errorMessages.emailFormat = "Le format de l'adresse email n'est pas correct";
-                    } else {
-                        this.errorMessages.emailFormat = "";
-                    }
+                //? Vérifie si les deux mot de passe sont identiques (composable)
+                if (isPasswordIdentical(this.passwords.firstInput, this.passwords.secondInput)) {
+                    this.errorMessages.passwordIdentical = "";
+                } else {
+                    this.errorMessages.passwordIdentical = "Les deux mots de passe ne sont pas identiques";
                 }
             },
 
             checkPasswordFormat() {
                 
+                //? Importer les fonction du composable useUtils
+                const { containUppercase }  = useUtils();
+                const { containLowercase }  = useUtils();
+                const { containNumbber }    = useUtils();
+                const { isLongEnough }      = useUtils();
+                
                 //? Réinitialiser les message d'erreur
-                this.errorMessages.passwordUppercase = "";
-                this.errorMessages.passwordLowercase = "";
-                this.errorMessages.passwordNumber = "";
-                this.errorMessages.passwordCaracters = "";
+                this.errorMessages.passwordUppercase    = "";
+                this.errorMessages.passwordLowercase    = "";
+                this.errorMessages.passwordNumber       = "";
+                this.errorMessages.passwordCaracters    = "";
 
-                //? Définir les pattern des regex
-                const upperCasePattern          = new RegExp(/[A-Z]/g);
-                const lowerCasePattern          = new RegExp(/[a-z]/g);
-                const numberPattern             = new RegExp(/[0-9]/g);
                 
-                //? Vérifier si le mot de passe contient une majuscule
-                if (!upperCasePattern.test(this.passwords.firstInput)) {
+                //? Vérifier les différents critères du format et générer les mesages d'erreur correspondants
+                if (!containUppercase(this.passwords.firstInput)) {
                     this.errorMessages.passwordUppercase = "Le mot de passe doit contenir au moins une majuscule"
-                    console.log("contient une majuscule");
                 }
 
-                //? Vérifier si le mot de passe contient une minuscule
-                if (!lowerCasePattern.test(this.passwords.firstInput)) {
+                if (!containLowercase(this.passwords.firstInput)) {
                     this.errorMessages.passwordLowercase = "Le mot de passe doit contenir au moins une minuscule"
-                    console.log("contient une minuscule");
                 }
-                //? Vérifier si le mot de passe contient un chiffre
-                if (!numberPattern.test(this.passwords.firstInput)) {
+
+                if (!containNumbber(this.passwords.firstInput)) {
                     this.errorMessages.passwordNumber = "Le mot de passe doit contenir au moins un chiffre"
-                    console.log("ne contient pas un chiffre");
                 }
-                //? Vérifier la longueur
-                if (this.passwords.firstInput.length < 14 ) {
+
+                if (!isLongEnough(this.passwords.firstInput)) {
                     this.errorMessages.passwordCaracters = "Le mot de passe doit contenir au moins 14 caractères"
-                    console.log("ne contient pas 14 caractères");
                 }
-                
             },
             checkErrorMessages() {
                 if (
@@ -261,6 +245,7 @@
                 
                 const userStore = useUsersStore();
                 const { verifyToken } = useAuthentification();
+                const { isMailFormatCorrect }   = useUtils();
 
                 //? Réinitialiser les éventuels précédents messages d'erreurs ou de succès
                 this.errorMessages.form = '';
@@ -270,18 +255,22 @@
                 this.checkInputBeforeSubmit();
 
                 //? Vérifier si le format de l'adresse mail est correct
-                this.checkMailFormat();
+                if (!isMailFormatCorrect(this.user.email)) {
+                    this.errorMessages.emailFormat = "Le format de l'adresse email n'est pas correct"
+                } else {
+                    this.errorMessages.emailFormat = ""
+                }
 
                 //? Déclaration de l'objet utilisateur à envoyer avec l'appel API
                 let userToUpdate = {
-                            id:             this.user.id,
-                            firstName:      this.user.first_name_user,
-                            lastName:       this.user.last_name_user,
-                            email:          this.user.email,
-                            roles:          [],
-                            password:       '',
-                            idApplicant:    userStore.id
-                        }
+                    id:             this.user.id,
+                    firstName:      this.user.first_name_user,
+                    lastName:       this.user.last_name_user,
+                    email:          this.user.email,
+                    roles:          [],
+                    password:       '',
+                    idApplicant:    userStore.id
+                }
 
                 if (this.checkErrorMessages()) {
 
@@ -295,7 +284,7 @@
                         userToUpdate.roles.push("ROLE_ADMIN");
                     }
 
-                    //? Mettre à jours le password si renseigné
+                    //? Mettre à jours le password si renseigné 
                     if (this.passwords.firstInput != '' && this.passwords.secondInput !='') {
                         userToUpdate.password = this.passwords.firstInput;
                     }
