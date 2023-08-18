@@ -2,10 +2,11 @@ import { defineStore } from 'pinia';
 
 export const useUsersStore = defineStore('users', {
   state: () => ({
-    users:  [],
-    token:  '',
-    id:     '',
-    role:   ''
+    users:      [],
+    token:      '',
+    id:         '',
+    role:       '',
+    firstName:  ''
   }),
   actions: {
     async getAllUsers() {
@@ -52,8 +53,14 @@ export const useUsersStore = defineStore('users', {
             body: bodyJson
         })
         .then( async response => {
-            const usersRole = await response.json();
-            this.role = usersRole;
+            const usersData= await response.json();
+            this.role = usersData.role;
+            this.firstName = usersData.firstName;
+
+            //? Rédiriger vers la page d'accueil au bout de 3 secondes (pour laisser le temps aux autres states de se charger)
+            setTimeout(() => {
+                navigateTo('/managerApp'); 
+            }, 3000);
         })
     }
   },
