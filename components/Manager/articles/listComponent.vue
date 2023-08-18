@@ -1,7 +1,7 @@
 <template>
     <div class="articles_list_card">
       <div class="articles_list_card_header">Liste des articles</div>
-      <div class="articles_list_card_content">
+      <div v-if="articles.length != 0" class="articles_list_card_content">
         <ManagerArticlesArticleComponent
           v-for="article in articles"
           @update="updateArticle"
@@ -11,7 +11,7 @@
           :isPublished="article.isPublished_article"
         ></ManagerArticlesArticleComponent>
       </div>
-      <div v-if="articles.length == 0" class="articles_list_card_no_article">Aucun article à afficher</div>
+      <div v-else class="articles_list_card_no_article">Aucun article à afficher</div>
     </div>
 </template>
   
@@ -36,14 +36,14 @@
                 //? Si les catégories ne sont pas déjà présents dans le store, effectuer l'appel API
                 articleStore
                     .getAllArticles()
-                    .then(() => {
-                    this.articles = articleStore.articles;
-                    })
-        
-                    //? En cas d'erreur inattendue, capter l'erreur rencontrée
-                    .catch((error) => {
-                    console.error("Erreur lors de la récupération des catégories :", error);
-                    });
+                        .then(() => {
+                            this.articles = articleStore.articles;
+                        })
+            
+                        //? En cas d'erreur inattendue, capter l'erreur rencontrée
+                        .catch((error) => {
+                            console.error("Erreur lors de la récupération des catégories :", error);
+                        });
                 }
             },
         updateArticle(id, name, color) {

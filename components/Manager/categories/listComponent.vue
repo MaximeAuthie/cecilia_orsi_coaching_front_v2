@@ -3,10 +3,10 @@
         <div class="categories_list_card_header">
             Liste des catégories
         </div>
-        <div class="categories_list_card_content">
+        <div v-if="categories.length != 0" class="categories_list_card_content">
             <ManagerCategoriesCategoryComponent v-for="category in categories" @update="updateCategory" :id="category.id" :name="category.name_category" :color="category.color_category"></ManagerCategoriesCategoryComponent>
         </div>
-        <div v-if="categories.length == 0" class="categories_list_card_no_categories">Aucune catégorie à afficher</div>
+        <div v-else class="categories_list_card_no_categories">Aucune catégorie à afficher</div>
     </div>
 </template>
 
