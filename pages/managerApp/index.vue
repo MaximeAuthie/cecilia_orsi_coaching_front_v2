@@ -7,7 +7,7 @@
 
 <template>
     <div class="admin_content">
-        <h1>Bienvenue dans l’espace d’administration Cécilia Orsi</h1>
+        <h1>Bienvenue dans l’espace d’administration {{ user }}</h1>
     
         <div class="admin_content_stats">
             <ManagerIndexStatCardComponent title="Visites totales" content="12%" color="#8EBBA7"></ManagerIndexStatCardComponent>
@@ -17,6 +17,22 @@
         <ManagerIndexLastCommentsCardComponent></ManagerIndexLastCommentsCardComponent>
     </div>
 </template>
+
+<script>
+    import { useUsersStore } from "@/store/user";
+
+    export default {
+        data() {
+            return {
+                user: ''
+            }
+        },
+        mounted() {
+            const userStore = useUsersStore();
+            this.user = userStore.firstName;
+        }
+    }
+</script>
 
 <style scoped>
 
