@@ -70,6 +70,9 @@ export default {
         overflow: hidden
     }
 
+    .categories_list_card:hover {
+        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    }
     .categories_list_card_header {
         position: relative;
         width: 100%;

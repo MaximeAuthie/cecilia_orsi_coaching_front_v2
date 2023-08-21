@@ -53,13 +53,13 @@
         },
     
         mounted() {
-        this.getArticles();
-    
-        const articleStore = useArticlesStore();
-        articleStore.$subscribe((state) => {
-            this.articles = articleStore.articles;
-            console.log("update store articles");
-        });
+            this.getArticles();
+        
+            const articleStore = useArticlesStore();
+            articleStore.$subscribe((state) => {
+                this.articles = articleStore.articles;
+                console.log("update store articles");
+            });
         },
     };
 </script>
@@ -74,6 +74,10 @@
         background-color: #ffffff;
         margin: 5vh 0;
         overflow: hidden;
+    }
+
+    .articles_list_card:hover {
+        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     }
   
     .articles_list_card_header {

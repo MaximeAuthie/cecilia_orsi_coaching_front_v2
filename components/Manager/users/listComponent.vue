@@ -71,6 +71,9 @@ export default {
         margin: 5vh 0;
         overflow: hidden
     }
+    .users_list_card:hover {
+        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    }
 
     .users_list_card_header {
         position: relative;

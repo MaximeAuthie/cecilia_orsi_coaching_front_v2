@@ -114,6 +114,9 @@
           padding: 1vh 1vh;
           font-size: 0.4em;
       }
+      .article_item:hover {
+        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+      }
       .article_item_name {
           width: 50%;
       }

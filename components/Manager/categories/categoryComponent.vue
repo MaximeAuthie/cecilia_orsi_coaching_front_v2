@@ -106,6 +106,10 @@
         padding: 1vh 1vh;
         font-size: 0.5em;
     }
+
+    .category_item:hover {
+        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    }
     .category_item_name {
         width: 70%;
     }
