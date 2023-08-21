@@ -11,11 +11,11 @@
         <div class="admin_content_filters">
             <div class="admin_content_filters_bloc">
                 <label for="status" class="admin_label">Nom de la catégorie :</label>
-                <input @click="resetMessages" v-model="formData.name" type="text" class="admin_input_filter">
+                <input @click="resetMessages" @keyup="ckeckNameLength" v-model="formData.name" type="text" class="admin_input_filter">
             </div>
             <div class="admin_content_filters_bloc">
                 <label for="status" class="admin_label">Couleur de la catégorie :</label>
-                <input @click="resetMessages" v-model="formData.color" type="text" class="admin_input_filter">
+                <input @click="resetMessages" v-model="formData.color" @keyup="checkColorFormat" type="text" class="admin_input_filter">
             </div>
             <div class="admin_content_filters_bloc_buttons">
                 <br>
@@ -25,8 +25,10 @@
             </div>
         </div>
         <div class="admin_content_filters_message">
-            <span v-if="formErrorMessage" class="admin_content_filters_message_error">{{ formErrorMessage }}</span>
-            <span v-if="formSuccessMessage" class="admin_content_filters_message_success">{{ formSuccessMessage }}</span>
+            <div v-if="errorMessages.form" class="admin_content_filters_message_error">{{ errorMessages.form }}</div>
+            <div v-if="errorMessages.nameLength" class="admin_content_filters_message_error">{{ errorMessages.nameLength }}</div>
+            <div v-if="errorMessages.colorFormat" class="admin_content_filters_message_error">{{ errorMessages.colorFormat }}</div>
+            <div v-if="formSuccessMessage" class="admin_content_filters_message_success">{{ formSuccessMessage }}</div>
         </div>
         <ManagerCategoriesListComponent @update="activateUpdateCategory"></ManagerCategoriesListComponent>
     </div>
@@ -44,22 +46,33 @@
                     name :  '',
                     color:  ''
                 },
-                isAnInputEmpty:         true,
-                isColorCorrect:         true,
                 formErrorMessage:       '',
                 formSuccessMessage:     '',
+                errorMessages: {
+                    form:               '',
+                    nameLength:         '',
+                    colorFormat :       ''
+                },
                 categoryUpdate:         false,
             }
         },
         methods: {
+            ckeckNameLength() {
+                if (this.formData.name.length >= 15) {
+                    this.errorMessages.nameLength = 'Le nom de la catégorie ne doit pas dépasser 15 caractères.';
+                } else {
+                    this.errorMessages.nameLength = '';
+                }
+            },
             async addNewCategory() {
                 const categoryStore = useCategoriesStore();
                 const userStore = useUsersStore();
                 const { verifyToken } = useAuthentification();
 
                 //? Appel des méthodes pour vérifier la conformité des données saisies
-                this.checkImputEmpty()
+                this.checkImputEmpty();
                 this.checkColorFormat();
+                this.ckeckNameLength();
 
                 //? Transformer l'objet formData en json
                 const bodyJson = JSON.stringify(this.formData);
@@ -68,7 +81,8 @@
                 const jwt = await verifyToken();
 
                 //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
-                if (this.isAnInputEmpty == false && this.isColorCorrect ==true) {
+                console.log(this.checkErrorMessages());
+                if (this.checkErrorMessages()) {
                     await fetch('https://127.0.0.1:8000/api/category/add', {
                         method:'POST',
                         headers: {
@@ -97,7 +111,7 @@
                     })
                     .catch(error => {
                         console.error(error);
-                        this.formErrorMessage = "Une erreur est survenue. Veuillez réessayer plus tard.";
+                        this.errorMessages.form = "Une erreur est survenue. Veuillez réessayer plus tard.";
                     })
                 }
             },
@@ -107,8 +121,9 @@
                 const { verifyToken } = useAuthentification();
 
                 //? Appel des méthodes pour vérifier la conformité des données saisies
-                this.checkImputEmpty()
+                this.checkImputEmpty();
                 this.checkColorFormat();
+                this.ckeckNameLength();
 
                 //? Transformer l'objet formData en json
                 const bodyJson = JSON.stringify(this.formData);
@@ -117,7 +132,7 @@
                 const jwt = await verifyToken();
 
                 //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
-                if (this.isAnInputEmpty == false && this.isColorCorrect ==true) {
+                if (this.checkErrorMessages()) {
                     await fetch('https://127.0.0.1:8000/api/category/update', {
                         method:'PATCH',
                         headers: {
@@ -138,7 +153,7 @@
                             userStore.token = '';
                             this.$router.push('/managerApp/logIn/expired-session'); 
                         } else {
-                            this.formErrorMessage       = body.message;
+                            this.errorMessages.form       = body.message;
                         }
 
                         //? Réinitialiser les data pour repasser en mode création de catégorie
@@ -146,7 +161,7 @@
                     })
                     .catch(error => {
                         console.error(error);
-                        this.formErrorMessage = "Une erreur est survenue. Veuillez réessayer plus tard.";
+                        this.errorMessages.form = "Une erreur est survenue. Veuillez réessayer plus tard.";
 
                         //? Réinitialiser les data pour repasser en mode création de catégorie
                         this.resetFetchedData();
@@ -158,10 +173,10 @@
                 this.resetFetchedData();
             },
             resetMessages() { //? Remettre les datas à leur état initial
-                this.isAnInputEmpty         = true;
-                this.isColorCorrect         = true;
-                this.formErrorMessage       = '';
-                this.formSuccessMessage     = ''
+                this.errorMessages.nameLength       = '';
+                this.errorMessages.colorFormat      = '';
+                this.errorMessages.form             = '';
+                this.formSuccessMessage             = ''
             },
             resetFetchedData() { //? Réinitiliser des datas après update d'une catégorie
                 this.categoryUpdate     = false;
@@ -169,11 +184,19 @@
                 this.formData.name      = '',
                 this.formData.color     = ''
             },
+            checkErrorMessages() {
+                if (
+                    this.errorMessages.form !='' 
+                    || this.errorMessages.nameLength != '' 
+                    || this.errorMessages.colorFormat != '' 
+                ) {
+                    return false;
+                } else {
+                    return true;
+                }
+            },
             checkColorFormat() { //? Vérifier si le format de la couleur est correct
-
-                //? Réinitialiser le booléen
-                this.isColorCorrect = true;
-
+                console.log("checkColorFormat lancé");
                 //? Définir le regex pour le format mail
                 const pattern = new RegExp(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/);
 
@@ -182,23 +205,22 @@
 
                     //? Vérifier si la saisie correspond au regex
                     if (pattern.test(this.formData.color)) {
-                        this.isColorCorrect = true;
+                        this.errorMessages.colorFormat = '';
                     } else {
-                        this.isColorCorrect = false;
-                        this.formErrorMessage = 'La couleur doit être renseignée au format hexadécimal.'
+                        this.errorMessages.colorFormat = 'La couleur doit être renseignée au format hexadécimal.';
                     }
                 }
             },
             checkImputEmpty() { //? Vérifier si tous les champs sont bien complétés
                 if (this.formData.name != '' && this.formData.color != '') {
-                    this.isAnInputEmpty = false;
+                    this.errorMessages.form = "";
                 } else {
-                    this.formErrorMessage = "Veuillez compléter tous les champs du formulaire.";
+                    this.errorMessages.form = "Veuillez compléter tous les champs du formulaire.";
                 }
             },
             activateUpdateCategory(id, name, color) { //? Réagir à l'évènement "update" du composant "ManagerCategoriesListComponent"
 
-                //? Réinitialiser les écentuels messages
+                //? Réinitialiser les éventuels messages
                 this.resetMessages();
                 
                 //? Renseigner les datas du composant aves les datas remontées des composants enfants

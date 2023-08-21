@@ -14,10 +14,7 @@
             <option v-for="tile in tiles" :value="tile.id" class="admin_option">{{ tile.title_tile }}</option>
         </select>
     </div>
-    <div class="admin_content_filters_message">
-        <span v-if="formErrorMessage" class="admin_content_filters_message_error">{{ formErrorMessage }}</span>
-        <span v-if="formSuccessMessage" class="admin_content_filters_message_success">{{ formSuccessMessage }}</span>
-    </div>
+    
     <div v-if="selectedTileId != 0" class="admin_content_form">
         <div class="admin_content_form_bloc">
             <label for="status" class="admin_label">URL de l'image de fond* : </label>
@@ -25,10 +22,16 @@
         </div>
 
         <div class="admin_content_form_bloc">
-            <label for="status" class="admin_label">Texte de la tuile* : </label>
-            <input v-model="selectedTileData.title_tile" type="text" class="admin_input_form">
+            <label for="status" class="admin_label">Texte de la tuile (20 caractères maximum)* : </label>
+            <input v-model="selectedTileData.title_tile" @keyup="ckeckTextLength" type="text" class="admin_input_form">
+            <span class="admin_error_message_form">{{ textErrorMessage }}</span>
         </div>
         * champs obligatoires
+        <div class="admin_content_filters_message">
+            <span v-if="formErrorMessage" class="admin_content_filters_message_error">{{ formErrorMessage }}</span>
+            <span v-if="formSuccessMessage" class="admin_content_filters_message_success">{{ formSuccessMessage }}</span>
+        </div>
+        
         <div class="admin_content_form_buttons_container">
             <button v-if="!tileUpdate" @click="updateTile" class="admin_button admin_button_main">Modifier</button>
         </div>
@@ -47,7 +50,8 @@
                 selectedTileId: 0,
                 selectedTileData: [],
                 formSuccessMessage: '',
-                formErrorMessage: ''
+                formErrorMessage: '',
+                textErrorMessage: ''
             }
         },
         methods: {
@@ -81,15 +85,32 @@
                 this.formErrorMessage ='';
                 this.formSuccessMessage = '';
             },
+            ckeckTextLength() {
+                if (this.selectedTileData.title_tile.length >= 20) {
+                    this.textErrorMessage = 'La limite de 20 caractères est dépassée';
+                } else {
+                    this.textErrorMessage = '';
+                }
+            },
             async updateTile() {
 
                 const tileStore = useTilesStore();
                 const userStore = useUsersStore();
                 const { verifyToken } = useAuthentification();
 
+                //? Réinialiser les éventuels messages d'erreur ou de succès précédents
+                this.formErrorMessage       = '';
+                this.formSuccessMessage    = '';
+
                 //? Vérifier si tous les champs du formulaires sont remplis
                 if (this.selectedTileData.title_tile == '' || this.selectedTileData.img_url_tile == '') {
                     this.formErrorMessage = "Merci de compléter tous les champs du formulaire.";
+                    return;
+                }
+
+                //? Vérifier si la longueur du texte de la tuile est respectée : 
+                if (this.textErrorMessage != "") {
+                    this.formErrorMessage = "Veuillez respecter le nombre de caractères maximum pour le texte de la tuile.";
                     return;
                 }
                 
