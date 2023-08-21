@@ -74,6 +74,7 @@
 
                 //? Réinitialiser les éventuels précédents messages d'erreurs
                 this.errorMessages.form = '';
+                this.formSuccessMessage = '';
 
                 //? Vérifier si les champs nécessaires sont bien renseignés
                 this.checkInputBeforeSubmit();
