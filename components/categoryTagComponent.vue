@@ -6,7 +6,7 @@
     </div>
 </template>
 
-<script lang="ts">
+<script>
     export default {
         props: {
             name: {
@@ -18,6 +18,7 @@
                 required:   true
             },
         },
+        emits : ['select'],
         data() {
             return {
                 isClicked:  false,
@@ -27,6 +28,7 @@
         methods : {
             clickOn() {
                 this.isClicked =! this.isClicked;
+                this.$emit('select', this.name, this.isClicked);
             },
             overOn() {
                 this.isOver = true;
