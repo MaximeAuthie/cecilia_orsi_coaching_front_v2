@@ -10,16 +10,18 @@
                 <div @click="showCategories" class="content_categories_title">
                     <div class="content_categories_title_content">
                         <h5>Catégories</h5>
-                        <svg v-if="isCategoriesVisible" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <svg v-if="!isCategoriesVisible" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                         </svg>
-                        <svg v-if="!isCategoriesVisible" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <svg v-if="isCategoriesVisible" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
                         </svg>
                     </div>
                 </div>
                 <div v-if="isCategoriesVisible" class="content_categories_list">
-                    <CategoryTagComponent v-for="category in categories"
+                    <CategoryTagComponent
+                        @select="filterByCategory"
+                        v-for="category in categories"
                         :name="category.name_category"
                         :color="category.color_category">
                     </CategoryTagComponent>
@@ -79,6 +81,7 @@ import { useCategoriesStore } from '@/store/category'
                 pageData:                   {},
                 categories :                [],
                 isCategoriesVisible:        false,
+                isFilterActivate:          false,
                 frontPageArticle:           {},
                 articles:                   [],
                 pageDataDownload :          false
@@ -176,6 +179,60 @@ import { useCategoriesStore } from '@/store/category'
                         this.pageData.tiles_list[tilesNumber-1].fullWidth = true;
                     }
             },
+            filterByCategory(categoryName, isSelected) {
+                //? Déclarer la variable articleStore
+                const articleStore = useArticlesStore();
+
+                //? Si les filtres n'ont pas encore été utilisé
+                if (this.isFilterActivate == false) {
+
+                        //? Passer isFilterActivate à true => on vide this.articles pour n'y mettre que les articles de la caétgorie sélectionnée
+                        this.isFilterActivate = true;
+                        this.articles = [];
+                        const filteredArticles = articleStore.validatedArticles.filter(article => {
+                            return article.categories_list.some(category => category.name_category === categoryName);
+                        });
+                        filteredArticles.forEach(article => this.articles.push(article));
+                } else {
+
+                    //? Vérifier si la catégorie à été sélectionnée
+                    if (isSelected) {
+                        
+                        //? Chercher les articles du store appartenant à cette catégorie
+                        const filteredArticles = articleStore.validatedArticles.filter(article => {
+                            return article.categories_list.some(category => category.name_category === categoryName);
+                        });
+                        
+                        //? Vérifier si les articles sont déjà présents dans this.articles
+                        filteredArticles.forEach(article => {
+                            
+                            if (!this.articles.indexOf(article) === false) {
+                                
+                                //? Si les articles à ajouter ne sont pas présents dans this.article => on les ajoute
+                                this.articles.push(article)
+                            }
+                        });
+                    } else {
+                        
+                        //? Si la catégorie a été désélectionnée ==> rechercher les articles du store appartenant à cette catégorie
+                        const filteredArticles = articleStore.validatedArticles.filter(article => {
+                            return article.categories_list.some(category => category.name_category === categoryName);
+                        });
+                        
+                        filteredArticles.forEach(article => {
+                            //? Rechercher l'index de chaque article dans this.article
+                            const articleIndex = this.articles.indexOf(article);
+                            
+                            //? Supprimer l'article de this.articles grace à son index
+                            this.articles.splice(articleIndex,1);
+                        });
+                    }
+                }
+
+                if (this.articles == '') {
+                    this.articles = articleStore.validatedArticles;
+                }
+            } 
         },
         mounted() {
             //? Exécution de la méthode récupérant les données de la page dans la BDD et qui les place dans l'objet this.pageData
