@@ -1,21 +1,147 @@
 <template>
-    <div>
-        legalInformations
+    <div v-if="!pageDataDownload" class="waiting_div">
+        <div class="waiting_div_logo">
+            <img src="~/assets/images/logo_loader.png" alt="logo">
+        </div>
+        <h2>Cécilia Orsi Coaching</h2>
+        <div class="waiting_div_loader">
+            <p>Chargement en cours...</p>
+        </div>
+    </div>
+    <div v-else>
+        <BannerComponent :imgUrl="pageData.banner_url_page" :messages="pageData.BannerTextsList" :isMainButtonActive="pageData.isMainButtonActive_page" :isSecondButtonActive="pageData.isSecondaryButtonActive_page" ></BannerComponent>
+        <div class="content">
+            <section class="content_description" >
+                <h2>1 - Édition du site</h2>
+                <p>
+                    En vertu de l'article 6 de la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique, il est précisé aux utilisateurs du site internet https://www.cecilia-orsi.fr/ l'identité des différents intervenants dans le cadre de sa réalisation et de son suivi:
+
+                    Propriétaire du site : Cécilia Orsi - Contact : contact@cecilia-orsi.fr - Adresse : .
+
+                    Identification de l'entreprise : Cécilia Orsi au capital social de € - SIREN : 84044525800014 - RCS ou RM : TOULOUSE - Adresse postale : - [Consignes : ajoutez ici le lien hypertexte vers la page de vos conditions générales de vente si vous en avez une]
+                    Directeur de la publication : - Contact : .
+
+                    Hébergeur : OVH SAS - 2 rue Kellermann - BP 80157 - 59053 Roubaix Cedex 1 - Téléphone : 1007
+
+                    Délégué à la protection des données : Cécilia Orsi - contact@cecilia-orsi.fr
+
+                    Autres contributeurs :
+                </p>
+                <h2>2 - Propriété intellectuelle et contrefaçons.</h2>
+                <p>
+                    Cécilia Orsi est propriétaire des droits de propriété intellectuelle et détient les droits d’usage sur tous les éléments accessibles sur le site internet, notamment les textes, images, graphismes, logos, vidéos, architecture, icônes et sons.
+
+                    Toute reproduction, représentation, modification, publication, adaptation de tout ou partie des éléments du site, quel que soit le moyen ou le procédé utilisé, est interdite, sauf autorisation écrite préalable de Cécilia Orsi.
+
+                    Toute exploitation non autorisée du site ou de l’un quelconque des éléments qu’il contient sera considérée comme constitutive d’une contrefaçon et poursuivie conformément aux dispositions des articles L.335-2 et suivants du Code de Propriété Intellectuelle.
+                </p>
+                <h2>3 - Limitations de responsabilité.</h2>
+                <p>
+                    Cécilia Orsi ne pourra être tenu pour responsable des dommages directs et indirects causés au matériel de l’utilisateur, lors de l’accès au site https://www.cecilia-orsi.fr/.
+
+                    Cécilia Orsi décline toute responsabilité quant à l’utilisation qui pourrait être faite des informations et contenus présents sur https://www.cecilia-orsi.fr/.
+
+                    Cécilia Orsi s’engage à sécuriser au mieux le site https://www.cecilia-orsi.fr/, cependant sa responsabilité ne pourra être mise en cause si des données indésirables sont importées et installées sur son site à son insu.
+
+                    Des espaces interactifs (espace contact ou commentaires) sont à la disposition des utilisateurs. Cécilia Orsi se réserve le droit de supprimer, sans mise en demeure préalable, tout contenu déposé dans cet espace qui contreviendrait à la législation applicable en France, en particulier aux dispositions relatives à la protection des données.
+
+                    Le cas échéant, Cécilia Orsi se réserve également la possibilité de mettre en cause la responsabilité civile et/ou pénale de l’utilisateur, notamment en cas de message à caractère raciste, injurieux, diffamant, ou pornographique, quel que soit le support utilisé (texte, photographie …).
+                </p>
+                <h2>4 - CNIL et gestion des données personnelles.</h2>
+                <p>
+                    Conformément aux dispositions de la loi 78-17 du 6 janvier 1978 modifiée, l’utilisateur du site https://www.cecilia-orsi.fr/ dispose d’un droit d’accès, de modification et de suppression des informations collectées. Pour exercer ce droit, envoyez un message à notre Délégué à la Protection des Données : Cécilia Orsi - contact@cecilia-orsi.fr.
+
+                    Pour plus d'informations sur la façon dont nous traitons vos données (type de données, finalité, destinataire...), lisez notre https://www.cecilia-orsi.fr/privacyPolicy. [Consignes : ajoutez ici le lien hypertexte vers votre politique de confidentialité]
+                </p>
+                <h2>5 - Liens hypertextes et cookies.</h2>
+                <p>
+                    Le site https://www.cecilia-orsi.fr/ contient des liens hypertextes vers d’autres sites et dégage toute responsabilité à propos de ces liens externes ou des liens créés par d’autres sites vers https://www.cecilia-orsi.fr/.
+
+                    La navigation sur le site https://www.cecilia-orsi.fr/ est susceptible de provoquer l’installation de cookie(s) sur l’ordinateur de l’utilisateur.
+
+                    Un "cookie" est un fichier de petite taille qui enregistre des informations relatives à la navigation d’un utilisateur sur un site. Les données ainsi obtenues permettent d'obtenir des mesures de fréquentation, par exemple.
+
+                    Vous avez la possibilité d’accepter ou de refuser les cookies en modifiant les paramètres de votre navigateur. Aucun cookie ne sera déposé sans votre consentement.
+
+                    Les cookies sont enregistrés pour une durée maximale de 1 mois.
+
+                    Pour plus d'informations sur la façon dont nous faisons usage des cookies, lisez notre https://www.cecilia-orsi.fr/privacyPolicy. [Consignes : ajoutez ici le lien hypertexte vers votre politique de confidentialité ou vers votre politique de cookies si vous en avez une (c'est le cas si vous utilisez Complianz)]
+                </p>
+                <h2>6 - Droit applicable et attribution de juridiction.</h2>
+                <p>
+                    Tout litige en relation avec l’utilisation du site https://www.cecilia-orsi.fr/ est soumis au droit français. En dehors des cas où la loi ne le permet pas, il est fait attribution exclusive de juridiction aux tribunaux compétents de Toulouse.
+                </p>
+    
+                    <NuxtLink to="/"><input class="button button_content" type="button" value="Retour à l'accueil"></NuxtLink>
+            </section>
+        </div>
     </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script>
+    import { usePagesStore } from '@/store/page';
 
-export default defineComponent({
-    setup () {
-        
+    export default {
+        data() {
+            return {
+                pageId :            6,
+                pageData :          {},
+                pageDataDownload :  false
+            }
+        },
+        methods: {
+            getPageData() {
+                const pageStore = usePagesStore();
 
-        return {}
-    }
-})
+                //? Vérifier si les articles sont toujours présents dans le store
+                if (pageStore.pages.length > 0) {
+                    this.pageData       = pageStore.pages[this.pageId];
+                    this.pageDataDownload   = true;
+                } else {
+
+                //? Si les articles ne sont pas déjà présents dans le store, effectuer l'appel API
+                pageStore.getAllPages()
+                    .then(() => {
+                        this.pageData       = pageStore.pages[this.pageId];
+                        this.pageDataDownload   = true;
+                    })
+
+                    //? En cas d'erreur inattendue, capter l'erreur rencontrée
+                    .catch((error) => {
+                    console.error('Erreur lors de la récupération des pages :', error);
+                    this.pageDataDownload   = false;
+                    });
+                }
+            }
+        },
+        mounted() {
+
+            //? Exécution de la méthode récupérant les données de la page dans la BDD et qui les place dans l'objet this.pageData
+            this.getPageData();
+
+            //? Renseigner les balises HTML de <head> pour le SEO
+            useHead({
+                title: 'Cécilia Orsi Coaching - Qui je suis?',
+                meta: [
+                    {name: 'description', content: 'Mention légales'},
+                    {name:'robots', content:'noindex, nofollow'},
+                    {"http-equiv": 'Content-Language', content: 'fr'},
+                ],
+                link: [{rel: 'icon', href: '/_nuxt/assets/images/icone_tree.png'}]
+            })
+        },
+    };
 </script>
 
 <style scoped>
-
+.content_description_avatar {
+    width: 30vh;
+    height: 30vh;
+    border-radius: 20vh;
+    background-size: cover; 
+    background-position: center;
+    /* background-image: url("../assets/images/cecilia-orsi.png"); */
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    margin: 10vh 0;
+}
 </style>

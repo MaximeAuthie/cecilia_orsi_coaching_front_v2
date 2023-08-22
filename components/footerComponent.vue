@@ -35,7 +35,7 @@
                 </li>
                 <li class="footer_nav_list_item">
                     <nuxt-link class="footer_nav_list_item_link" to="https://www.linkedin.com/in/maxime-authie-b10931149/?originalSubdomain=fr" target="_blank" rel="external">
-                        <span class="footer_nav_list_item_credit">Réalisé par Maxime Authié</span>
+                        <span class="footer_nav_list_item_credit">Copyright © 2023 Cécilia Orsi - Réalisé par Maxime Authié</span>
                     </nuxt-link>
                 </li>
             </ul>
