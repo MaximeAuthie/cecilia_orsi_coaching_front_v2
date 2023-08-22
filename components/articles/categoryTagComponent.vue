@@ -1,12 +1,12 @@
 <template>
-    <div class="tag_div" :style="{backgroundColor: color, borderColor: color}">
+    <div @click="selectCategory" class="tag_div" :style="{backgroundColor: color, borderColor: color}">
         <div class="tag_title">
             {{ name }}
         </div>
     </div>
 </template>
 
-<script lang="ts">
+<script>
     export default {
         props: {
             name: {
@@ -17,6 +17,12 @@
                 type:       String,
                 required:   true
             },
+        },
+        emits: ['selectCategory'],
+        methods : {
+            selectCategory() {
+                this.$emit('selectCategory', name);
+            }
         }
     }
 </script>

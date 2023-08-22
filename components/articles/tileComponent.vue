@@ -77,6 +77,8 @@
         height: 360px;
         /* background-color: antiquewhite; */
         margin-top: 5vh;
+        margin-left: 0.95vw;
+        margin-right: 0.95vw;
         padding: 2vh 0;
         box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
         cursor: pointer;
