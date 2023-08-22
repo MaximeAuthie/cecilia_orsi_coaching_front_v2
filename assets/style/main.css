@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=La+Belle+Aurore&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Playfair:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cutive+Mono&family=Playfair:wght@300&display=swap');
 
 
 /* GERENERAL RULES */
@@ -266,6 +267,55 @@ form {
     width: 90%;
     margin: auto;
 }
+.waiting_div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 78vh;
+}
+
+.waiting_div h2 {
+    font-size: 2.8em;
+}
+
+.waiting_div_logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 25vh;
+}
+
+.waiting_div_logo img {
+    max-height: 90%;
+    width: auto;
+}
+
+.waiting_div_loader {
+    display: flex;
+    justify-content: flex-start;
+}
+.waiting_div_loader p {
+    color: #B05447;
+    font-family: Cutive Mono, monospace;
+    font-size: 25px;
+    font-weight: lighter;
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+    animation: typing 3.5s steps(22);
+}
+.waiting_div_loader p::after {
+    content: "";
+    position: absolute;
+    display: block;
+    height: 100%;
+    width: 1px;
+    right: 0;
+    top: 0;
+    background-color: #B05447;
+    animation: cursor 0.9s infinite;
+}
 
 .content_tiles {
     display: flex;
@@ -353,6 +403,12 @@ form {
         border-radius: 2vh;
         margin-top: 5vh;
     }
+    .waiting_div_loader p {
+        font-size: 45px;
+    }
+    .waiting_div h2 {
+        font-size: 3.5em;
+    }
 }
 
 
@@ -391,6 +447,23 @@ form {
     }
     100% {
         text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    }
+}
+
+@keyframes typing {
+    from {width:0}
+    to {width:100%;}
+}
+
+@keyframes cursor {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
     }
 }
 
@@ -471,6 +544,7 @@ form {
 .admin_content_form_bloc {
     width: 100%;
     margin-bottom: 2vh;
+    overflow: hidden;
 }
 
 .admin_content_link {
@@ -666,10 +740,11 @@ form {
     color: #E04F5F;
 }
 .ProseMirror {
-    min-height: 49vh;
+    height: 49vh;
     padding-top: 1vh;
     padding-left: 0.5vw;
     padding-right: 0.5vw;
+    overflow-y: scroll;
 }
 .ProseMirror:hover {
     box-shadow: 0 3px 3px rgba(0, 0, 0, 0.25);
