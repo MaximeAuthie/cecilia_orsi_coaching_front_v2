@@ -280,6 +280,8 @@
             this.id = this.$route.params.id.toString();
             this.getArticle();
             this.getCategories();
+
+            
         }
     }
 

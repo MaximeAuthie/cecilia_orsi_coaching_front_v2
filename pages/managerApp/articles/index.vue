@@ -18,8 +18,6 @@
                 Nouvel article
             </button>
         </nuxt-link>
-            
-        
         <ManagerArticlesListComponent></ManagerArticlesListComponent>
     </div>
 </template>

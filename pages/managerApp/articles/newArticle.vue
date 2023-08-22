@@ -262,7 +262,6 @@
         font-size: 0.7em;
         cursor: pointer;
     }  
-  
 
     option:active {
         background-color: #E04F5F;

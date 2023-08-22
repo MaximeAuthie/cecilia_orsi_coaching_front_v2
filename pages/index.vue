@@ -1,7 +1,12 @@
 <template>
     <div v-if="!pageDataDownload" class="waiting_div">
-        <h2>Bienvenue sur le site de Cécilia Orsi Coaching</h2>
-        <h2>Veuillez patienter...</h2>
+        <div class="waiting_div_logo">
+            <img src="~/assets/images/logo_loader.png" alt="logo">
+        </div>
+        <h2>Cécilia Orsi Coaching</h2>
+        <div class="waiting_div_loader">
+            <p>Chargement en cours...</p>
+        </div>
     </div>
     <div v-else>
         <BannerComponent :imgUrl="pageData.banner_url_page" :messages="pageData.BannerTextsList" :isMainButtonActive="pageData.isMainButtonActive_page" :isSecondButtonActive="pageData.isSecondaryButtonActive_page" ></BannerComponent>
@@ -108,19 +113,15 @@
                     {property: 'og:title', content: 'Cécilia Orsi, coach de vie certifiée à Toulouse'},
                     {property: 'og:type', content: 'website'},
                     {property: 'og:url', content:'https://www.cecilia-orsi.fr/'},
-                    {property: 'og:image', content: './assets/images/logo_header.png'},
+                    {property: 'og:image', content: '/_nuxt/assets/images/logo_header.png'},
                     {property: 'og:description', content: 'Coach de vie certifiée intervenant en région Toulousaine. Accompagnement personnalisé pour atteindre un mieux-être et/ou réaliser ses objectifs.'},
                     {name: 'twitter:card', content: 'summary_large_image'},
                     {name: 'twitter: title', content: 'Cécilia Orsi, coach de vie certifiée à Toulouse'},
                     {name: 'twitter:description', content: 'Coach de vie certifiée intervenant en région Toulousaine. Accompagnement personnalisé pour atteindre un mieux-être et/ou réaliser ses objectifs.'},
-                    {name: 'twitter:image', content: './assets/images/logo_header.png'}
+                    {name: 'twitter:image', content: '/_nuxt/assets/images/logo_header.png'}
                 ],
-                link: [{rel: 'icon', href: './assets/images/icone_tree.png'}]
+                link: [{rel: 'icon', href: '/_nuxt/assets/images/icone_tree.png'}]
             })
         },
     };
 </script>
-
-<style scoped>
-
-</style>

@@ -26,7 +26,7 @@
                 meta: [
                     {name:'robots', content:'noindex, nofollow'},
                 ],
-                link: [{rel: 'icon', href: './assets/images/icone_tree.png'}]
+                link: [{rel: 'icon', href: '/_nuxt/assets/images/icone_tree.png'}]
             })
         },
     }

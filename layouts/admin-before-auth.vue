@@ -8,11 +8,11 @@
         mounted() {
             //? Renseigner les balises HTML de <head> pour bloquer le SEO
             useHead({
-                title: 'Cécilia Orsi Coaching - Espace administrateur',
+                title: 'Cécilia Orsi Coaching - Connexion',
                 meta: [
                     {name:'robots', content:'noindex, nofollow'},
                 ],
-                link: [{rel: 'icon', href: './assets/images/icone_tree.png'}]
+                link: [{rel: 'icon', href: '/_nuxt/assets/images/icone_tree.png'}]
             })
         }
     }

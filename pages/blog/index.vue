@@ -1,7 +1,12 @@
 <template>
     <div v-if="!pageDataDownload" class="waiting_div">
-        <h2>Bienvenue sur le site de Cécilia Orsi Coaching</h2>
-        <h2>Veuillez patienter...</h2>
+        <div class="waiting_div_logo">
+            <img src="~/assets/images/logo_loader.png" alt="logo">
+        </div>
+        <h2>Cécilia Orsi Coaching</h2>
+        <div class="waiting_div_loader">
+            <p>Chargement en cours...</p>
+        </div>
     </div>
     <div v-else>
         <BannerComponent :imgUrl="pageData.banner_url_page" :messages="pageData.BannerTextsList" :isMainButtonActive="pageData.isMainButtonActive_page" :isSecondButtonActive="pageData.isSecondaryButtonActive_page" ></BannerComponent>
@@ -231,6 +236,7 @@ import { useCategoriesStore } from '@/store/category'
 
                 if (this.articles == '') {
                     this.articles = articleStore.validatedArticles;
+                    this.isFilterActivate = false
                 }
             } 
         },
@@ -331,10 +337,10 @@ import { useCategoriesStore } from '@/store/category'
     }
 
     .content_articles_list {
-        width: 100%;
+        /* width: 100%; */
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
+        justify-content:center;
         flex-wrap: wrap;
     }
 

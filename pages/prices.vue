@@ -1,7 +1,12 @@
 <template>
     <div v-if="!pageDataDownload" class="waiting_div">
-        <h2>Bienvenue sur le site de Cécilia Orsi Coaching</h2>
-        <h2>Veuillez patienter...</h2>
+        <div class="waiting_div_logo">
+            <img src="~/assets/images/logo_loader.png" alt="logo">
+        </div>
+        <h2>Cécilia Orsi Coaching</h2>
+        <div class="waiting_div_loader">
+            <p>Chargement en cours...</p>
+        </div>
     </div>
     <div v-else>
         <BannerComponent :imgUrl="pageData.banner_url_page" :messages="pageData.BannerTextsList" :isMainButtonActive="pageData.isMainButtonActive_page" :isSecondButtonActive="pageData.isSecondaryButtonActive_page" ></BannerComponent>
@@ -66,7 +71,7 @@
                 } else {
 
                 //? Si les articles ne sont pas déjà présents dans le store, effectuer l'appel API
-                pageStorepageStore.getAllPages()
+                usePagesStore.getAllPages()
                     .then(() => {
                     this.pageData       = pageStore.pages[this.pageId];
                     this.addTilesWidth();
@@ -111,14 +116,14 @@
                     {property: 'og:title', content: 'Cécilia Orsi Coaching - Tarifs'},
                     {property: 'og:type', content: 'website'},
                     {property: 'og:url', content:'https://www.cecilia-orsi.fr/prices'},
-                    {property: 'og:image', content: './assets/images/logo_header.png'},
+                    {property: 'og:image', content: '/_nuxt/assets/images/logo_header.png'},
                     {property: 'og:description', content: 'Détail des prestations que je propose, des tarifs et des réductions associés.'},
                     {name: 'twitter:card', content: 'summary_large_image'},
                     {name: 'twitter: title', content: 'Cécilia Orsi Coaching - Tarifs'},
                     {name: 'twitter:description', content: 'Détail des prestations que je propose, des tarifs et des réductions associés.'},
-                    {name: 'twitter:image', content: './assets/images/logo_header.png'}
+                    {name: 'twitter:image', content: '/_nuxt/assets/images/logo_header.png'}
                 ],
-                link: [{rel: 'icon', href: './assets/images/icone_tree.png'}]
+                link: [{rel: 'icon', href: '/_nuxt/assets/images/icone_tree.png'}]
             })
         },
     };
