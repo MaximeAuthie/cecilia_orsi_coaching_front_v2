@@ -1,24 +1,37 @@
 
 <template>
     <div v-if="!isArticleLoaded" class="waiting_div">
-        <h2>Bienvenue sur le site de Cécilia Orsi Coaching</h2>
-        <h2>Veuillez patienter...</h2>
+        <div class="waiting_div_logo">
+            <img src="~/assets/images/logo_loader.png" alt="logo">
+        </div>
+        <h2>Cécilia Orsi Coaching</h2>
+        <div class="waiting_div_loader">
+            <p>Chargement en cours...</p>
+        </div>
     </div>
     <div v-else>
-        <div class="banner" :style="{backgroundImage: 'url(' + articleDataTest.banner_url_article + ')'}">
+        <div class="banner" :style="{backgroundImage: 'url(' + articleData.banner_url_article + ')'}">
+            <NuxtLink to="/blog">
+                <div class="banner_link">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                        <path fill-rule="evenodd" d="M20.25 12a.75.75 0 01-.75.75H6.31l5.47 5.47a.75.75 0 11-1.06 1.06l-6.75-6.75a.75.75 0 010-1.06l6.75-6.75a.75.75 0 111.06 1.06l-5.47 5.47H19.5a.75.75 0 01.75.75z" clip-rule="evenodd" />
+                    </svg>
+                    Retour au blog
+                </div>
+            </NuxtLink>
                 <div class="banner_logo">
                 <img src="~/assets/images/logo_nav_header.png" alt="">
             </div>
             <div v-if="isArticleLoaded" class="banner_title">
-                <h1>{{ articleDataTest.title_article }}</h1>
+                <h1>{{ articleData.title_article }}</h1>
             </div> 
         
             <div v-if="isArticleLoaded" class="banner_informations">
-                Par {{ articleDataTest.user.first_name_user }} {{ articleDataTest.user.last_name_user }} - le {{ articleDataTest.date_article }}
+                Par {{ articleData.user.first_name_user }} {{ articleData.user.last_name_user }} - le {{ articleData.date_article }}
             </div>
         </div>
         <div class="content">
-            <section v-html="articleDataTest.content_article" class="content_article">
+            <section v-html="articleData.content_article" class="content_article">
             
             </section>
 
@@ -38,30 +51,7 @@
         data() {
             return {
                 id: '',
-                articleData: {
-                    id: 7,
-                    title: 'Stress et performance en entreprise',
-                    bannerUrl: "url(https://images.pexels.com/photos/2128817/pexels-photo-2128817.jpeg)",
-                    content: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi, magni. Vel commodi ex placeat ratione voluptatem, dignissimos ullam qui quam nobis dolore temporibus iusto eligendi alias, sequi sint eius possimus cumque neque. Quasi numquam rerum aperiam expedita delectus. Rem facere officia tempora dolore enim aut quisquam illo facilis vel minus quasi, voluptates perspiciatis laudantium, sit ut labore sapiente. Alias quia ad modi neque. Numquam porro maxime cum doloremque ex illo eius explicabo a molestiae corporis, vero at dolorem recusandae soluta est minus dolore temporibus, sequi necessitatibus eveniet ea veniam quam, mollitia nulla. Impedit accusamus dolores consectetur soluta, ut suscipit maxime?",
-                    date: '25/03/2023',
-                    description:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi, magni.',
-                    keywords : 'stress, performance, entreprise, management, burn-out',
-                    user: {
-                        firstName: 'Cécilia',
-                        lastName: 'Orsi'
-                    },
-                    categories: [
-                        {
-                            name:   "Travail",
-                            color:  "#C6BDB4"
-                        },
-                        {
-                            name:   "Santé",
-                            color:  "#8EBBA7"
-                        },
-                    ],
-                },
-                articleDataTest: {},
+                articleData: {},
                 isArticleLoaded :  false,
                 comments: []
             }
@@ -71,15 +61,15 @@
                 const articleStore = useArticlesStore();
 
                 //? Vérifier si les articles sont toujours présents dans le store, récupérer les données de l'article
-                if (articleStore.articles.length > 0) {
-                    this.articleDataTest            = articleStore.articles.find( article => article.id == this.id);
+                if (articleStore.validatedArticles.length > 0) {
+                    this.articleData            = articleStore.validatedArticles.find( article => article.id == this.id);
                     this.isArticleLoaded            = true;
                 } else {
 
                 //? Si les articles ne sont pas déjà présents dans le store, effectuer l'appel API et récupérer les données de l'article
-                articleStore.getAllArticles()
+                articleStore.getValidatedArticles()
                     .then(() => {
-                        this.articleDataTest            = articleStore.articles.find( article => article.id == this.id);
+                        this.articleData            = articleStore.validatedArticles.find( article => article.id == this.id);
                         this.isArticleLoaded            = true;
                     })
 
@@ -176,13 +166,29 @@
       opacity: 0.40;
       z-index: -1;
   }
-
+    .banner_link {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        text-decoration:none;
+        color: #FFFFFF;
+        width: 50vh;
+        font-size: 1.2em;
+        margin-top: 1vh;
+    }
+    .banner_link:hover {
+        text-decoration: underline;
+    }
+    .banner_link svg {
+        height: 3vh;
+        width: auto;
+    }
   .banner_logo {
         display: flex;
         align-items: center;
         justify-content: center;
         height: 25vh;
-        /* background-color: aqua; */
         margin-top: 2.5vh;
   }
 
