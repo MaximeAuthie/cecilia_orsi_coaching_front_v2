@@ -34,7 +34,7 @@ export const useArticlesStore = defineStore('articles', {
                     this.articles       = articlesList;
                   
                     //? Changer le format de date des propriétés date_article de this.articles
-                    this.formatArticlesDates();
+                    this.formatArticlesDates('articles');
 
                 })
 
@@ -62,7 +62,7 @@ export const useArticlesStore = defineStore('articles', {
                     this.validatedArticles  = articlesList;
                   
                     //? Changer le format de date des propriétés date_article de this.articles
-                    this.formatArticlesDates();
+                    this.formatArticlesDates('validated-articles');
 
                     //? Affecter les données du dernier articles à this.frontPageArticle
                     this.frontPageArticle = this.validatedArticles[this.validatedArticles.length-1];
@@ -75,16 +75,31 @@ export const useArticlesStore = defineStore('articles', {
             }
             
         },
-        formatArticlesDates() {
+        formatArticlesDates(prout) {
+            console.log("formatArticlesDates!");
+            let pouet = prout;
+            console.log(pouet);
+            if (pouet == 'articles') {
+                console.log("articles!");
+                //? On vérifie que le this.articles n'est pas vide
+                if (this.articles != '') {
 
-            //? On vérifie que le this.articles n'est pas vide
-            if (this.articles != '') {
-
-                //? Parcourir this.articles pour modifier le format de date_article grâce à la méthode formatDate() du service Utils
-                this.articles.forEach(article => {
-                    article.date_article = Utils.formatDate(article.date_article);
-                })
+                    //? Parcourir this.articles pour modifier le format de date_article grâce à la méthode formatDate() du service Utils
+                    this.articles.forEach(article => {
+                        article.date_article = Utils.formatDate(article.date_article);
+                    })
+                }
+            } else if (pouet == 'validated-articles') {
+                //? On vérifie que le this.articles n'est pas vide
+                if (this.validatedArticles != '') {
+                    console.log("validated-articles!");
+                    //? Parcourir this.articles pour modifier le format de date_article grâce à la méthode formatDate() du service Utils
+                    this.validatedArticles.forEach(article => {
+                        article.date_article = Utils.formatDate(article.date_article);
+                    })
+                }
             }
+            
         }
     },
 });
