@@ -298,7 +298,7 @@ form {
 .waiting_div_loader p {
     color: #B05447;
     font-family: Cutive Mono, monospace;
-    font-size: 25px;
+    font-size: 1.7em;
     font-weight: lighter;
     overflow: hidden;
     white-space: nowrap;
@@ -343,11 +343,17 @@ form {
 }
 
 .content_description p {
+    min-width: 100%;
     line-height: 4vh;
     font-size: 1.2em ;
     color: #4B453F;
 }
 
+.content_description ul {
+    line-height: 4vh;
+    font-size: 1.2em ;
+    color: #4B453F;
+}
 
 .content_description_image {
     display: flex;
@@ -389,8 +395,16 @@ form {
     }
     
     .content_description p {
+        min-width: 100%;
         line-height: 4vh;
         font-size: 1.5em ;
+        color: #4B453F;
+    }
+
+    .content_description ul {
+        line-height: 4vh;
+        font-size: 1.5em ;
+        color: #4B453F;
     }
 
     .content_description_image {
@@ -404,7 +418,7 @@ form {
         margin-top: 5vh;
     }
     .waiting_div_loader p {
-        font-size: 45px;
+        font-size: 2em;
     }
     .waiting_div h2 {
         font-size: 3.5em;
@@ -544,7 +558,7 @@ form {
 .admin_content_form_bloc {
     width: 100%;
     margin-bottom: 2vh;
-    overflow: hidden;
+
 }
 
 .admin_content_link {
@@ -641,7 +655,7 @@ form {
 } 
 
 .admin_input_form {
-    width: 98%;
+    width: 97%;
     height: 3.5vh;
     padding: 0.5% 1%;
     border: #C6C5C5 solid 1px;
