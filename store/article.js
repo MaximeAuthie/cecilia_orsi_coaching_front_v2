@@ -5,6 +5,7 @@ export const useArticlesStore = defineStore('articles', {
     state: () => ({
         articles: [],
         validatedArticles:[],
+        validatedArticlesToShow: [],
         frontPageArticle: []
     }),
     actions: {
@@ -57,16 +58,21 @@ export const useArticlesStore = defineStore('articles', {
                         "Access-Control-Allow-Origin": "*"
                     }
                 }).then(response => {
-                    //? Affecter le json de la réponse à this.articles
-                    const articlesList      = response;
-                    this.validatedArticles  = articlesList;
-                  
+                    //? Affecter le json de la réponse au éléments du state
+                    const articlesList              = response;
+                    this.validatedArticles          = articlesList;
+
                     //? Changer le format de date des propriétés date_article de this.articles
                     this.formatArticlesDates('validated-articles');
+                    
+                    //? Créer un clone de this.validatedArticles pour obtenir à la liste des articles à afficher dans le blog
+                    this.validatedArticlesToShow    = Object.values(this.validatedArticles);
 
                     //? Affecter les données du dernier articles à this.frontPageArticle
-                    this.frontPageArticle = this.validatedArticles[this.validatedArticles.length-1];
-                    this.validatedArticles.splice(this.validatedArticles.length-1,1);
+                    this.frontPageArticle = this.validatedArticlesToShow[this.validatedArticlesToShow.length-1];
+
+                    //? Supprimer le frontPageArticle de this.validatedArticlesToShow (pour qu'il n'apparaisse pas deux fois dans le blog)
+                    this.validatedArticlesToShow.splice(this.validatedArticlesToShow.length-1,1);
                 })
 
             //? En cas d'erreur inattendue, capter l'erreur rencontrée et emettre une erreur dans la console
@@ -75,12 +81,12 @@ export const useArticlesStore = defineStore('articles', {
             }
             
         },
-        formatArticlesDates(prout) {
-            console.log("formatArticlesDates!");
-            let pouet = prout;
-            console.log(pouet);
-            if (pouet == 'articles') {
-                console.log("articles!");
+        formatArticlesDates(array) {
+            
+            let arrayToFormat = array;
+   
+            if (arrayToFormat == 'articles') {
+                
                 //? On vérifie que le this.articles n'est pas vide
                 if (this.articles != '') {
 
@@ -89,10 +95,10 @@ export const useArticlesStore = defineStore('articles', {
                         article.date_article = Utils.formatDate(article.date_article);
                     })
                 }
-            } else if (pouet == 'validated-articles') {
+            } else if (arrayToFormat == 'validated-articles') {
                 //? On vérifie que le this.articles n'est pas vide
                 if (this.validatedArticles != '') {
-                    console.log("validated-articles!");
+                    
                     //? Parcourir this.articles pour modifier le format de date_article grâce à la méthode formatDate() du service Utils
                     this.validatedArticles.forEach(article => {
                         article.date_article = Utils.formatDate(article.date_article);
