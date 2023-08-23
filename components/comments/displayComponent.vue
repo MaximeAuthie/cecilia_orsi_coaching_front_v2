@@ -18,11 +18,11 @@
                 required:   true
             },
             authorName: {
-                type:       Number,
+                type:       String,
                 required:   true
             },
             date: {
-                type:       Date,
+                type:       String,
                 required:   true
             },
             content: {

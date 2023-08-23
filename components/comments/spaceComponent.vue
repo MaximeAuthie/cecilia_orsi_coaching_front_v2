@@ -35,7 +35,7 @@
     export default {
         props: {
             articleId: {
-                type:       Number,
+                type:       String,
                 required:   true
             },
             comments: {
