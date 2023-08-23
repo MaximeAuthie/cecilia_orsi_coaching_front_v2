@@ -2,14 +2,14 @@
     <div class="articles_list_card">
       <div class="articles_list_card_header">Liste des articles</div>
       <div v-if="articles.length != 0" class="articles_list_card_content">
-        <ManagerArticlesArticleComponent
+        <ManagerArticlesItemComponent
           v-for="article in articles"
           @update="updateArticle"
           :id="article.id"
           :title="article.title_article"
           :date="article.date_article"
           :isPublished="article.isPublished_article"
-        ></ManagerArticlesArticleComponent>
+        ></ManagerArticlesItemComponent>
       </div>
       <div v-else class="articles_list_card_no_article">Aucun article à afficher</div>
     </div>

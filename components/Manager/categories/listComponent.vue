@@ -4,7 +4,7 @@
             Liste des catégories
         </div>
         <div v-if="categories.length != 0" class="categories_list_card_content">
-            <ManagerCategoriesCategoryComponent v-for="category in categories" @update="updateCategory" :id="category.id" :name="category.name_category" :color="category.color_category"></ManagerCategoriesCategoryComponent>
+            <ManagerCategoriesItemComponent v-for="category in categories" @update="updateCategory" :id="category.id" :name="category.name_category" :color="category.color_category"></ManagerCategoriesItemComponent>
         </div>
         <div v-else class="categories_list_card_no_categories">Aucune catégorie à afficher</div>
     </div>
