@@ -10,9 +10,9 @@
         <h1>Bienvenue dans l’espace d’administration {{ user }}</h1>
     
         <div class="admin_content_stats">
-            <ManagerIndexStatCardComponent title="Visites totales" content="12%" color="#8EBBA7"></ManagerIndexStatCardComponent>
-            <ManagerIndexStatCardComponent title="Visites 30 jours" content="412" color="#E28250"></ManagerIndexStatCardComponent>
-            <ManagerIndexStatCardComponent title="Visites 24h" content="25" color="#6C89B4"></ManagerIndexStatCardComponent>
+            <ManagerIndexStatCardComponent title="Visites totales" :content="stats.all" color="#8EBBA7"></ManagerIndexStatCardComponent>
+            <ManagerIndexStatCardComponent title="Visites 30 jours" :content="stats.month" color="#E28250"></ManagerIndexStatCardComponent>
+            <ManagerIndexStatCardComponent title="Visites 24h" :content="stats.day" color="#6C89B4"></ManagerIndexStatCardComponent>
         </div>
         <ManagerIndexLastCommentsCardComponent></ManagerIndexLastCommentsCardComponent>
     </div>
@@ -20,16 +20,21 @@
 
 <script>
     import { useUsersStore } from "@/store/user";
+    import { useStatsStore } from '@/store/stats';
 
     export default {
         data() {
             return {
-                user: ''
+                user:   '',
+                stats:  {}
             }
         },
         mounted() {
             const userStore = useUsersStore();
             this.user = userStore.firstName;
+
+            const statsStore = useStatsStore();
+            this.stats = statsStore.stats;
         }
     }
 </script>
