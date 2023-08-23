@@ -60,11 +60,7 @@
                 content: this.modelValue,
                 extensions: [
                     StarterKit,
-                    ListItem,
                     Underline,
-                    Heading.configure({
-                        levels: [1, 2, 3],
-                    }),
                 ],
                 onUpdate: () => {
                     this.$emit('update:modelValue', this.editor.getHTML())
