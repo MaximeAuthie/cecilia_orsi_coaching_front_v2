@@ -11,9 +11,6 @@
     <div v-else>
         <BannerComponent :imgUrl="pageData.banner_url_page" :messages="pageData.BannerTextsList" :isMainButtonActive="pageData.isMainButtonActive_page" :isSecondButtonActive="pageData.isSecondaryButtonActive_page" ></BannerComponent>
         <div class="content">
-            <ul>
-                <li v-for="article in articles" :key="article.id">{{ article.title_article }}</li>
-            </ul>
             <section class="content_description">
                 <h2>Pourquoi venir en séance?</h2>
                 <p>Chacun d’entre nous peut à un moment donné, se retrouver dans une période compliquée. Il est donc normal de se sentir démuni face à certaines situations, à certains changements, à nos manques de décisions, à nos émotions débordantes ou au contraire refoulées, à notre stress… Ce qui devient problématique, c’est lorsque ces situations et ces émotions nous freinent, nous font souffrir et perdurent dans le temps.</p>
@@ -73,7 +70,6 @@
                     .then(() => {
                         this.pageData       = pageStore.pages[this.pageId];
                         this.addTilesWidth();
-                        this.pageDataDownload   = true;
                     })
 
                     //? En cas d'erreur inattendue, capter l'erreur rencontrée
@@ -92,8 +88,10 @@
 
                 //? Si le nombre de tuiles est impair, la valeur de la propriété fullWidth passe à true pour la dernière tuile
                 if (tilesNumber%2 != 0) {
-                        this.pageData.tiles_list[tilesNumber-1].fullWidth = true;
-                    }
+                    this.pageData.tiles_list[tilesNumber-1].fullWidth = true;
+                }
+
+                this.pageDataDownload   = true;
             },
            
         },

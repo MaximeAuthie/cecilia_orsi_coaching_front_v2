@@ -98,7 +98,7 @@ import { useCategoriesStore } from '@/store/category'
 
                 //? Vérifier si les articles sont toujours présents dans le store
                 if (articleStore.validatedArticles.length > 0) {
-                    this.articles           = articleStore.validatedArticles;
+                    this.articles           = articleStore.validatedArticlesToShow;
                     this.frontPageArticle   = articleStore.frontPageArticle;
                     this.loading            = false;
                 } else {
@@ -106,7 +106,7 @@ import { useCategoriesStore } from '@/store/category'
                 //? Si les articles ne sont pas déjà présents dans le store, effectuer l'appel API
                 articleStore.getValidatedArticles()
                     .then(() => {
-                        this.articles           = articleStore.validatedArticles;
+                        this.articles           = articleStore.validatedArticlesToShow;
                         this.frontPageArticle   = articleStore.frontPageArticle;
                         this.loading            = false;
                     })
@@ -122,12 +122,12 @@ import { useCategoriesStore } from '@/store/category'
             getCategories() {
                 const categoryStore = useCategoriesStore();
 
-                //? Vérifier si les articles sont toujours présents dans le store
+                //? Vérifier si les catégories sont toujours présentes dans le store
                 if (categoryStore.categories.length > 0) {
                     this.categories           = categoryStore.categories;
                 } else {
 
-                //? Si les articles ne sont pas déjà présents dans le store, effectuer l'appel API
+                //? Si les catégories ne sont pas déjà présentes dans le store, effectuer l'appel API
                 categoryStore.getAllCategories()
                     .then(() => {
                         this.categories           = categoryStore.categories;
@@ -135,7 +135,7 @@ import { useCategoriesStore } from '@/store/category'
 
                     //? En cas d'erreur inattendue, capter l'erreur rencontrée
                     .catch((error) => {
-                        console.error('Erreur lors de la récupération des articles :', error);
+                        console.error('Erreur lors de la récupération des catégories :', error);
                     });
                 }
             },
@@ -148,24 +148,22 @@ import { useCategoriesStore } from '@/store/category'
             getPageData() {
                 const pageStore = usePagesStore();
 
-                //? Vérifier si les articles sont toujours présents dans le store
+                //? Vérifier si les pages sont toujours présents dans le store
                 if (pageStore.pages.length > 0) {
                     this.pageData       = pageStore.pages[this.pageId];
                     this.addTilesWidth();
-                    this.pageDataDownload   = true;
                 } else {
 
-                //? Si les articles ne sont pas déjà présents dans le store, effectuer l'appel API
+                //? Si les pages ne sont pas déjà présents dans le store, effectuer l'appel API
                 pageStore.getAllPages()
                     .then(() => {
                         this.pageData       = pageStore.pages[this.pageId];
                         this.addTilesWidth();
-                        this.pageDataDownload   = true;
                     })
 
                     //? En cas d'erreur inattendue, capter l'erreur rencontrée
                     .catch((error) => {
-                    console.error('Erreur lors de la récupération des articles :', error);
+                    console.error('Erreur lors de la récupération des pages :', error);
                     this.pageDataDownload   = false;
                     });
                 }
@@ -181,8 +179,10 @@ import { useCategoriesStore } from '@/store/category'
 
                 //? Si le nombre de tuiles est impair, la valeur de la propriété fullWidth passe à true pour la dernière tuile
                 if (tilesNumber%2 != 0) {
-                        this.pageData.tiles_list[tilesNumber-1].fullWidth = true;
-                    }
+                    this.pageData.tiles_list[tilesNumber-1].fullWidth = true;
+                }
+
+                this.pageDataDownload   = true;
             },
             filterByCategory(categoryName, isSelected) {
                 //? Déclarer la variable articleStore
@@ -242,9 +242,9 @@ import { useCategoriesStore } from '@/store/category'
         },
         mounted() {
             //? Exécution de la méthode récupérant les données de la page dans la BDD et qui les place dans l'objet this.pageData
-            this.getPageData();
             this.getArticles();
             this.getCategories();
+            this.getPageData();
 
             //?Vérifier le nombre d'articles pour afficher la barre "voir plus"
             if (this.articles.length > 9) {

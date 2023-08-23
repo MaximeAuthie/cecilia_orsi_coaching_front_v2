@@ -67,21 +67,19 @@
                 if (pageStore.pages.length > 0) {
                     this.pageData       = pageStore.pages[this.pageId];
                     this.addTilesWidth();
-                    this.pageDataDownload   = true;
                 } else {
 
                 //? Si les articles ne sont pas déjà présents dans le store, effectuer l'appel API
-                usePagesStore.getAllPages()
+                pageStore.getAllPages()
                     .then(() => {
-                    this.pageData       = pageStore.pages[this.pageId];
-                    this.addTilesWidth();
-                    this.pageDataDownload   = true;
+                        this.pageData       = pageStore.pages[this.pageId];
+                        this.addTilesWidth();
                     })
 
                     //? En cas d'erreur inattendue, capter l'erreur rencontrée
                     .catch((error) => {
-                    console.error('Erreur lors de la récupération des articles :', error);
-                    this.pageDataDownload   = false;
+                        console.error('Erreur lors de la récupération des articles :', error);
+                        this.pageDataDownload   = false;
                     });
                 }
 
@@ -96,8 +94,10 @@
 
                 //? Si le nombre de tuiles est impair, la valeur de la propriété fullWidth passe à true pour la dernière tuile
                 if (tilesNumber%2 != 0) {
-                        this.pageData.tiles_list[tilesNumber-1].fullWidth = true;
-                    }
+                    this.pageData.tiles_list[tilesNumber-1].fullWidth = true;
+                }
+
+                this.pageDataDownload   = true;
             },
         },
         mounted() {

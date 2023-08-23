@@ -33,7 +33,7 @@
         </div>
         
         <div class="admin_content_form_buttons_container">
-            <button v-if="!tileUpdate" @click="updateTile" class="admin_button admin_button_main">Modifier</button>
+            <button @click="updateTile" class="admin_button admin_button_main">Modifier</button>
         </div>
     </div>
 </div>

@@ -42,7 +42,7 @@
                 <input v-model="selectedPageData.img2_url_page" type="text" class="admin_input_form">
             </div>
             <div class="admin_content_form_buttons_container">
-                <button v-if="!categoryUpdate" @click="updatePage()" class="admin_button admin_button_main">Modifier</button>
+                <button @click="updatePage()" class="admin_button admin_button_main">Modifier</button>
             </div>
        </div>
 
