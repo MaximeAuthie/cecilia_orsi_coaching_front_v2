@@ -12,7 +12,9 @@
                 <ArticlesCategoryTagComponent v-for="category in categories" :name="category.name_category" :color="category.color_category"></ArticlesCategoryTagComponent>
             </div>
             <div class="article_div_summary">
-                <p>{{ summary.substring(0, 400) + "..." }}</p>
+                <div v-html="summary" class="article_div_summary">
+                  
+                </div>
             </div>
      
     </nuxt-link>
@@ -61,7 +63,7 @@
     }
 </script>
 
-<style scoped>
+<style>
 
     h5 {
         font-size: 2em;
@@ -141,13 +143,16 @@
     }
     .article_div_summary {
         flex: 53%;
-        width: 93%;
+        width: calc(100%-3vw);
+        padding-left: 2vw;
+        padding-right: 2vw;
         /* background-color: chartreuse; */
         font-family: 'Playfair', serif;
         font-size: 1em;
         color: #4B453F;
         text-align: justify;
         margin: 0;
+        overflow: hidden;
     }
     .article_div_summary p {
         margin: 0;
@@ -156,6 +161,12 @@
     @media screen and (min-width: 1210px) {
         .article_div {
             width: 30%;
-        } 
+        }
+        .article_div_summary {
+
+        width: calc(100%-1vw);
+        padding-left: 0.5vw;
+        padding-right: 0.5vw;
+    }
     }
 </style>
