@@ -40,6 +40,7 @@
     import { useCategoriesStore } from '@/store/category'
     import { useCommentsStore } from '@/store/comment';
     import { useTilesStore } from '@/store/tile';
+    import { useStatsStore } from '@/store/stats';
 
     export default {
         data() {
@@ -70,9 +71,10 @@
                 //? Récupérer l'id de l'utilisateur dans le paramètre
                 userStore.id            = token.toString().split('!').pop();
 
-               
-
                 //? Appel des méthodes get des autres stores pour précharcher les informations de tout l'espace admin
+                const statsStore = useStatsStore();
+                statsStore.getVisitsStats();
+                
                 const commentsStore = useCommentsStore();
                 commentsStore.getCommentsToValidate();
                 commentsStore.getValidatedComments();
@@ -85,7 +87,6 @@
 
                 const categoriesStore = useCategoriesStore();
                 categoriesStore.getAllCategories();
-
 
                 const tilesStore = useTilesStore();
                 tilesStore.getAllTiles();
