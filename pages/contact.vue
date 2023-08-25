@@ -16,24 +16,24 @@
                 <form @submit.prevent="">
                     <label for="firstName">Votre prénom</label><br>
                     <input v-model="formData.firstName" @keyup="checkImputKeyUp" :class="isEmpty.firstName ? 'bad_input' : 'normal_input'" type="text" name="firstName" id="firstName"><br>
-                    <p v-if="isEmpty.firstName" class="error_message">Veuillez saisir votre prénom</p>
+                    <p v-if="isEmpty.firstName" class="error_message" id="error_msg_firstName">Veuillez saisir votre prénom</p>
 
                     <label for="lastName">Votre nom</label><br>
                     <input v-model="formData.lastName" @keyup="checkImputKeyUp" :class="isEmpty.lastName ? 'bad_input' : 'normal_input'" type="text" name="lastName" id="lastName"><br>
-                    <p v-if="isEmpty.lastName" class="error_message">Veuillez saisir votre nom</p>
+                    <p v-if="isEmpty.lastName" class="error_message" id="error_msg_lastName">Veuillez saisir votre nom</p>
 
                     <label for="email">Votre adresse mail</label><br>
                     <input v-model="formData.email" @keyup="checkImputKeyUp" :class="isEmpty.email ? 'bad_input' : 'normal_input'" type="mail" name="email" id="email"><br>
-                    <p v-if="isEmpty.email" class="error_message">Veuillez saisir votre adresse mail</p>
-                    <p v-if="!isMailCorrect" class="error_message">Format de l'adresse mail incorrect</p>
+                    <p v-if="isEmpty.email" class="error_message" id="error_msg_empty_email">Veuillez saisir votre adresse mail</p>
+                    <p v-if="!isMailCorrect" class="error_message" id="error_msg_format_email">Format de l'adresse mail incorrect</p>
 
                     <label for="subject">Sujet de votre message</label><br>
                     <input v-model="formData.subject" @keyup="checkImputKeyUp" :class="isEmpty.subject ? 'bad_input' : 'normal_input'" type="text" name="subject" id="subject"><br>
-                    <p v-if="isEmpty.subject" class="error_message">Veuillez saisir un sujet pour votre message</p>
+                    <p v-if="isEmpty.subject" class="error_message" id="error_msg_subject">Veuillez saisir un sujet pour votre message</p>
 
                     <label for="content">Votre message</label><br>
                     <textarea v-model="formData.content" @keyup="checkImputKeyUp" :class="isEmpty.content ? 'bad_textarea' : 'normal_textarea'"  name="content" id="content"></textarea>
-                    <p v-if="isEmpty.content" class="error_message">Veuillez saisir un message</p>
+                    <p v-if="isEmpty.content" class="error_message" id="error_msg_content">Veuillez saisir un message</p>
 
                     <p v-if="serverError" class="error_message p-center" id="serverError">{{ serverResponse }}</p>
 

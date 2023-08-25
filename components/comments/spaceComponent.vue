@@ -7,16 +7,16 @@
                 <h6>Poster un commentaire</h6>
                 <label for="authorName">Vos prénom et nom</label><br>
                 <input v-model="newComment.authorName" @keyup="checkImputKeyUp" :class="isEmpty.authorName ? 'bad_input' : 'normal_input'" type="text" name="authorName" id="authorName"><br>
-                <p v-if="isEmpty.authorName" class="error_message">Veuillez saisir votre nom</p>
+                <p v-if="isEmpty.authorName" class="error_message" id="error_msg_authorName">Veuillez saisir votre prénom et votre nom</p>
 
                 <label for="authorEmail">Votre adresse mail</label><br>
                 <input v-model="newComment.authorEmail" @keyup="checkImputKeyUp" :class="isEmpty.authorEmail ? 'bad_input' : 'normal_input'" type="email" name="authorEmail" id="authorEmail"><br>
-                <p v-if="isEmpty.authorEmail" class="error_message">Veuillez saisir votre adresse email</p>
-                <p v-if="!isMailCorrect" class="error_message">Format de l'adresse mail incorrect</p>
+                <p v-if="isEmpty.authorEmail" class="error_message" id="error_msg_empty_authorEmail">Veuillez saisir votre adresse email</p>
+                <p v-if="!isMailCorrect" class="error_message" id="error_msg_format_authorEmail">Format de l'adresse mail incorrect</p>
 
                 <label for="content">Votre commentaire</label><br>
                 <textarea v-model="newComment.content" @keyup="checkImputKeyUp" :class="isEmpty.content ? 'bad_textarea' : 'normal_textarea'"  name="content" id="content"></textarea>
-                <p v-if="isEmpty.content" class="error_message">Veuillez saisir un commentaire</p>
+                <p v-if="isEmpty.content" class="error_message" id="error_msg_content">Veuillez saisir un commentaire</p>
 
                 <input @click="submitForm" class="button button_form" type="button" value="Poster">
             </form>
