@@ -6,11 +6,14 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "test":"cypress open",
+    "auto_test":"cypress run --browser chrome"
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
     "@types/node": "^18.17.1",
+    "cypress": "^12.17.4",
     "nuxt": "^3.6.5"
   },
   "dependencies": {
