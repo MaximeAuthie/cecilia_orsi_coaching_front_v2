@@ -1,6 +1,31 @@
+<script setup>
+    const route =useRoute();
+    const id = route.params.id;
+    const {data:article, pending} = useFetch('https://www.maximeauthie.fr/api/article/1');
+    const {data:comments} = useFetch('https://www.maximeauthie.fr/api/comment/validated/' + id);
 
+    useHead({
+                title: 'Cécilia Orsi Coaching - ' + article.title,
+                meta: [
+                    {name: 'description', content: article.description},
+                    {name:'robots', content:'index, follow'},
+                    {"http-equiv": 'Content-Language', content: 'fr'},
+                    {name: 'keywords', content: article.keywords},
+                    {property: 'og:title', content: 'Cécilia Orsi Coaching - ' + article.title},
+                    {property: 'og:type', content: 'website'},
+                    {property: 'og:url', content:'https://www.cecilia-orsi.fr/blog'},
+                    {property: 'og:image', content: './assets/images/logo_header.png'},
+                    {property: 'og:description', content: article.description},
+                    {name: 'twitter:card', content: 'summary_large_image'},
+                    {name: 'twitter: title', content: 'Cécilia Orsi Coaching - ' + article.title},
+                    {name: 'twitter:description', content: article.description},
+                    {name: 'twitter:image', content: './assets/images/logo_header.png'}
+                ],
+                link: [{rel: 'icon', href: './assets/images/icone_tree.png'}]
+            })
+</script>
 <template>
-    <div v-if="!isArticleLoaded" class="waiting_div">
+    <div v-if="pending" class="waiting_div">
         <div class="waiting_div_logo">
             <img src="~/assets/images/logo_loader.png" alt="logo">
         </div>
@@ -10,7 +35,7 @@
         </div>
     </div>
     <div v-else>
-        <div class="banner" :style="{backgroundImage: 'url(' + articleData.banner_url_article + ')'}">
+        <div class="banner" :style="{backgroundImage: 'url(' + article.banner_url_article + ')'}">
             <NuxtLink to="/blog">
                 <div class="banner_link">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
@@ -22,16 +47,16 @@
                 <div class="banner_logo">
                 <img src="~/assets/images/logo_nav_header.png" alt="">
             </div>
-            <div v-if="isArticleLoaded" class="banner_title">
-                <h1>{{ articleData.title_article }}</h1>
+            <div v-if="!pending" class="banner_title">
+                <h1>{{ article.title_article }}</h1>
             </div> 
         
-            <div v-if="isArticleLoaded" class="banner_informations">
-                Par {{ articleData.user.first_name_user }} {{ articleData.user.last_name_user }} - le {{ articleData.date_article }}
+            <div v-if="!pending" class="banner_informations">
+                Par {{ article.user.first_name_user }} {{ article.user.last_name_user }} - le {{ article.date_article }}
             </div>
         </div>
         <div class="content">
-            <section v-html="articleData.content_article" class="content_article">
+            <section v-html="article.content_article" class="content_article">
             
             </section>
 
@@ -41,103 +66,6 @@
         </div>
     </div>
 </template>
-
-<script>
-
-    import { useArticlesStore } from '@/store/article';
-    import { useCommentsStore } from '@/store/comment'
-
-    export default {
-        data() {
-            return {
-                id: '',
-                articleData: {},
-                isArticleLoaded :  false,
-                comments: []
-            }
-        },
-        methods: {
-            getArticleData() {
-                const articleStore = useArticlesStore();
-
-                //? Vérifier si les articles sont toujours présents dans le store, récupérer les données de l'article
-                if (articleStore.validatedArticles.length > 0) {
-                    this.articleData            = articleStore.validatedArticles.find( article => article.id == this.id);
-                    this.isArticleLoaded            = true;
-                } else {
-
-                //? Si les articles ne sont pas déjà présents dans le store, effectuer l'appel API et récupérer les données de l'article
-                articleStore.getValidatedArticles()
-                    .then(() => {
-                        this.articleData            = articleStore.validatedArticles.find( article => article.id == this.id);
-                        this.isArticleLoaded            = true;
-                    })
-
-                    //? En cas d'erreur inattendue, capter l'erreur rencontrée
-                    .catch((error) => {
-                    console.error('Erreur lors de la récupération des articles :', error);
-                    this.loading                    = false;
-                    });
-                }
-
-            },
-            getComments() {
-               const commentsStore = useCommentsStore();
-
-               //? Vérifier si les articles sont toujours présents dans le store, récupérer les données de l'article
-               if (commentsStore.comments.length > 0) {
-                    this.comments                   = commentsStore.comments.filter( comment => comment.article.id == this.id);
-                    this.isArticleLoaded            = true;
-                } else {
-
-                //? Si les articles ne sont pas déjà présents dans le store, effectuer l'appel API et récupérer les données de l'article
-                commentsStore.getValidatedComments()
-                    .then(() => {
-                        this.comments            = commentsStore.comments.filter( comment => comment.article.id == this.id);;
-                        this.isArticleLoaded            = true;
-                    })
-
-                    //? En cas d'erreur inattendue, capter l'erreur rencontrée
-                    .catch((error) => {
-                        console.error('Erreur lors de la récupération des commentaires :', error);
-                        this.loading            = false;
-                    });
-                }
-            }
-        },
-        mounted() {
-
-            //? Récupération de l'id de l'article dans la route à l'ouverture de la page
-            this.id = this.$route.params.id.toString();
-
-            //? Récupérer les information de l'article concerné dans le store Article
-            this.getArticleData();
-            this.getComments();
-
-            //? Renseigner les balises HTML de <head> pour le SEO
-            useHead({
-                title: 'Cécilia Orsi Coaching - ' + this.articleData.title,
-                meta: [
-                    {name: 'description', content: this.articleData.description},
-                    {name:'robots', content:'index, follow'},
-                    {"http-equiv": 'Content-Language', content: 'fr'},
-                    {name: 'keywords', content: this.articleData.keywords},
-                    {property: 'og:title', content: 'Cécilia Orsi Coaching - ' + this.articleData.title},
-                    {property: 'og:type', content: 'website'},
-                    {property: 'og:url', content:'https://www.cecilia-orsi.fr/blog'},
-                    {property: 'og:image', content: './assets/images/logo_header.png'},
-                    {property: 'og:description', content: this.articleData.description},
-                    {name: 'twitter:card', content: 'summary_large_image'},
-                    {name: 'twitter: title', content: 'Cécilia Orsi Coaching - ' + this.articleData.title},
-                    {name: 'twitter:description', content: this.articleData.description},
-                    {name: 'twitter:image', content: './assets/images/logo_header.png'}
-                ],
-                link: [{rel: 'icon', href: './assets/images/icone_tree.png'}]
-            })
-        },
-    };
-  
-</script>
 
 <style scoped>
   .banner {
