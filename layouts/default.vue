@@ -4,16 +4,16 @@
     <footerComponent></footerComponent>
 </template>
 <script>
-    import { useStatsStore } from '@/store/stats';
+    
     export default {
         data() {
             return {
-                route: ''
+                route: '',
             }
         },
         methods: {
             async addVisit() {
-        console.log("addVisitLancé");
+        
                 //? Importer le composable permettant de vérifier le jwt
                 const { getPublicIp } = useIp();
 
@@ -51,7 +51,6 @@
         mounted() {
             this.route = this.$route.path;
             this.addVisit();
-        
-        },
+        }
     }
 </script>

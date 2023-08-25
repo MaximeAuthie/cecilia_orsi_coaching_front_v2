@@ -93,7 +93,6 @@
 
                 this.pageDataDownload   = true;
             },
-           
         },
         mounted() {
 
