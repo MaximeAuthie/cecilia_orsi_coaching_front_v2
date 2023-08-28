@@ -1,5 +1,34 @@
+<script setup>
+
+    const route = useRoute();
+    const title = route.fullPath;
+
+    const {data: pageData} = useFetch('https://www.maximeauthie.fr/api/page' + title);
+    const {data: tilesData, pending} = useFetch('https://www.maximeauthie.fr/api/tile' + title);
+    
+    useHead({
+        title: 'Cécilia Orsi Coaching - Qui je suis?',
+        meta: [
+            {name: 'description', content: 'Présentation de Cécilia Orsi, coach de vie certifiée à Toulouse.'},
+            {name:'robots', content:'index, follow'},
+            {"http-equiv": 'Content-Language', content: 'fr'},
+            {name: 'keywords', content: 'coach, coaching, coaching de vie, toulouse, haute-garonne, présentation'},
+            {property: 'og:title', content: 'Cécilia Orsi Coaching - Qui je suis?'},
+            {property: 'og:type', content: 'website'},
+            {property: 'og:url', content:'https://www.cecilia-orsi.fr/owner'},
+            {property: 'og:image', content: '/_nuxt/assets/images/logo_header.png'},
+            {property: 'og:description', content: 'Présentation de Cécilia Orsi, coach de vie certifiée à Toulouse.'},
+            {name: 'twitter:card', content: 'summary_large_image'},
+            {name: 'twitter: title', content: 'Cécilia Orsi Coaching - Qui je suis?'},
+            {name: 'twitter:description', content: 'Présentation de Cécilia Orsi, coach de vie certifiée à Toulouse.'},
+            {name: 'twitter:image', content: '/_nuxt/assets/images/logo_header.png'}
+        ],
+        link: [{rel: 'icon', href: '/_nuxt/assets/images/icone_tree.png'}]
+    })
+</script>
+
 <template>
-    <div v-if="!pageDataDownload" class="waiting_div">
+    <div v-if="pending" class="waiting_div">
         <div class="waiting_div_logo">
             <img src="~/assets/images/logo_loader.png" alt="logo">
         </div>
@@ -35,91 +64,11 @@
                 <NuxtLink to="/appointment"><input class="button button_content" type="button" value="Prendre rendez-vous"></NuxtLink>
             </section>
             <section class="content_tiles">
-                <TileComponent v-for="tile in pageData.tiles_list" :pageTitle="tile.title_tile" :pagePath="tile.link_tile" :pageImgUrm="tile.img_url_tile" :full-width="tile.fullWidth" ></TileComponent>
+                <TileComponent v-for="tile in tilesData" :pageTitle="tile.title_tile" :pagePath="tile.link_tile" :pageImgUrm="tile.img_url_tile" :full-width="tile.isFullWidth_tile" ></TileComponent>
             </section>
         </div>
     </div>
 </template>
-
-<script>
-    import { usePagesStore } from '@/store/page';
-
-    export default {
-        data() {
-            return {
-                pageId :            1,
-                pageData :          {},
-                pageDataDownload :  false
-            }
-        },
-        methods: {
-            getPageData() {
-                const pageStore = usePagesStore();
-
-                //? Vérifier si les articles sont toujours présents dans le store
-                if (pageStore.pages.length > 0) {
-                    this.pageData       = pageStore.pages[this.pageId];
-                    this.addTilesWidth();
-                } else {
-
-                //? Si les articles ne sont pas déjà présents dans le store, effectuer l'appel API
-                pageStore.getAllPages()
-                    .then(() => {
-                        this.pageData       = pageStore.pages[this.pageId];
-                        this.addTilesWidth();
-                    })
-
-                    //? En cas d'erreur inattendue, capter l'erreur rencontrée
-                    .catch((error) => {
-                        console.error('Erreur lors de la récupération des articles :', error);
-                        this.pageDataDownload   = false;
-                    });
-                }
-            },
-            addTilesWidth() {
-                //? On ajoute un proprité fullWitdh à chaque objet de this.data.tilesList (pour gérer la largueur des tuiles via une props)
-                let tilesNumber = this.pageData.tiles_list.length;
-                for (let i=0 ; i<tilesNumber; i++) {
-                        this.pageData.tiles_list[i].fullWidth = false;
-                    }
-
-                //? Si le nombre de tuiles est impair, la valeur de la propriété fullWidth passe à true pour la dernière tuile
-                if (tilesNumber%2 != 0) {
-                    this.pageData.tiles_list[tilesNumber-1].fullWidth = true;
-                }
-
-                this.pageDataDownload   = true;
-
-            },
-        },
-        mounted() {
-
-            //? Exécution de la méthode récupérant les données de la page dans la BDD et qui les place dans l'objet this.pageData
-            this.getPageData();
-
-            //? Renseigner les balises HTML de <head> pour le SEO
-            useHead({
-                title: 'Cécilia Orsi Coaching - Qui je suis?',
-                meta: [
-                    {name: 'description', content: 'Présentation de Cécilia Orsi, coach de vie certifiée à Toulouse.'},
-                    {name:'robots', content:'index, follow'},
-                    {"http-equiv": 'Content-Language', content: 'fr'},
-                    {name: 'keywords', content: 'coach, coaching, coaching de vie, toulouse, haute-garonne, présentation'},
-                    {property: 'og:title', content: 'Cécilia Orsi Coaching - Qui je suis?'},
-                    {property: 'og:type', content: 'website'},
-                    {property: 'og:url', content:'https://www.cecilia-orsi.fr/owner'},
-                    {property: 'og:image', content: '/_nuxt/assets/images/logo_header.png'},
-                    {property: 'og:description', content: 'Présentation de Cécilia Orsi, coach de vie certifiée à Toulouse.'},
-                    {name: 'twitter:card', content: 'summary_large_image'},
-                    {name: 'twitter: title', content: 'Cécilia Orsi Coaching - Qui je suis?'},
-                    {name: 'twitter:description', content: 'Présentation de Cécilia Orsi, coach de vie certifiée à Toulouse.'},
-                    {name: 'twitter:image', content: '/_nuxt/assets/images/logo_header.png'}
-                ],
-                link: [{rel: 'icon', href: '/_nuxt/assets/images/icone_tree.png'}]
-            })
-        },
-    };
-</script>
 
 <style scoped>
 .content_description_avatar {

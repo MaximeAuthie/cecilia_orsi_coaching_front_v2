@@ -4,25 +4,29 @@
     const {data:article, pending} = useFetch('https://www.maximeauthie.fr/api/article/1');
     const {data:comments} = useFetch('https://www.maximeauthie.fr/api/comment/validated/' + id);
 
+    const { formatDate } = useUtils();
+
+    
+
     useHead({
-                title: 'Cécilia Orsi Coaching - ' + article.title,
-                meta: [
-                    {name: 'description', content: article.description},
-                    {name:'robots', content:'index, follow'},
-                    {"http-equiv": 'Content-Language', content: 'fr'},
-                    {name: 'keywords', content: article.keywords},
-                    {property: 'og:title', content: 'Cécilia Orsi Coaching - ' + article.title},
-                    {property: 'og:type', content: 'website'},
-                    {property: 'og:url', content:'https://www.cecilia-orsi.fr/blog'},
-                    {property: 'og:image', content: './assets/images/logo_header.png'},
-                    {property: 'og:description', content: article.description},
-                    {name: 'twitter:card', content: 'summary_large_image'},
-                    {name: 'twitter: title', content: 'Cécilia Orsi Coaching - ' + article.title},
-                    {name: 'twitter:description', content: article.description},
-                    {name: 'twitter:image', content: './assets/images/logo_header.png'}
-                ],
-                link: [{rel: 'icon', href: './assets/images/icone_tree.png'}]
-            })
+        title: 'Cécilia Orsi Coaching - ' + article.title,
+        meta: [
+            {name: 'description', content: article.description},
+            {name:'robots', content:'index, follow'},
+            {"http-equiv": 'Content-Language', content: 'fr'},
+            {name: 'keywords', content: article.keywords},
+            {property: 'og:title', content: 'Cécilia Orsi Coaching - ' + article.title},
+            {property: 'og:type', content: 'website'},
+            {property: 'og:url', content:'https://www.cecilia-orsi.fr/blog'},
+            {property: 'og:image', content: './assets/images/logo_header.png'},
+            {property: 'og:description', content: article.description},
+            {name: 'twitter:card', content: 'summary_large_image'},
+            {name: 'twitter: title', content: 'Cécilia Orsi Coaching - ' + article.title},
+            {name: 'twitter:description', content: article.description},
+            {name: 'twitter:image', content: './assets/images/logo_header.png'}
+        ],
+        link: [{rel: 'icon', href: './assets/images/icone_tree.png'}]
+    })
 </script>
 <template>
     <div v-if="pending" class="waiting_div">
@@ -52,7 +56,7 @@
             </div> 
         
             <div v-if="!pending" class="banner_informations">
-                Par {{ article.user.first_name_user }} {{ article.user.last_name_user }} - le {{ article.date_article }}
+                Par {{ article.user.first_name_user }} {{ article.user.last_name_user }} - le {{ formatDate(article.date_article ) }}
             </div>
         </div>
         <div class="content">

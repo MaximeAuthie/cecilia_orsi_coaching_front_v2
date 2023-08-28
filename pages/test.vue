@@ -1,10 +1,10 @@
 <script setup>
 
-    const route = useRoute();
-    const title = route.fullPath;
+    const route =useRoute();
+    const title = '/prices' //route.fullPath;
 
     const {data: pageData} = useFetch('https://www.maximeauthie.fr/api/page' + title);
-    const {data: tilesData, pending} = useFetch('https://www.maximeauthie.fr/api/tile' + title);
+    const {data: tiles, pending} = useFetch('https://www.maximeauthie.fr/api/tile' + title);
     
     useHead({
         title: 'Cécilia Orsi Coaching - Tarifs',
@@ -71,7 +71,7 @@
                 <NuxtLink to="/appointment"><input class="button button_content" type="button" value="Prendre rendez-vous"></NuxtLink>
             </section>
             <section class="content_tiles">
-                <TileComponent v-for="tile in tilesData" :pageTitle="tile.title_tile" :pagePath="tile.link_tile" :pageImgUrm="tile.img_url_tile" :full-width="tile.isFullWidth_tile" ></TileComponent>
+                <TileComponent v-for="tile in tiles" :pageTitle="tile.title_tile" :pagePath="tile.link_tile" :pageImgUrm="tile.img_url_tile" :full-width="tile.isFullWidth_tile" ></TileComponent>
             </section>
         </div>
     </div>
@@ -97,4 +97,5 @@
         background-color: #8EBBA7;
         cursor: pointer;
     }
+    
 </style>

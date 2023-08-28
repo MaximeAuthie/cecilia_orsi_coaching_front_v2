@@ -1,5 +1,24 @@
+<script setup>
+
+    const route = useRoute();
+    const title = route.fullPath;
+
+    const {data: pageData} = useFetch('https://www.maximeauthie.fr/api/page' + title);
+    const {data: tilesData, pending} = useFetch('https://www.maximeauthie.fr/api/tile' + title);
+    
+    useHead({
+        title: 'Cécilia Orsi Coaching - Mentions légales',
+        meta: [
+            {name: 'description', content: 'Mention légales'},
+            {name:'robots', content:'noindex, nofollow'},
+            {"http-equiv": 'Content-Language', content: 'fr'},
+        ],
+        link: [{rel: 'icon', href: '/_nuxt/assets/images/icone_tree.png'}]
+    })
+</script>
+
 <template>
-    <div v-if="!pageDataDownload" class="waiting_div">
+    <div v-if="pending" class="waiting_div">
         <div class="waiting_div_logo">
             <img src="~/assets/images/logo_loader.png" alt="logo">
         </div>
@@ -74,70 +93,19 @@
     
                     <NuxtLink to="/"><input class="button button_content" type="button" value="Retour à l'accueil"></NuxtLink>
             </section>
+            <section class="content_tiles">
+                <TileComponent v-for="tile in tilesData" :pageTitle="tile.title_tile" :pagePath="tile.link_tile" :pageImgUrm="tile.img_url_tile" :full-width="tile.isFullWidth_tile" ></TileComponent>
+            </section>
         </div>
     </div>
 </template>
 
-<script>
-    import { usePagesStore } from '@/store/page';
-
-    export default {
-        data() {
-            return {
-                pageId :            6,
-                pageData :          {},
-                pageDataDownload :  false
-            }
-        },
-        methods: {
-            getPageData() {
-                const pageStore = usePagesStore();
-
-                //? Vérifier si les articles sont toujours présents dans le store
-                if (pageStore.pages.length > 0) {
-                    this.pageData       = pageStore.pages[this.pageId];
-                    this.pageDataDownload   = true;
-                } else {
-
-                //? Si les articles ne sont pas déjà présents dans le store, effectuer l'appel API
-                pageStore.getAllPages()
-                    .then(() => {
-                        this.pageData       = pageStore.pages[this.pageId];
-                        this.pageDataDownload   = true;
-                    })
-
-                    //? En cas d'erreur inattendue, capter l'erreur rencontrée
-                    .catch((error) => {
-                    console.error('Erreur lors de la récupération des pages :', error);
-                    this.pageDataDownload   = false;
-                    });
-                }
-            }
-        },
-        mounted() {
-
-            //? Exécution de la méthode récupérant les données de la page dans la BDD et qui les place dans l'objet this.pageData
-            this.getPageData();
-
-            //? Renseigner les balises HTML de <head> pour le SEO
-            useHead({
-                title: 'Cécilia Orsi Coaching - Qui je suis?',
-                meta: [
-                    {name: 'description', content: 'Mention légales'},
-                    {name:'robots', content:'noindex, nofollow'},
-                    {"http-equiv": 'Content-Language', content: 'fr'},
-                ],
-                link: [{rel: 'icon', href: '/_nuxt/assets/images/icone_tree.png'}]
-            })
-        },
-    };
-</script>
-
 <style scoped>
- .content_description_link {
+    .content_description_link {
     color: #4B453F;
     text-decoration: underline;
- }
-
-
+    }
+    .content_description_link:hover {
+    color: #398C7E;
+    }
 </style>
