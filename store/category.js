@@ -6,20 +6,17 @@ export const useCategoriesStore = defineStore('categories', {
   }),
   actions: {
     async getAllCategories() {
-      console.log("GetAllCategories lancé");
+      
         try {
-            let response = await $fetch('https://127.0.0.1:8000/api/category/all', {
-                method:'GET',
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*"
-                }
-            }).then(response => {
-              const categoryList = response;
-              this.categories = categoryList;
-            })
-            
+
+            //? Appel de la méthode getAllCategories() du composable useCategory
+            const { getAllCategories } = useCategory();
+            const categoriesList = await getAllCategories();
+
+            //? Stocker les données retournée dans le state this.categories
+            this.categories = categoriesList;
+        
+        //? En cas d'erreur inattendue, capter l'erreur rencontrée et emettre une erreur dans la console
         } catch (error) {
             console.error(error.message);
         }

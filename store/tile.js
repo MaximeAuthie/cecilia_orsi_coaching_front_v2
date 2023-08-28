@@ -6,19 +6,14 @@ export const useTilesStore = defineStore('tiles', {
   }),
   actions: {
     async getAllTiles() {
-      console.log("GetAllTiles lancé");
+
         try {
-            let response = await $fetch('https://127.0.0.1:8000/api/tile/all', {
-                method:'GET',
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*"
-                }
-            }).then(response => {
-              const tilsList = response;
-              this.tiles = tilsList;
-            })
+            //? Appel de la méthode getVisitsStats() du composable useCategory
+            const { getAllTiles } = useTile();
+            const tilesList = await getAllTiles();
+
+            //? Stocker les données retournée dans le state this.tiles
+            this.tiles = tilesList;
             
         } catch (error) {
             console.error(error.message);

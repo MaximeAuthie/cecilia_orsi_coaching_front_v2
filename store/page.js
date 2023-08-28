@@ -7,20 +7,15 @@ export const usePagesStore = defineStore('pages', {
   actions: {
     async getAllPages() {
         try {
-            await $fetch('https://127.0.0.1:8000/api/page/all', {
-                method:'GET',
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*"
-                }
-            }).then(response => {
-              const pagesList = response;
-              this.pages = pagesList;
-            })
+            //? Appel de la méthode getAllPages() du composable usePage
+            const { getAllPages } = usePage();
+            const pagesList = await getAllPages();
+
+            //? Stocker les données retournée dans le state this.pages
+            this.pages = pagesList;
             
         } catch (error) {
-            console.error(error.message);
+            console.error(error);
         }
         
     }

@@ -9,26 +9,12 @@ export const useStatsStore = defineStore('stats', {
             
         try {
 
-            //? Importer le composable permettant de vérifier le jwt
-            const { verifyToken } = useAuthentification();
-
-            //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-            const jwt = await verifyToken();
+            //? Appel de la méthode getVisitsStats() du composable useStat
+            const { getVisitsStats } = useStat();
+            const statsList = await getVisitsStats();
             
-            //? Appeler l'api getVisitsStats()
-            await $fetch('https://127.0.0.1:8000/api/visit/stats', {
-                method:'GET',
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*",
-                    "Authorization": `Bearer ${jwt}`
-                }
-            }).then(response => {
-                //? Affecter le json de la réponse à this.stats
-                const stats = response;
-                this.stats  = stats;
-            })
+            //? Stocker les données retournée dans le state this.stats
+            this.stats  = statsList;
 
         //? En cas d'erreur inattendue, capter l'erreur rencontrée et emettre une erreur dans la console
         } catch (error) {

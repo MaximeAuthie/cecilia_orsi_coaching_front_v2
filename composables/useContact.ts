@@ -1,11 +1,12 @@
-class ContactService {
-    
-    async sendContactMail(contactData) {
+export function useContact() {
 
-        let message = {
+    async function sendContactMail(contactData:Object) {
+
+        let message:Object = {
             code: 0,
             text: ''
         };
+
         const bodyJson   = JSON.stringify(contactData);
         const response   = await fetch('https://127.0.0.1:8000/api/contact', {
             method:'POST',
@@ -32,6 +33,9 @@ class ContactService {
 
         return message;
     }
+  
+    
+    return {
+        sendContactMail
+    }
 }
-
-export default new ContactService;
