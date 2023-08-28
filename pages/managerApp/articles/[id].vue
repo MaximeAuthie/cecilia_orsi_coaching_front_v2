@@ -215,50 +215,66 @@
                 });
             },
             async publishArticle() {
-                const { verifyToken } = useAuthentification();
-                const userStore = useUsersStore();
-                const articleStore = useArticlesStore();
+                // const { verifyToken } = useAuthentification();
+                // const userStore = useUsersStore();
+                // const articleStore = useArticlesStore();
 
-                //? Définir le contenu du body de la requête
-                const body = {
-                        id: this.id,
-                };
+                // //? Définir le contenu du body de la requête
+                // const body = {
+                //         id: this.id,
+                // };
 
-                //? Transformer l'objet body en json
-                const bodyJson  = JSON.stringify(body);
+                // //? Transformer l'objet body en json
+                // const bodyJson  = JSON.stringify(body);
 
-                //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-                const jwt = await verifyToken();
+                // //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
+                // const jwt = await verifyToken();
                 
-                //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
-                await fetch('https://127.0.0.1:8000/api/article/publish', {
-                    method:'PATCH',
-                    headers: {
-                            "Accept": "application/json",
-                            "Content-Type": "application/json",
-                            "Access-Control-Allow-Origin": "*",
-                            "Authorization": `Bearer ${jwt}`
-                        },
-                    body: bodyJson,
-                })
-                .then(async response => {
-                    const body = await response.json();
+                // //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
+                // await fetch('https://127.0.0.1:8000/api/article/publish', {
+                //     method:'PATCH',
+                //     headers: {
+                //             "Accept": "application/json",
+                //             "Content-Type": "application/json",
+                //             "Access-Control-Allow-Origin": "*",
+                //             "Authorization": `Bearer ${jwt}`
+                //         },
+                //     body: bodyJson,
+                // })
+                // .then(async response => {
+                //     const body = await response.json();
 
-                    if (response.status == 200) {
-                        this.formSuccessMessage     = body.message;
-                        this.article.isPublished_article = !this.article.isPublished_article;
-                        articleStore.getAllArticles();
-                    } else if (response.status == 498) {
-                        userStore.token = '';
-                        navigateTo('/managerApp/logIn/expired-session'); 
-                    } else {
-                        this.errorMessages.form       = body.message;
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                    this.errorMessages.form = "Une erreur est survenue. Veuillez réessayer plus tard.";
-                });
+                //     if (response.status == 200) {
+                //         this.formSuccessMessage     = body.message;
+                //         this.article.isPublished_article = !this.article.isPublished_article;
+                //         articleStore.getAllArticles();
+                //     } else if (response.status == 498) {
+                //         userStore.token = '';
+                //         navigateTo('/managerApp/logIn/expired-session'); 
+                //     } else {
+                //         this.errorMessages.form       = body.message;
+                //     }
+                // })
+                // .catch(error => {
+                //     console.error(error);
+                //     this.errorMessages.form = "Une erreur est survenue. Veuillez réessayer plus tard.";
+                // });
+                
+                //? Appel de la méthode publishArticle() du composable useCategory
+                const { publishArticle } = useArticle();
+                const response = await publishArticle(this.id);
+
+                //? Récupérer le body de la réponse
+                const responseBody = await response.json()
+                
+                //? En fonction du statut de la réponse, afficher le message d'erreur ou de succès correspondant
+                if (response.status == 200) {
+                    this.formSuccessMessage             = responseBody.message;
+                    console.log(response);
+                    this.article.isPublished_article    = !this.article.isPublished_article;
+                } else {
+                    this.errorMessages.form             = responseBody.message;
+                }
             },
             ckeckTitleLength() {
                 if (this.article.title_article.length >= 40) {
