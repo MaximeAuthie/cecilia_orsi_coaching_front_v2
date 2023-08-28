@@ -20,8 +20,6 @@
 <script>
     import { Editor, EditorContent } from '@tiptap/vue-3'
     import StarterKit from '@tiptap/starter-kit';
-    import Heading from '@tiptap/extension-heading';
-    import ListItem from '@tiptap/extension-list-item';
     import Underline from '@tiptap/extension-underline'
 
     export default {

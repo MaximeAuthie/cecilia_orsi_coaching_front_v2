@@ -30,7 +30,6 @@
 </template>
 
 <script>
-    import Utils from '@/services/Utils';
 
     export default {
         props: {
@@ -63,6 +62,9 @@
         },
         methods: {
             async submitForm() {
+                //? Importer la méthode getCurrentDateTime du composable useUtils.ts
+                const { getCurrentDateTime } = useUtils();
+
                 //? Exécuter les fonction de vérification des saisies
                 this.checkImputSubmit();
                 this.checkMailFormat();
@@ -73,7 +75,7 @@
                     let commentBody = {
                         author_name_comment:    this.newComment.authorName,
                         author_email_comment:   this.newComment.authorEmail,
-                        date_comment:           Utils.getCurrentDateTime(),
+                        date_comment:           getCurrentDateTime(),
                         content_comment:        this.newComment.content,
                         articleId:              this.articleId
                     }

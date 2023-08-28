@@ -19,7 +19,7 @@
 
                 //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
                 const publicIp = await getPublicIp();
-
+                
                 //? Déclarer la variable body
                 const body = {
                     ip : publicIp

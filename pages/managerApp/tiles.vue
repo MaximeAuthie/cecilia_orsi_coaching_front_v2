@@ -116,10 +116,11 @@
                 
                 //? Transformer l'objet selectedPageData en json
                 const bodyJson = JSON.stringify(this.selectedTileData);
+                console.log(bodyJson);
                
                 //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
                 const jwt = await verifyToken();
-
+                console.log(jwt);
                 //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
                 await fetch('https://127.0.0.1:8000/api/tile/update', {
                     method:'PATCH',

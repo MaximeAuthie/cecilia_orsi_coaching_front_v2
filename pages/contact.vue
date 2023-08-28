@@ -81,8 +81,6 @@
 </template>
 
 <script>
-    import ContactService from '@/services/ContactService';
-    import { usePagesStore } from '@/store/page';
 
     export default {
         
@@ -127,8 +125,9 @@
                         content:      this.formData.content
                     }
                  
-                     //? Appeller la métode sendContactMail() du service ContactService
-                    ContactService.sendContactMail(message).then(response => {
+                    //? Appeller la métode sendContactMail() du service ContactService
+                    const { sendContactMail } = useContact();
+                    sendContactMail(message).then(response => {
                         
                         if (response.code === 200) {
                             this.isFormSubmit = true;

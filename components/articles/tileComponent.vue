@@ -65,7 +65,7 @@
 
 <style>
 
-    h5 {
+    .article_div_title_bloc_title h5 {
         font-size: 2em;
         margin: 0;
         padding-top: 1vh;

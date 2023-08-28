@@ -1,16 +1,20 @@
+<script setup>
+    //? Importer la méthode formatDatetime du composable useUtils.ts
+   const { formatDatetime } = useUtils();
+</script>
+
 <template>
     <div class="comments_display_div" :key="id">
         <div class="comment_display_div_informations">
-            {{ authorName }} - le {{ date }}
+            {{ authorName }} - le {{ formatDatetime(date) }}
         </div>
-        <div class="comment_display_div_content">
-            {{ content }}
+        <div v-html="content" class="comment_display_div_content">
+            
         </div>
     </div>
 </template>
 
 <script>
-
     export default {
         props: {
             id: {
@@ -31,10 +35,9 @@
             }
         }
     }
-
 </script>
 
-<style scoped>
+<style>
     .comments_display_div {
         display: flex;
         flex-direction: column;
