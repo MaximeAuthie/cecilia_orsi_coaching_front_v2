@@ -8,7 +8,6 @@
 <template>
     <div class="admin_content">
         <h1>Bienvenue dans l’espace d’administration {{ user }}</h1>
-    
         <div class="admin_content_stats">
             <ManagerIndexStatCardComponent title="Visites totales" :content="stats.all" color="#8EBBA7"></ManagerIndexStatCardComponent>
             <ManagerIndexStatCardComponent title="Visites 30 jours" :content="stats.month" color="#E28250"></ManagerIndexStatCardComponent>

@@ -34,16 +34,15 @@
                 this.articles = articleStore.articles;
                 } else {
                 //? Si les catégories ne sont pas déjà présents dans le store, effectuer l'appel API
-                articleStore
-                    .getAllArticles()
-                        .then(() => {
-                            this.articles = articleStore.articles;
-                        })
-            
-                        //? En cas d'erreur inattendue, capter l'erreur rencontrée
-                        .catch((error) => {
-                            console.error("Erreur lors de la récupération des catégories :", error);
-                        });
+                articleStore.getAllArticles()
+                    .then(() => {
+                        this.articles = articleStore.articles;
+                    })
+        
+                    //? En cas d'erreur inattendue, capter l'erreur rencontrée
+                    .catch((error) => {
+                        console.error("Erreur lors de la récupération des catégories :", error);
+                    });
                 }
             },
         updateArticle(id, name, color) {
