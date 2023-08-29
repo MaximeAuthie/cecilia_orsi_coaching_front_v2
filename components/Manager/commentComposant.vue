@@ -64,89 +64,44 @@
         methods: {
             async validateComment() {
                 const userStore = useUsersStore();
-                const { verifyToken } = useAuthentification();
 
                 //? Définir le contenu du body de la requête
                 let body = {
                     commentId:  this.id,
-                    userId:     1
+                    userId:     userStore.id
                 }
 
-                //? Transformer l'objet body en json
-                let bodyJson = JSON.stringify(body);
+                //? Appel de la méthode validateComment() du composable useComment
+                const { validateComment } = useComment();
+                const response = await validateComment(body);
                 
-                //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-                const jwt = await verifyToken();
-
-                await fetch('https://127.0.0.1:8000/api/comment/validate', {
-                        method:'PATCH',
-                        headers: {
-                            "Accept": "application/json",
-                            "Content-Type": "application/json",
-                            "Access-Control-Allow-Origin": "*",
-                            "Authorization": `Bearer ${jwt}`
-                        },
-                        body: bodyJson
-                    })
-                    .then(async response => {
-                        const body = await response.json()
-
-                        if (response.status == 200) {
-                            this.updateStore();
-                        } else if (response.status == 498) {
-                            userStore.token = '';
-                            navigateTo('/managerApp/logIn/expired-session'); 
-                        } else {
-                            this.$emit('error',  body.message);
-                        }
-                    })
-                    .catch(error => {
-                        this.$emit('error', 'Une erreur est survenue. Veuillez réessayer plus tard');
-                    })
+                //? En fonction du statut de la réponse, afficher le message d'erreur ou de succès correspondant
+                if (response.status == 200) {
+                    this.updateStore();
+                } else {
+                    this.$emit('error', 'Une erreur est survenue. Veuillez réessayer plus tard');
+                }
 
             },
             async rejectComment() {
                 const userStore = useUsersStore();
-                const { verifyToken } = useAuthentification();
 
                 //? Définir le cntenu du body de la requête
                 let body = {
                     commentId:  this.id,
-                    userId:     1
+                    userId:     userStore.id
                 }
 
-                //? Transformer l'objet selectedPageData en json
-                body = JSON.stringify(body);
+                //? Appel de la méthode rejectComment() du composable useComment
+                const { rejectComment } = useComment();
+                const response = await rejectComment(body);
                 
-                //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-                const jwt = await verifyToken();
-
-                await fetch('https://127.0.0.1:8000/api/comment/reject', {
-                        method:'PATCH',
-                        headers: {
-                            "Accept": "application/json",
-                            "Content-Type": "application/json",
-                            "Access-Control-Allow-Origin": "*",
-                            "Authorization": `Bearer ${jwt}`
-                        },
-                        body: body
-                    })
-                    .then(async response => {
-                        const body = await response.json()
-                        
-                        if (response.status == 200) {
-                            this.updateStore();
-                        } else if (response.status == 498) {
-                            userStore.token = '';
-                            navigateTo('/managerApp/logIn/expired-session'); 
-                        } else {
-                            this.$emit('error', body.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        this.$emit('error', 'Une erreur est survenue. Veuillez réessayer plus tard');
-                    })
+                //? En fonction du statut de la réponse, afficher le message d'erreur ou de succès correspondant
+                if (response.status == 200) {
+                    this.updateStore();
+                } else {
+                    this.$emit('error', 'Une erreur est survenue. Veuillez réessayer plus tard');
+                }
             },
             updateStore() {
                 const store = useCommentsStore();

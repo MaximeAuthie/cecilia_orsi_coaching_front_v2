@@ -25,7 +25,8 @@ export function useStat() {
             const statsList = await response.json();
             
             return statsList;
-              
+        
+        //? En cas d'erreur, capter cette erreur et la retourner
         } catch (error) {
             console.error(error);
         }      

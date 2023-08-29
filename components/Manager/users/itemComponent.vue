@@ -36,7 +36,6 @@
         methods: {
             async disableUser() { 
                 const userStore = useUsersStore();
-                const { verifyToken } = useAuthentification();
 
                 //? Demander confirmation à l'utilisateur avant de désactiver l'autre tuilisateur
                 if (confirm('L\'utilisateur "' + this.name + '" sera conservé dans la base de donnée mais n\'apparaitra plus dans l\'espace d\'administration. Voulez-vous poursuivre?')) {
@@ -48,40 +47,18 @@
                         idApplicant : userStore.id
                     }
 
-                    //? Transformer l'objet body en json
-                    const bodyJson  = JSON.stringify(body);
-
-                    //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-                    const jwt = await verifyToken();
-
-                    //? Exécuter l'appel API
-                    await fetch('https://127.0.0.1:8000/api/user/disable', {
-                        method:'PATCH',
-                        headers: {
-                            "Accept": "application/json",
-                            "Content-Type": "application/json",
-                            "Access-Control-Allow-Origin": "*",
-                            "Authorization": `Bearer ${jwt}`
-                        },
-                        body: bodyJson,
-                    })
-                    .then(async response => {
-                        const body = await response.json()
-
-                        if (response.status == 200) {
-                            userStore.getAllUsers();
-                            alert("L'utilisateur " + this.name + " a été désactivé avec succès.");
-                        } else if (response.status == 498) {
-                            userStore.token = '';
-                            navigateTo('/managerApp/logIn/expired-session'); 
-                        } else {
-                            alert(body.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        alert("Une erreur est survenue. Veuillez réessayer plus tard.");
-                    });
+                    //? Appel de la méthode updateUser() du composable useUser
+                    const { disableUser }   = useUser();
+                    const response          = await disableUser(body);
+                    const responseBody      = await response.json();
+                    
+                    //? En fonction du statut de la réponse, afficher le message d'erreur ou de succès correspondant
+                    if (response.status == 200) {
+                        userStore.getAllUsers();
+                        alert("L'utilisateur " + this.name + " a été désactivé avec succès.")
+                    } else {
+                        alert(responseBody.message);
+                    }
                 }
             },
             update() {

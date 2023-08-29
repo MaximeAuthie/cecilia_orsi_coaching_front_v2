@@ -81,35 +81,21 @@
                 
                 if (this.checkErrorMessages()) {
 
-                    //? Transformer l'objet authentificationData en json
-                    const bodyJson = JSON.stringify(this.authentificationData);
-
-                    // //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
-                    await fetch('https://localhost:8000/api/user/logIn', {
-                        method:'PATCH',
-                        headers: {
-                            "Accept": "application/json",
-                            "Content-Type": "application/json",
-                            "Access-Control-Allow-Origin": "*"
-                        },
-                        body: bodyJson,
-                    })
-                    .then(async response => {
-                        const body = await response.json();
-                        
-                        if (response.status == 200) {
-                            this.formSuccessMessage     = body.message;
-                        } else {
-                            console.log(body);
-                            this.errorMessages.form       = body.message;
-                        }
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        this.errorMessages.form = "Une erreur est survenue. Veuillez réessayer plus tard.";
-                    });
+                   //? Appel de la méthode logIn() du composable useUser
+                    const { logIn } = useUser();
+                    const response = await logIn(this.authentificationData);
+                    
+                    //? Récupérer le body de la réponse
+                    const responseBody = await response.json()
+                    
+                    //? En fonction du statut de la réponse, afficher le message d'erreur ou de succès correspondant
+                    if (response.status == 200) {
+                        this.formSuccessMessage             = responseBody.message;
+                    } else {
+                        this.errorMessages.form             = responseBody.message;
+                    }
                 }
-},
+            }
         }
     }
 </script>

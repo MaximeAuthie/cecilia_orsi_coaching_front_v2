@@ -1,4 +1,3 @@
-import { useArticlesStore } from "@/store/article";
 import { useUsersStore } from "@/store/user";
 
 export function useArticle() {
@@ -11,7 +10,7 @@ export function useArticle() {
             //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
             const jwt = await verifyToken();
             
-            //? Appeler l'api getAllArticles()
+            //? Exxecuter l'appel API
             const response = await $fetch('https://127.0.0.1:8000/api/article/all', {
                 method:'GET',
                 headers: {
@@ -24,7 +23,6 @@ export function useArticle() {
 
             //? Retourner la réponse
             const articlesList = await response;
-            
             return articlesList;
 
         //? En cas d'erreur inattendue, capter l'erreur rencontrée et emettre une erreur dans la console
@@ -49,22 +47,99 @@ export function useArticle() {
 
             //? Retourner la réponse
             const articlesList = await response.json();
-            
             return articlesList;
 
         //? En cas d'erreur inattendue, capter l'erreur rencontrée et emettre une erreur dans la console
         } catch (error) {
             console.error(error);
         }
-        
     }
-  
+
+    async function addArticle(body:object) {
+        try {
+            const userStore = useUsersStore();
+            const { verifyToken } = useAuthentification();
+
+            //? Transformer l'objet body en json
+            const bodyJson = JSON.stringify(body);
+            
+            //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
+            const jwt = await verifyToken();
+
+            //? Exécuter l'appel API
+            const response = await fetch('https://127.0.0.1:8000/api/article/add', {
+                method:'POST',
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                    "Authorization": `Bearer ${jwt}`
+                },
+                body: bodyJson,
+            })
+
+            //? Retourner la réponse
+            if (response.status == 200) {
+                return response;
+            } else if (response.status == 498) {
+                userStore.token = '';
+                navigateTo('/managerApp/logIn/expired-session'); 
+            } else {
+                return response;
+            }
+
+        //? En cas d'erreur, capter cette erreur et la retourner
+        } catch(error) {
+            console.error(error);      
+            return error;
+        }
+    }
+    
+    async function updateArticle(body:object) {
+        try {
+            const userStore = useUsersStore();
+            const { verifyToken } = useAuthentification();
+
+            //? Transformer l'objet body en json
+            const bodyJson = JSON.stringify(body);
+            
+            //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
+            const jwt = await verifyToken();
+            
+            //? Exécuter l'appel API
+            const response = await fetch('https://127.0.0.1:8000/api/article/update', {
+                method:'PATCH',
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                    "Authorization": `Bearer ${jwt}`
+                },
+                body: bodyJson,
+            })
+
+            //? Retourner la réponse
+            if (response.status == 498) {
+                userStore.token = '';
+                navigateTo('/managerApp/logIn/expired-session'); 
+            } else {
+                return response;
+            }
+
+        //? En cas d'erreur, capter cette erreur et la retourner
+        } catch(error) {
+            console.error(error);  
+            return error;
+        }
+        
+
+    }
+
     async function publishArticle(id:number) {
 
         try {
             const { verifyToken } = useAuthentification();
             const userStore = useUsersStore();
-            const articleStore = useArticlesStore();
 
             //? Définir le contenu du body de la requête
             const body = {
@@ -77,7 +152,7 @@ export function useArticle() {
             //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
             const jwt = await verifyToken();
 
-            //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
+            //? Exécuter l'appel API
             const response = await fetch('https://127.0.0.1:8000/api/article/publish', {
                 method:'PATCH',
                 headers: {
@@ -90,27 +165,66 @@ export function useArticle() {
             })
 
             //? Retourner la réponse
-            
-
-            if (response.status == 200) {
-                articleStore.getAllArticles();
-                return response;
-            } else if (response.status == 498) {
+            if (response.status == 498) {
                 userStore.token = '';
                 navigateTo('/managerApp/logIn/expired-session'); 
             } else {
                 return response;
             }
-        } catch (error) {
-            console.log(error);
-            
+        
+        //? En cas d'erreur, capter cette erreur et la retourner
+        } catch(error) {
+            console.error(error);          
             return error;
         }
     }
-    
+
+    async function disableArticle(body:object) {
+        try {
+            const userStore = useUsersStore();
+            const { verifyToken } = useAuthentification();
+
+            //? Transformer l'objet body en json
+            const bodyJson = JSON.stringify(body);
+            
+            //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
+            const jwt = await verifyToken();
+            
+            //? Exécuter l'appel API
+            const response = await fetch("https://127.0.0.1:8000/api/article/disable", {
+                method: "PATCH",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                    "Authorization": `Bearer ${jwt}`
+                },
+                body: bodyJson,
+            })
+
+            //? Retourner la réponse
+            if (response.status == 498) {
+                userStore.token = '';
+                navigateTo('/managerApp/logIn/expired-session'); 
+            } else {
+                return response;
+            }
+
+        //? En cas d'erreur, capter cette erreur et la retourner
+        } catch(error) {
+            console.error(error);  
+            return error;
+        }
+        
+
+    }
+
     return {
         getAllArticles,
         getValidatedArticles,
-        publishArticle
+        addArticle,
+        updateArticle,
+        publishArticle,
+        disableArticle
     }
 }

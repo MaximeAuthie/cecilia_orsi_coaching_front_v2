@@ -14,10 +14,6 @@
                 <option v-for="page in pages" :value="page.id" class="admin_option">{{ page.title_page }}</option>
             </select>
         </div>
-        <div class="admin_content_filters_message">
-            <span v-if="formErrorMessage" class="admin_content_filters_message_error">{{ formErrorMessage }}</span>
-            <span v-if="formSuccessMessage" class="admin_content_filters_message_success">{{ formSuccessMessage }}</span>
-        </div>
        <div v-if="selectedPageId != 0" class="admin_content_form">
             <div class="admin_content_form_bloc">
                 <label for="status" class="admin_label">URL de la bannière : </label>
@@ -41,6 +37,10 @@
                 <label for="status" class="admin_label">URL de l'image 2 : </label>
                 <input v-model="selectedPageData.img2_url_page" type="text" class="admin_input_form">
             </div>
+            <div class="admin_content_filters_message">
+                <span v-if="formErrorMessage" class="admin_content_filters_message_error">{{ formErrorMessage }}</span>
+                <span v-if="formSuccessMessage" class="admin_content_filters_message_success">{{ formSuccessMessage }}</span>
+            </div>
             <div class="admin_content_form_buttons_container">
                 <button @click="updatePage()" class="admin_button admin_button_main">Modifier</button>
             </div>
@@ -51,7 +51,6 @@
 
 <script>
     import { usePagesStore } from '@/store/page';
-    import { useUsersStore } from "@/store/user";
 
     export default {
         data() {
@@ -86,7 +85,7 @@
                     });
                 }
             },
-            displayPageData(event) { //! A MODIFIER
+            displayPageData(event) {
                 const index = event.target.selectedIndex;
                 this.selectedPageData = this.pages[index];
                 this.formErrorMessage ='';
@@ -101,46 +100,23 @@
             async updatePage() {
 
                 const pageStore = usePagesStore();
-                const userStore = useUsersStore();
-                const { verifyToken } = useAuthentification();
                 
                 //? Rénitialiser les messages d'erreur
                 this.formErrorMessage ='';
                 this.formSuccessMessage = '';
+                
+                //? Appel de la méthode updatePage() du composable usePage
+                const { updatePage }    = usePage();
+                const response          = await updatePage(this.selectedPageData);
+                const body              = await response.json();
 
-                //? Transformer l'objet selectedPageData en json
-                const bodyJson  = JSON.stringify(this.selectedPageData);
-                
-                //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-                const jwt = await verifyToken();
-                
-                //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
-                await fetch('https://127.0.0.1:8000/api/page/update', {
-                    method:'PATCH',
-                    headers: {
-                        "Accept": "application/json",
-                        "Content-Type": "application/json",
-                        "Access-Control-Allow-Origin": "*",
-                        "Authorization": `Bearer ${jwt}`
-                    },
-                    body: bodyJson,
-                })
-                .then(async response => {
-                    const body = await response.json()
-                    if (response.status == 200) {
-                        this.formSuccessMessage     = body.message;
-                        pageStore.getAllPages();
-                    } else if (response.status == 498) {
-                        userStore.token = '';
-                        navigateTo('/managerApp/logIn/expired-session'); 
-                    } else {
-                        this.formErrorMessage       = body.message;
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                    this.formErrorMessage = "Une erreur est survenue. Veuillez réessayer plus tard.";
-                });
+                //? En fonction du statut de la réponse, afficher le message d'erreur ou de succès correspondant
+                if (response.status == 200) {
+                    this.formSuccessMessage = body.message;
+                    pageStore.getAllPages();
+                } else {
+                    this.formErrorMessage ='Une erreur est survenue. Veuillez réessayer plus tard';
+                }
             },
             deleteBannerText(id) {
                 //? Rechercher l'objet dans le tableau pour récupérer son index
@@ -150,7 +126,6 @@
                 //? Suppression de l'objet dans le tableau
                 this.selectedPageData.BannerTextsList.splice(indexToDelete,1);
             },
-    
         },
         mounted() {
             this.getPages();

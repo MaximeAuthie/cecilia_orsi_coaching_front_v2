@@ -9,12 +9,11 @@ export function useIp() {
             
             //? Retourner la réponse : ici un noouveau token (string)
             const publicIp = await response.toString();
-            
             return publicIp; 
 
         //? En cas d'erreur on met fin à la session
         } catch (error) {
-            console.log(error)
+            console.error(error); 
         }
     }
     

@@ -137,8 +137,6 @@
             },
             async addArticle() {
                 const articleStore = useArticlesStore();
-                const userStore = useUsersStore();
-                const { verifyToken } = useAuthentification();
 
                 //? Vérifier si le titre est au moins renseigné 
                 if (this.article.title_article == '') {
@@ -163,41 +161,21 @@
                     this.article.categories_list.push(cat);
                 })
 
-                //? Transformer l'objet selectedPageData en json
-                const bodyJson = JSON.stringify(this.article);
+                //? Appel de la méthode addArticle() du composable useArticle
+                const { addArticle } = useArticle();
+                const response = await addArticle(this.article);
                 
-                //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-                const jwt = await verifyToken();
-
-                //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
-                await fetch('https://127.0.0.1:8000/api/article/add', {
-                    method:'POST',
-                    headers: {
-                        "Accept": "application/json",
-                        "Content-Type": "application/json",
-                        "Access-Control-Allow-Origin": "*",
-                        "Authorization": `Bearer ${jwt}`
-                    },
-                    body: bodyJson,
-                })
-                .then(async response => {
-                    const body = await response.json();
-
-                    if (response.status == 200) {
-                        this.formSuccessMessage = body.message;
-                        
-                        articleStore.getAllArticles();
-                    } else if (response.status == 498) {
-                        userStore.token = '';
-                        navigateTo('/managerApp/logIn/expired-session'); 
-                    } else {
-                        this.errorMessages.form = body.message;
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                    this.errorMessages.form = "Une erreur est survenue. Veuillez réessayer plus tard.";
-                });
+                //? Récupérer le body de la réponse
+                const responseBody = await response.json()
+                
+                //? En fonction du statut de la réponse, afficher le message d'erreur ou de succès correspondant
+                if (response.status == 200) {
+                    this.formSuccessMessage             = responseBody.message;
+                    articleStore.getAllArticles();
+                    this.article.isPublished_article    = !this.article.isPublished_article;
+                } else {
+                    this.errorMessages.form             = responseBody.message;
+                }
             },
             ckeckTitleLength() {
                 if (this.article.title_article.length >= 40) {
@@ -218,8 +196,6 @@
             this.getCategories();
         }
     }
-
-
 </script>
 
 <style scoped>

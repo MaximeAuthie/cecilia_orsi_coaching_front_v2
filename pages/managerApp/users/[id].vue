@@ -244,7 +244,6 @@
             async updateUser() {
                 
                 const userStore = useUsersStore();
-                const { verifyToken } = useAuthentification();
                 const { isMailFormatCorrect }   = useUtils();
 
                 //? Réinitialiser les éventuels précédents messages d'erreurs ou de succès
@@ -289,41 +288,18 @@
                         userToUpdate.password = this.passwords.firstInput;
                     }
 
-                    //? Transformer l'objet userToUpdate en json
-                    const bodyJson = JSON.stringify(userToUpdate);
-
-                    //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-                    const jwt = await verifyToken();
-
-                    //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
-                    await fetch('https://127.0.0.1:8000/api/user/update', {
-                        method:'PATCH',
-                        headers: {
-                            "Accept": "application/json",
-                            "Content-Type": "application/json",
-                            "Access-Control-Allow-Origin": "*",
-                            "Authorization": `Bearer ${jwt}`
-                        },
-                        body: bodyJson,
-                    })
-                    .then(async response => {
-                        const body = await response.json();
-                        
-                        if (response.status == 200) {
-                            this.formSuccessMessage     = body.message;
-                            userStore.getAllUsers();
-                        } else if (response.status == 498) {
-                            userStore.token = '';
-                            navigateTo('/managerApp/logIn/expired-session'); 
-                        } else {
-                            this.errorMessages.form       = body.message;
-                        }
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        this.errorMessages.form = "Une erreur est survenue. Veuillez réessayer plus tard.";
-                    });
-
+                    //? Appel de la méthode updateUser() du composable useUser
+                    const { updateUser }    = useUser();
+                    const response          = await updateUser(userToUpdate);
+                    const body              = await response.json();
+                    
+                    //? En fonction du statut de la réponse, afficher le message d'erreur ou de succès correspondant
+                    if (response.status == 200) {
+                        this.formSuccessMessage = body.message;
+                        userStore.getAllUsers();
+                    } else {
+                        this.errorMessages.form = body.message;
+                    }
                 }
             },
         },

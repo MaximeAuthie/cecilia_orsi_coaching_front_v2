@@ -163,10 +163,10 @@
                     this.errorMessages.emailEmpty       = "";
                 }
                 if (this.passwords.firstInput != '') {
-                    this.errorMessages.emailEmpty       = "";
+                    this.errorMessages.passwordsEmpty   = "";
                 }
                 if (this.passwords.secondInput != '') {
-                    this.errorMessages.emailEmpty       = "";
+                    this.errorMessages.passwordsEmpty   = "";
                 }
                 if (this.selectedRole != []) {
                     this.errorMessages.rolesEmpty       = "";
@@ -264,7 +264,6 @@
             async addUser() {
 
                 const userStore                 = useUsersStore();
-                const { verifyToken }           = useAuthentification();
                 const { isMailFormatCorrect }   = useUtils();
 
                 //? Réinitialiser les éventuels précédents messages d'erreurs
@@ -295,42 +294,20 @@
 
                     //? Ajouter l'id de l'utilisateur demandeur à l'objet user
                     this.user.idApplicant = userStore.id;
-
-                    //? Transformer l'objet selectedPageData en json
-                    const bodyJson = JSON.stringify(this.user);
                     
-                    //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-                    const jwt = await verifyToken();
-
-                    //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
-                    await fetch('https://127.0.0.1:8000/api/user/add', {
-                        method:'POST',
-                        headers: {
-                            "Accept": "application/json",
-                            "Content-Type": "application/json",
-                            "Access-Control-Allow-Origin": "*",
-                            "Authorization": `Bearer ${jwt}`
-                        },
-                        body: bodyJson,
-                    })
-                    .then(async response => {
-                        const body = await response.json()
-                        
-                        if (response.status == 200) {
-                            this.formSuccessMessage     = body.message;
-                            userStore.getAllUsers();
-                        } else if (response.status == 498) {
-                            userStore.token = '';
-                            navigateTo('/managerApp/logIn/expired-session'); 
-                        } else {
-                            this.errorMessages.form       = body.message;
-                        }
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        this.errorMessages.form = "Une erreur est survenue. Veuillez réessayer plus tard.";
-                    });
-
+                    //? Appel de la méthode addUser() du composable useUser
+                    const { addUser }    = useUser();
+                    const response       = await addUser(this.user);
+                    const body           = await response.json();
+                    
+                    //? En fonction du statut de la réponse, afficher le message d'erreur ou de succès correspondant
+                    if (response.status == 200) {
+                        console.log(body);
+                        this.formSuccessMessage = body.message;
+                        userStore.getAllUsers();
+                    } else {
+                        this.errorMessages.form = body.message;
+                    }
                 }
             },
         }

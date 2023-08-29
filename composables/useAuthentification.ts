@@ -33,7 +33,6 @@ export function useAuthentification() {
             //? Retourner la réponse : ici un noouveau token (string)
             const newToken = await response.toString();
             store.token = newToken;
-            
             return newToken; 
 
         //? En cas d'erreur on met fin à la session

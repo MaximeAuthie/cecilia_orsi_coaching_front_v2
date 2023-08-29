@@ -36,7 +36,6 @@
 
 <script>
     import { useCategoriesStore } from '@/store/category';
-    import { useUsersStore } from "@/store/user";
 
     export default {
         data() {
@@ -66,106 +65,55 @@
             },
             async addNewCategory() {
                 const categoryStore = useCategoriesStore();
-                const userStore = useUsersStore();
-                const { verifyToken } = useAuthentification();
 
                 //? Appel des méthodes pour vérifier la conformité des données saisies
                 this.checkImputEmpty();
                 this.checkColorFormat();
                 this.ckeckNameLength();
 
-                //? Transformer l'objet formData en json
-                const bodyJson = JSON.stringify(this.formData);
-
-                //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-                const jwt = await verifyToken();
-
-                //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
-                console.log(this.checkErrorMessages());
+                //? Si tous les champs sont remplis et que le format de la couleur est correct
                 if (this.checkErrorMessages()) {
-                    await fetch('https://127.0.0.1:8000/api/category/add', {
-                        method:'POST',
-                        headers: {
-                            "Accept": "application/json",
-                            "Content-Type": "application/json",
-                            "Access-Control-Allow-Origin": "*",
-                            "Authorization": `Bearer ${jwt}`
-                        },
-                        body: bodyJson,
-                    })
-                    .then(async response => {
-                        const body = await response.json()
-                        
-                        if (response.status == 200) {
-                            this.formSuccessMessage     = body.message;
-                            categoryStore.getAllCategories();
-                        } else if (response.status == 498) {
-                            userStore.token = '';
-                            navigateTo('/managerApp/logIn/expired-session'); 
-                        } else {
-                            this.formErrorMessage       = body.message;
-                        }
 
-                        //? Réinitialiser les data pour repasser en mode création de catégorie
-                        this.resetFetchedData();
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        this.errorMessages.form = "Une erreur est survenue. Veuillez réessayer plus tard.";
-                    })
+                    //? Appel de la méthode addNewCategory() du composable useCategory
+                    const { addNewCategory }    = useCategory();
+                    const response              = await addNewCategory(this.formData);
+                    const body                  = await response.json();
+
+                    //? En fonction du statut de la réponse, afficher le message d'erreur ou de succès correspondant
+                    if (response.status == 200) {
+                        this.formSuccessMessage = body.message;
+                        categoryStore.getAllCategories();
+                    } else {
+                        this.formErrorMessage = body.message;
+                    }
                 }
             },
             async updateCategory() {
                 const categoryStore = useCategoriesStore();
-                const userStore = useUsersStore();
-                const { verifyToken } = useAuthentification();
 
                 //? Appel des méthodes pour vérifier la conformité des données saisies
                 this.checkImputEmpty();
                 this.checkColorFormat();
                 this.ckeckNameLength();
 
-                //? Transformer l'objet formData en json
-                const bodyJson = JSON.stringify(this.formData);
-
-                //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-                const jwt = await verifyToken();
-
                 //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
                 if (this.checkErrorMessages()) {
-                    await fetch('https://127.0.0.1:8000/api/category/update', {
-                        method:'PATCH',
-                        headers: {
-                            "Accept": "application/json",
-                            "Content-Type": "application/json",
-                            "Access-Control-Allow-Origin": "*",
-                            "Authorization": `Bearer ${jwt}`
-                        },
-                        body: bodyJson,
-                    })
-                    .then(async response => {
-                        const body = await response.json()
-                        
-                        if (response.status == 200) {
-                            this.formSuccessMessage     = body.message;
-                            categoryStore.getAllCategories();
-                        } else if (response.status == 498) {
-                            userStore.token = '';
-                            this.$router.push('/managerApp/logIn/expired-session'); 
-                        } else {
-                            this.errorMessages.form       = body.message;
-                        }
 
-                        //? Réinitialiser les data pour repasser en mode création de catégorie
-                        this.resetFetchedData();
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        this.errorMessages.form = "Une erreur est survenue. Veuillez réessayer plus tard.";
+                    //? Appel de la méthode updateCategory() du composable useCategory
+                    const { updateCategory }    = useCategory();
+                    const response              = await updateCategory(this.formData);
+                    const body                  = await response.json();
 
-                        //? Réinitialiser les data pour repasser en mode création de catégorie
-                        this.resetFetchedData();
-                    });
+                    //? En fonction du statut de la réponse, afficher le message d'erreur ou de succès correspondant
+                    if (response.status == 200) {
+                        this.formSuccessMessage = body.message;
+                        categoryStore.getAllCategories();
+                    } else {
+                        this.formErrorMessage = body.message;
+                    }
+
+                    //? Réinitialiser les data pour repasser en mode création de catégorie
+                    this.resetFetchedData();
                 }
             },
             cancelUpdate() {

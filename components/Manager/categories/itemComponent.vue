@@ -15,7 +15,6 @@
 
 <script>
     import { useCategoriesStore } from '@/store/category';
-    import { useUsersStore } from "@/store/user";
 
     export default {
         emits: ['update'],
@@ -40,52 +39,28 @@
             },
             async deleteCategory() {
                 const categorieStore = useCategoriesStore();
-                const userStore = useUsersStore();
-                const { verifyToken } = useAuthentification();
 
                 //? Demander une confirmation pour la suppression de la catégorie
                 if (confirm("Etes-vous sûr de vouloir supprimer la catégorie \"" + this.name + "\" ?")) {
 
                     //? Définir le contenu du body de la requête
                     const body = {
-                        id: this.id,
+                        id: "pouet",
                         name: this.name
                     };
 
-                    //? Transformer l'objet body en json
-                    const bodyJson  = JSON.stringify(body);
+                    //? Appel de la méthode deleteCategory() du composable useCategory
+                    const { deleteCategory }    = useCategory();
+                    const response              = await deleteCategory(body);
+                    const responseBody          = await response.json();
 
-                    //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-                    const jwt = await verifyToken();
-
-                    //? Exécuter l'appel API
-                    await fetch('https://127.0.0.1:8000/api/category/delete', {
-                        method:'DELETE',
-                        headers: {
-                            "Accept": "application/json",
-                            "Content-Type": "application/json",
-                            "Access-Control-Allow-Origin": "*",
-                            "Authorization": `Bearer ${jwt}`
-                        },
-                        body: bodyJson,
-                    })
-                    .then(async response => {
-                        const body = await response.json()
-
-                        if (response.status == 200) {
-                            categorieStore.getAllCategories();
-                            alert("La catégorie " + this.name + " a été supprimée avec succès.");
-                        } else if (response.status == 498) {
-                            userStore.token = '';
-                            navigateTo('/managerApp/logIn/expired-session'); 
-                        } else {
-                            alert(body.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        alert("Une erreur est survenue. Veuillez réessayer plus tard.");
-                    });
+                    //? En fonction du statut de la réponse, afficher le message d'erreur ou de succès correspondant
+                    if (response.status == 200) {
+                        categorieStore.getAllCategories();
+                        alert("La catégorie " + this.name + " a été supprimée avec succès.")
+                    } else {
+                        alert("Une erreur est survenue. Veuillez réessayer plus tard.")
+                    }
                 }
             }
         }

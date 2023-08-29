@@ -153,8 +153,6 @@
             },
             async updateArticle() {
                 const articleStore = useArticlesStore();
-                const userStore = useUsersStore();
-                const { verifyToken } = useAuthentification();
 
                 //? Vérifier si le titre est au moins renseigné 
                 if (this.article.title_article == '') {
@@ -179,88 +177,26 @@
                     this.article.categories_list.push(cat);
                 })
 
-                //? Transformer l'objet article en json
-                const bodyJson = JSON.stringify(this.article);
+                //? Appel de la méthode updateArticle() du composable useArticle
+                const { updateArticle } = useArticle();
+                const response          = await updateArticle(this.article);
                 
-                //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-                const jwt = await verifyToken();
-
-                //? Exécuter l'appel API si tous les champs sont remplis
-                await fetch('https://127.0.0.1:8000/api/article/update', {
-                    method:'PATCH',
-                    headers: {
-                        "Accept": "application/json",
-                        "Content-Type": "application/json",
-                        "Access-Control-Allow-Origin": "*",
-                        "Authorization": `Bearer ${jwt}`
-                    },
-                    body: bodyJson,
-                })
-                .then(async response => {
-                    const body = await response.json();
-
-                    if (response.status == 200) {
-                        this.formSuccessMessage = body.message;
-                        articleStore.getAllArticles();
-                    } else if (response.status == 498) {
-                        userStore.token = '';
-                        navigateTo('/managerApp/logIn/expired-session'); 
-                    }else {
-                        this.errorMessages.form       = body.message;
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                    this.errorMessages.form = "Une erreur est survenue. Veuillez réessayer plus tard.";
-                });
+                //? Récupérer le body de la réponse
+                const responseBody = await response.json()
+                
+                //? En fonction du statut de la réponse, afficher le message d'erreur ou de succès correspondant
+                if (response.status == 200) {
+                    this.formSuccessMessage             = responseBody.message;
+                    articleStore.getAllArticles();
+                    this.article.isPublished_article    = !this.article.isPublished_article;
+                } else {
+                    this.errorMessages.form             = responseBody.message;
+                }
             },
             async publishArticle() {
-                // const { verifyToken } = useAuthentification();
-                // const userStore = useUsersStore();
-                // const articleStore = useArticlesStore();
-
-                // //? Définir le contenu du body de la requête
-                // const body = {
-                //         id: this.id,
-                // };
-
-                // //? Transformer l'objet body en json
-                // const bodyJson  = JSON.stringify(body);
-
-                // //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-                // const jwt = await verifyToken();
+                const articleStore = useArticlesStore();
                 
-                // //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
-                // await fetch('https://127.0.0.1:8000/api/article/publish', {
-                //     method:'PATCH',
-                //     headers: {
-                //             "Accept": "application/json",
-                //             "Content-Type": "application/json",
-                //             "Access-Control-Allow-Origin": "*",
-                //             "Authorization": `Bearer ${jwt}`
-                //         },
-                //     body: bodyJson,
-                // })
-                // .then(async response => {
-                //     const body = await response.json();
-
-                //     if (response.status == 200) {
-                //         this.formSuccessMessage     = body.message;
-                //         this.article.isPublished_article = !this.article.isPublished_article;
-                //         articleStore.getAllArticles();
-                //     } else if (response.status == 498) {
-                //         userStore.token = '';
-                //         navigateTo('/managerApp/logIn/expired-session'); 
-                //     } else {
-                //         this.errorMessages.form       = body.message;
-                //     }
-                // })
-                // .catch(error => {
-                //     console.error(error);
-                //     this.errorMessages.form = "Une erreur est survenue. Veuillez réessayer plus tard.";
-                // });
-                
-                //? Appel de la méthode publishArticle() du composable useCategory
+                //? Appel de la méthode publishArticle() du composable useArticle
                 const { publishArticle } = useArticle();
                 const response = await publishArticle(this.id);
 
@@ -270,7 +206,7 @@
                 //? En fonction du statut de la réponse, afficher le message d'erreur ou de succès correspondant
                 if (response.status == 200) {
                     this.formSuccessMessage             = responseBody.message;
-                    console.log(response);
+                    articleStore.getAllArticles();
                     this.article.isPublished_article    = !this.article.isPublished_article;
                 } else {
                     this.errorMessages.form             = responseBody.message;

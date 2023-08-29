@@ -78,7 +78,7 @@
                     });
                 }
             },
-            displayTileData(event) { //! A MODIFIER
+            displayTileData(event) { 
                 const index = event.target.selectedIndex;
                 this.selectedTileData = this.tiles[index];
                 console.log(this.selectedTileData);
@@ -95,8 +95,6 @@
             async updateTile() {
 
                 const tileStore = useTilesStore();
-                const userStore = useUsersStore();
-                const { verifyToken } = useAuthentification();
 
                 //? Réinialiser les éventuels messages d'erreur ou de succès précédents
                 this.formErrorMessage       = '';
@@ -113,42 +111,19 @@
                     this.formErrorMessage = "Veuillez respecter le nombre de caractères maximum pour le texte de la tuile.";
                     return;
                 }
-                
-                //? Transformer l'objet selectedPageData en json
-                const bodyJson = JSON.stringify(this.selectedTileData);
-                console.log(bodyJson);
-               
-                //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-                const jwt = await verifyToken();
-                console.log(jwt);
-                //? Exécuter l'appel API si tous les champs sont remplis et que le format de la couleur est correct
-                await fetch('https://127.0.0.1:8000/api/tile/update', {
-                    method:'PATCH',
-                    headers: {
-                        "Accept": "application/json",
-                        "Content-Type": "application/json",
-                        "Access-Control-Allow-Origin": "*",
-                        "Authorization": `Bearer ${jwt}`
-                    },
-                    body: bodyJson,
-                })
-                .then(async response => {
-                    const body = await response.json()
-                    
-                    if (response.status == 200) {
-                        this.formSuccessMessage     = body.message;
-                        tileStore.getAllTiles();
-                    } else if (response.status == 498) {
-                        userStore.token = '';
-                        navigateTo('/managerApp/logIn/expired-session'); 
-                    } else {
-                        this.formErrorMessage       = body.message;
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                    this.formErrorMessage = "Une erreur est survenue. Veuillez réessayer plus tard.";
-                });
+         
+                //? Appel de la méthode updatePage() du composable usePage
+                const { updateTile }    = useTile();
+                const response          = await updateTile(this.selectedTileData);
+                const body              = await response.json();
+
+                //? En fonction du statut de la réponse, afficher le message d'erreur ou de succès correspondant
+                if (response.status == 200) {
+                    this.formSuccessMessage = body.message;
+                    tileStore.getAllTiles();
+                } else {
+                    this.formErrorMessage = 'Une erreur est survenue. Veuillez réessayer plus tard';
+                }
             }
         },
         mounted() {
