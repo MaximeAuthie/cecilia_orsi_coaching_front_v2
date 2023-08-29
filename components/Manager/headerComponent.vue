@@ -25,14 +25,12 @@
         },
         mounted() {
             const userStore = useUsersStore();
-            userStore.$subscribe((state) => {
-                console.log("update store user");
-                if (userStore.token != "") {
-                    this.isUserLogedIn = true;
-                } else {
-                    this.isUserLogedIn = false;
-                }
-            });
+            
+            if (userStore.token != "") {
+                this.isUserLogedIn = true;
+            } else {
+                this.isUserLogedIn = false;
+            }
         }
     }
 </script>
