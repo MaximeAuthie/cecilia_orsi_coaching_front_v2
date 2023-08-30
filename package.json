@@ -7,8 +7,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "test":"cypress open",
-    "auto_test":"cypress run --browser chrome"
+    "test": "cypress open",
+    "auto_test": "cypress run --browser chrome"
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
@@ -17,6 +17,7 @@
     "nuxt": "^3.6.5"
   },
   "dependencies": {
+    "@nuxt/image": "^1.0.0-rc.1",
     "@pinia/nuxt": "^0.4.11",
     "@tiptap/extension-heading": "^2.0.4",
     "@tiptap/extension-list-item": "^2.0.4",
