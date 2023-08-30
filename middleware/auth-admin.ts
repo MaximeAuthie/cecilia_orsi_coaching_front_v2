@@ -4,7 +4,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
     const store = useUsersStore();
     console.log("auth admin ok");
         
-    if (store.token == '' || store.token == 'expired-token' || store.token == 'invalid-token' || store.token == 'expired-session') {
+    if (store.token == '' || store.token == 'expired-token' || store.token == 'invalid-token' || store.token == 'expired-session' || store.token == 'connexion-fail') {
         console.log("pbm token");
         
         return navigateTo("/managerApp/logIn");

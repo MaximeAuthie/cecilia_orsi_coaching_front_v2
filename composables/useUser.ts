@@ -81,8 +81,7 @@ export function useUser() {
             })
 
             //? Retourner la réponse
-            const usersData = await response.json();
-            return usersData;
+            return response;
               
         } catch (error) {
             console.error(error);

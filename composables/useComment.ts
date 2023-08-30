@@ -3,12 +3,12 @@ import { useUsersStore } from "@/store/user";
 
 export function useComment() {
 
-    async function getValidatedComments() {
+    async function getModeratedComments() {
 
         try {
 
             //? Appeler l'api getValidatedComments()
-            let response = await fetch('https://127.0.0.1:8000/api/comment/validated', {
+            let response = await fetch('https://127.0.0.1:8000/api/comment/moderated', {
                 method:'GET',
                 headers: {
                     "Accept": "application/json",
@@ -134,7 +134,7 @@ export function useComment() {
     }
     
     return {
-        getValidatedComments,
+        getModeratedComments,
         getCommentsToValidate,
         validateComment,
         rejectComment

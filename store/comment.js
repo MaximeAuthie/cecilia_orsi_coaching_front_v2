@@ -6,12 +6,12 @@ export const useCommentsStore = defineStore('comments', {
         commentsToValidate: []
     }),
     actions: {
-        async getValidatedComments() {
+        async getModeratedComments() {
             try {
 
                 //? Appel de la méthode getValidatedComments() du composable useComment
-                const { getValidatedComments }  = useComment();
-                const commentsList              = await getValidatedComments();
+                const { getModeratedComments }  = useComment();
+                const commentsList              = await getModeratedComments();
                 
                 //? Affecter le json de la réponse à this.articles
                 this.comments                   = commentsList;

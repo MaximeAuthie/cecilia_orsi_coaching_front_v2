@@ -39,7 +39,7 @@ export const useArticlesStore = defineStore('articles', {
                 const { getValidatedArticles }      = useArticle();
                 const articlesList                  = await getValidatedArticles();
 
-                //? Stocker les données retournée dans le state this.validatedArticles
+                //? Stocker les données retournées dans le state this.validatedArticles
                 this.validatedArticles              = articlesList;
 
                 //? Changer le format de date des propriétés date_article de this.articles
