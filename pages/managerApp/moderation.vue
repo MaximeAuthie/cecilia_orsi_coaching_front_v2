@@ -74,7 +74,7 @@
                 }
                 this.displayComments = true;
             },
-            getValidatedComments() {
+            getModeratedComments() {
                 const commentStore = useCommentsStore();
 
                //? Vérifier si les articles validés sont toujours présents dans le store, récupérer les données de l'article
@@ -85,7 +85,7 @@
                 } else {
 
                 //? Si les articles ne sont pas déjà présents dans le store, effectuer l'appel API et récupérer les données de l'article
-                commentStore.getValidatedComments()
+                commentStore.getModeratedComments()
                     .then(() => {
                         this.comments            = commentStore.comments;
                         this.comments.sort((a,b) => (a.id < b.id ? 1 : -1));
@@ -154,7 +154,7 @@
             const articleStore = useArticlesStore();
 
             this.getArticles();
-            this.getValidatedComments();
+            this.getModeratedComments();
             this.getCommentsToValidate();
             
             commentStore.$subscribe(state => {
