@@ -1,5 +1,40 @@
+<script setup>
+    //? Récupérer le nom de la page pour l'utiliser dans l'appel api
+    const route = useRoute();
+    const title = route.fullPath;
+
+    //? Récupérer l'adresse URL du serveur
+    const config    = useRuntimeConfig();
+    const serverUrl = config.public.serverUrl;
+
+    //? Exécuter les appels api pour récupérer les données de la page et des tuile de la page côté serveur
+    const {data: pageData, pending}     = useFetch(serverUrl + 'api/page/title' + title);
+    const {data: tilesData}             = useFetch(serverUrl + 'api/tile/page' + title);
+
+    //? Renseigner les balises HTML de <head> pour le SEO côté serveur
+    useHead({
+        title: 'Cécilia Orsi Coaching - Blog',
+        meta: [
+            {name: 'description', content: 'Retrouvez ici tous mes articles et venez commenter et échanger avec la communauté.'},
+            {name:'robots', content:'index, follow'},
+            {"http-equiv": 'Content-Language', content: 'fr'},
+            {name: 'keywords', content: 'coach, coaching, coaching de vie, toulouse, haute-garonne, articles, blog'},
+            {property: 'og:title', content: 'Cécilia Orsi Coaching - Blog'},
+            {property: 'og:type', content: 'website'},
+            {property: 'og:url', content:'https://www.cecilia-orsi.fr/blog'},
+            {property: 'og:image', content: '/_nuxt/assets/images/logo_header.png'},
+            {property: 'og:description', content: 'Retrouvez ici tous mes articles et venez commenter et échanger avec la communauté.'},
+            {name: 'twitter:card', content: 'summary_large_image'},
+            {name: 'twitter: title', content: 'Cécilia Orsi Coaching - Blog'},
+            {name: 'twitter:description', content: 'Retrouvez ici tous mes articles et venez commenter et échanger avec la communauté.'},
+            {name: 'twitter:image', content: '/_nuxt/assets/images/logo_header.png'}
+        ],
+        link: [{rel: 'icon', href: '/_nuxt/assets/images/icone_tree.png'}]
+    })
+</script>
+
 <template>
-    <div v-if="!pageDataDownload" class="waiting_div">
+    <div v-if="pending" class="waiting_div">
         <div class="waiting_div_logo">
             <img src="~/assets/images/logo_loader.png" alt="logo">
         </div>
@@ -66,7 +101,7 @@
             <br>
             <br>
             <section class="content_tiles">
-                <TileComponent v-for="tile in pageData.tiles_list" :pageTitle="tile.title_tile" :pagePath="tile.link_tile" :pageImgUrm="tile.img_url_tile" :full-width="tile.fullWidth" ></TileComponent>
+                <TileComponent v-for="tile in tilesData" :pageTitle="tile.title_tile" :pagePath="tile.link_tile" :pageImgUrm="tile.img_url_tile" :full-width="tile.isFullWidth_tile" ></TileComponent>
             </section>
         </div>
     </div>
@@ -145,45 +180,6 @@ import { useCategoriesStore } from '@/store/category'
             showMoreArticles() {
 
             },
-            getPageData() {
-                const pageStore = usePagesStore();
-
-                //? Vérifier si les pages sont toujours présents dans le store
-                if (pageStore.pages.length > 0) {
-                    this.pageData       = pageStore.pages[this.pageId];
-                    this.addTilesWidth();
-                } else {
-
-                //? Si les pages ne sont pas déjà présents dans le store, effectuer l'appel API
-                pageStore.getAllPages()
-                    .then(() => {
-                        this.pageData       = pageStore.pages[this.pageId];
-                        this.addTilesWidth();
-                    })
-
-                    //? En cas d'erreur inattendue, capter l'erreur rencontrée
-                    .catch((error) => {
-                    console.error('Erreur lors de la récupération des pages :', error);
-                    this.pageDataDownload   = false;
-                    });
-                }
-
-                
-            },
-            addTilesWidth() {
-                //? On ajoute un proprité fullWitdh à chaque objet de this.data.tilesList (pour gérer la largueur des tuiles via une props)
-                let tilesNumber = this.pageData.tiles_list.length;
-                for (let i=0 ; i<tilesNumber; i++) {
-                        this.pageData.tiles_list[i].fullWidth = false;
-                    }
-
-                //? Si le nombre de tuiles est impair, la valeur de la propriété fullWidth passe à true pour la dernière tuile
-                if (tilesNumber%2 != 0) {
-                    this.pageData.tiles_list[tilesNumber-1].fullWidth = true;
-                }
-
-                this.pageDataDownload   = true;
-            },
             filterByCategory(categoryName, isSelected) {
                 //? Déclarer la variable articleStore
                 const articleStore = useArticlesStore();
@@ -244,33 +240,12 @@ import { useCategoriesStore } from '@/store/category'
             //? Exécution de la méthode récupérant les données de la page dans la BDD et qui les place dans l'objet this.pageData
             this.getArticles();
             this.getCategories();
-            this.getPageData();
 
             //?Vérifier le nombre d'articles pour afficher la barre "voir plus"
             if (this.articles.length > 9) {
                 this.isMoreThenNineArticles = true;
             }
 
-            //? Renseigner les balises HTML de <head> pour le SEO
-            useHead({
-                title: 'Cécilia Orsi Coaching - Blog',
-                meta: [
-                    {name: 'description', content: 'Retrouvez ici tous mes articles et venez commenter et échanger avec la communauté.'},
-                    {name:'robots', content:'index, follow'},
-                    {"http-equiv": 'Content-Language', content: 'fr'},
-                    {name: 'keywords', content: 'coach, coaching, coaching de vie, toulouse, haute-garonne, tarif, prestations'},
-                    {property: 'og:title', content: 'Cécilia Orsi Coaching - Blog'},
-                    {property: 'og:type', content: 'website'},
-                    {property: 'og:url', content:'https://www.cecilia-orsi.fr/blog'},
-                    {property: 'og:image', content: './assets/images/logo_header.png'},
-                    {property: 'og:description', content: 'Retrouvez ici tous mes articles et venez commenter et échanger avec la communauté.'},
-                    {name: 'twitter:card', content: 'summary_large_image'},
-                    {name: 'twitter: title', content: 'Cécilia Orsi Coaching - Blog'},
-                    {name: 'twitter:description', content: 'Retrouvez ici tous mes articles et venez commenter et échanger avec la communauté.'},
-                    {name: 'twitter:image', content: './assets/images/logo_header.png'}
-                ],
-                link: [{rel: 'icon', href: './assets/images/icone_tree.png'}]
-            })
         },
     };
 </script>

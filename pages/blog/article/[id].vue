@@ -1,28 +1,42 @@
 <script setup>
-    const route =useRoute();
-    const id = route.params.id;
-    const {data:article, pending} = useFetch('https://www.maximeauthie.fr/api/article/1');
-    const {data:comments} = useFetch('https://www.maximeauthie.fr/api/comment/validated/' + id);
 
+    //? Récupérer l'ID de l'article pour l'utiliser dans l'appel api
+    const route = useRoute();
+    const id    = route.params.id;
+
+    //? Récupérer l'adresse URL du serveur
+    const config    = useRuntimeConfig();
+    const serverUrl = config.public.serverUrl;
+
+    //? Exécuter les appels api pour récupérer les données de l'article et des commentaires de l'article côté serveur
+    const {data:article, pending}   = await useFetch(serverUrl + 'api/article/id/' + id);
+    const {data:comments}           = useFetch(serverUrl + 'api/comment/validated/' + id);
+
+    //? Importer la fonction formatDate() du composable useUtils pour l'utiliser dans le template
     const { formatDate } = useUtils();
 
-    
+    //? Créer une chaine de caratère contenant tous les keywords pour l'utiliser pour renseigner les balises meta dans useHead()
+    let keywordList = ''
+    article.value.kewords_list.forEach(keyword => {
+        keywordList = keywordList + keyword.content_keywork + ', ';
+    })
 
+    //? Renseigner les balises HTML de <head> pour le SEO côté serveur
     useHead({
-        title: 'Cécilia Orsi Coaching - ' + article.title,
+        title: 'Cécilia Orsi Coaching - ' + article.value.title_article,
         meta: [
-            {name: 'description', content: article.description},
+            {name: 'description', content: article.value.description_article},
             {name:'robots', content:'index, follow'},
             {"http-equiv": 'Content-Language', content: 'fr'},
-            {name: 'keywords', content: article.keywords},
-            {property: 'og:title', content: 'Cécilia Orsi Coaching - ' + article.title},
+            {name: 'keywords', content: keywordList},
+            {property: 'og:title', content: 'Cécilia Orsi Coaching - ' + article.value.title_article},
             {property: 'og:type', content: 'website'},
             {property: 'og:url', content:'https://www.cecilia-orsi.fr/blog'},
             {property: 'og:image', content: './assets/images/logo_header.png'},
-            {property: 'og:description', content: article.description},
+            {property: 'og:description', content: article.value.description_article},
             {name: 'twitter:card', content: 'summary_large_image'},
-            {name: 'twitter: title', content: 'Cécilia Orsi Coaching - ' + article.title},
-            {name: 'twitter:description', content: article.description},
+            {name: 'twitter: title', content: 'Cécilia Orsi Coaching - ' + article.value.title_article},
+            {name: 'twitter:description', content: article.value.description_article},
             {name: 'twitter:image', content: './assets/images/logo_header.png'}
         ],
         link: [{rel: 'icon', href: './assets/images/icone_tree.png'}]

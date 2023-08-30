@@ -1,11 +1,17 @@
 <script setup>
-
+    //? Récupérer le nom de la page pour l'utiliser dans l'appel api
     const route = useRoute();
     const title = route.fullPath;
 
-    const {data: pageData} = useFetch('https://www.maximeauthie.fr/api/page' + title);
-    const {data: tilesData, pending} = useFetch('https://www.maximeauthie.fr/api/tile' + title);
+    //? Récupérer l'adresse URL du serveur
+    const config    = useRuntimeConfig();
+    const serverUrl = config.public.serverUrl;
+
+    //? Exécuter les appels api pour récupérer les données de la page et des tuile de la page côté serveur
+    const {data: pageData, pending}     = useFetch(serverUrl + 'api/page/title' + title);
+    const {data: tilesData}             = useFetch(serverUrl + 'api/tile/page' + title);
     
+    //? Renseigner les balises HTML de <head> pour le SEO côté serveur
     useHead({
         title: 'Cécilia Orsi Coaching - Tarifs',
         meta: [
@@ -28,15 +34,7 @@
 </script>
 
 <template>
-    <div v-if="pending" class="waiting_div">
-        <div class="waiting_div_logo">
-            <img src="~/assets/images/logo_loader.png" alt="logo">
-        </div>
-        <h2>Cécilia Orsi Coaching</h2>
-        <div class="waiting_div_loader">
-            <p>Chargement en cours...</p>
-        </div>
-    </div>
+    <LoaderComponent v-if="pending"></LoaderComponent>
     <div v-else>
         <BannerComponent :imgUrl="pageData.banner_url_page" :messages="pageData.BannerTextsList" :isMainButtonActive="pageData.isMainButtonActive_page" :isSecondButtonActive="pageData.isSecondaryButtonActive_page" ></BannerComponent>
         <div class="content">

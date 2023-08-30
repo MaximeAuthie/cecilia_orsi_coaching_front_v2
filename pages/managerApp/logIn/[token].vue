@@ -63,6 +63,9 @@
             } else if (token == 'expired-session') {
                 this.errorMessage   = 'Votre session a expirée. Merci de vous reconnecter si vous souhaitez accéder à nouveau à l\'espace d\'administration.';
                 userStore.token     = 'expired-session';
+            } else if (token == 'connexion-fail') {
+                this.errorMessage   = 'Une erreur est survenue. Merci de réessayer plus tard.';
+                userStore.token     = 'connexion-fail';
             } else {
 
                 //? Récupérer le jwt dans le paramètre
@@ -77,7 +80,7 @@
                 
                 const commentsStore = useCommentsStore();
                 commentsStore.getCommentsToValidate();
-                commentsStore.getValidatedComments();
+                commentsStore.getModeratedComments();
                 
                 const articlesStore = useArticlesStore();
                 articlesStore.getAllArticles();

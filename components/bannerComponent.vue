@@ -52,7 +52,8 @@
                     console.log(this.activeMessageIndex +" - "+ this.messages.length);
                     
                     this.activeMessageText = this.messages[this.activeMessageIndex];
-                }, 4000)  
+                }, 4000)
+                console.log(this.imgUrl);
         },
         beforeUnmount() {
             clearInterval(this.interval);
