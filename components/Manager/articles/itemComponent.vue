@@ -20,7 +20,6 @@
   
 <script>
     import { useArticlesStore } from "@/store/article";
-    import { useUsersStore } from "@/store/user";
     
     export default {
         props: {
@@ -42,6 +41,8 @@
             },
         },
         methods: {
+
+            //! Désactiver l'article pour qu'il n'apparaissent plus dans l'espace admin
             async disableArticle() {
 
                 const articleStore = useArticlesStore();
@@ -71,6 +72,8 @@
                     }
                 }
             },
+
+            //! Rediriger l'utilisateur vers la page de modification d'un article
             update() {
                 this.$router.push('/managerApp/articles/' + this.id); 
             }

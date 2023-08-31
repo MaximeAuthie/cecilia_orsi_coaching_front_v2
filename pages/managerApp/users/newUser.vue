@@ -125,6 +125,7 @@
         },
         methods: {
 
+            //! Vérifier si les input sont vides et générer les messages d'erreur correspondants quand le formulaire est soumis
             checkInputBeforeSubmit() {
                 if (this.user.firstName == '') {
                     this.errorMessages.firstNameEmpty   = "Veuillez saisir un prénom";
@@ -152,6 +153,7 @@
                 }
             },
             
+            //! Vérifier si les input sont vides et effacer les messages d'erreur correspondants pendant la saisie
             checkInputKeyUp() {
                 if (this.user.firstName != '') {
                     this.errorMessages.firstNameEmpty   = "";
@@ -173,16 +175,17 @@
                 }
             },
 
-            checkPasswordKeyUp() { //Vérifie si les champs sont remplis lors de la saisir et vérifie le format du password
+            //! Vérifier si les champs sont saisis, le format du password et si les deux password sont identique pendant la saisie
+            checkPasswordKeyUp() { 
                 const { isPasswordIdentical } = useUtils();
                 
-                //? Vérifie le remplissage des champs obligatoires à chaque frappe
+                //? Vérifier le remplissage des champs obligatoires à chaque frappe
                 this.checkInputKeyUp();
 
-                //? Vérifie le format du mot de passe
+                //? Vérifier le format du mot de passe
                 this.checkPasswordFormat();
 
-                //? Vérifie si les deux mot de passe sont identiques (composable)
+                //? Vérifier si les deux mot de passe sont identiques (composable)
                 if (isPasswordIdentical(this.passwords.firstInput, this.passwords.secondInput)) {
                     this.errorMessages.passwordIdentical = "";
                 } else {
@@ -190,7 +193,8 @@
                 }
             },
 
-            checkMailFormat() { // Vérifie si le format du mail est correct
+            //! Vérifier le format de l'adresse mail
+            checkMailFormat() {
 
                 //? Définir le regex pour le format mail
                 const pattern = new RegExp(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/i);
@@ -207,12 +211,13 @@
                 }
             },
 
+            //! Vérifier le format du mot de passe
             checkPasswordFormat() {
 
                 //? Importer les fonction du composable useUtils
                 const { containUppercase }  = useUtils();
                 const { containLowercase }  = useUtils();
-                const { containNumbber }    = useUtils();
+                const { containNumber }     = useUtils();
                 const { isLongEnough }      = useUtils();
                 
                 //? Réinitialiser les message d'erreur
@@ -231,7 +236,7 @@
                     this.errorMessages.passwordLowercase = "Le mot de passe doit contenir au moins une minuscule"
                 }
 
-                if (!containNumbber(this.passwords.firstInput)) {
+                if (!containNumber(this.passwords.firstInput)) {
                     this.errorMessages.passwordNumber = "Le mot de passe doit contenir au moins un chiffre"
                 }
 
@@ -240,6 +245,7 @@
                 }
             },
 
+            //! Vérifier si un message d'erreur est encore affiché
             checkErrorMessages() {
                 if (
                     this.errorMessages.form !='' 
@@ -261,6 +267,7 @@
                 }
             },
 
+            //! Ajouter l'utilisateur dans la BDD
             async addUser() {
 
                 const userStore                 = useUsersStore();

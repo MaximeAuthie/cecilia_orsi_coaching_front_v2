@@ -21,6 +21,8 @@ export default {
         }
     },
     methods: {
+
+        //! Récupérer les catégories à afficher dans l'interface administrateur via le store useCategoriesStore;
         getCategories() {
             const categoryStore = useCategoriesStore();
 
@@ -41,6 +43,8 @@ export default {
                 });
             }
         },
+
+        //! Emettre un évènement quand le composant capte l'évènement "update" depuis le composant enfant ManagerCategoriesItemComponent
         updateCategory(id, name, color) {
             this.$emit('update', id, name, color);
             console.log("niv 2 activé" + this.name + this.color);
@@ -48,12 +52,13 @@ export default {
     },
     
     mounted() {
+        //? Exécuter this.getCategories()
         this.getCategories();
 
+        //? Souscrire a useCategoriesStore et récupérer la liste des nouvelles catégories dans this.catergories
         const categoryStore = useCategoriesStore();
         categoryStore.$subscribe(state => {
             this.categories = categoryStore.categories;
-            console.log("update store categories")
         })
     }
 }

@@ -63,6 +63,8 @@
             }
         },
         methods: {
+
+            //! Récupérer les commentaires filtrés par l'utilisateur via le store useCommentsStore
             getComments() {
                 const commentStore = useCommentsStore();
                 if (this.commentStatus === 'already-validate') {
@@ -74,6 +76,8 @@
                 }
                 this.displayComments = true;
             },
+
+            //! Récupérer les commentaires déjà modérés via le store useCommentsStore
             getModeratedComments() {
                 const commentStore = useCommentsStore();
 
@@ -97,6 +101,8 @@
                     });
                 }
             },
+
+            //! Récupérer les commentaires à valider via le store useCommentsStore
             getCommentsToValidate() {
                 const commentStore = useCommentsStore();
 
@@ -120,6 +126,8 @@
                     });
                 }
             },
+
+            //! Récupérer les articles à afficehr dans les filtres via le store useArticlesStore
             getArticles() {
                 const commentStore = useArticlesStore();
 
@@ -145,11 +153,15 @@
                     });
                 }
             },
+            
+            //! Capter l'évènement "error" du composant enfant ManagerCommentComposant et afficher le message d'erreur renvoyé
             errorOnComment(message) {
                 this.formErrorMessage = message;
             }
         },
         mounted() {
+
+            //? Import des store et exécution des méthodes pour récupérer les commentaires et les articles au montage de la page
             const commentStore = useCommentsStore();
             const articleStore = useArticlesStore();
 
@@ -157,18 +169,18 @@
             this.getModeratedComments();
             this.getCommentsToValidate();
             
+
+            //? Souscrire à useCommentsStore pour modifier l'affichage des commentaires en cas de validation ou de rejet d'un commentaire
             commentStore.$subscribe(state => {
                 if (this.commentStatus === 'already-validate') {
-                    console.log("changement store already-validate");
                     this.comments = commentStore.comments;
                 } else if (this.commentStatus === "to-validate" ) {
-                    console.log("changement store to-validate");
                     this.comments = commentStore.commentsToValidate;
                 }
             })
 
+            //? Souscrire à useArticlesStore pour modifier l'affichage des articles dans les filtres si un article est ajouté ou désactivé
             articleStore.$subscribe(state => {
-                console.log("changement store article");
                 this.articles = articleStore.articles;
             })
         }

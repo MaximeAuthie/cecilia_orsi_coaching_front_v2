@@ -43,15 +43,17 @@
             }
         },
         methods: {
+
+            //! Swicher la classe via this.actualClass pour ouvrir ou fermer le menu burger au click sur l'icone burger
             openBurgerMenu() {
 
-                //?Changement de la valeur du booléen isOpenMenu
+                //? Changer de la valeur du booléen isOpenMenu
                 this.isMenuOpen = !this.isMenuOpen;
 
-                //?Récupération de la largeur de la fenêtre du navigateur
+                //?Récupérer la largeur de la fenêtre du navigateur
                 this.windowWidth = window.innerWidth;
 
-                //?Actualisation de la valeur de actualClass
+                //? Actualiser la valeur de actualClass
                 if (this.windowWidth < 1210) {
                     if (this.isMenuOpen) {
                         this.actualClass = 'header_nav_open';
@@ -60,6 +62,8 @@
                     }
                 }
             },
+
+            //! Fermer le menu burger au click sur le logo
             closeBurgerMenu() {
                 //?Récupération de la largeur de la fenêtre du navigateur
                 this.windowWidth = window.innerWidth;

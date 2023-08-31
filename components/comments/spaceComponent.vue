@@ -61,6 +61,7 @@
             }
         },
         methods: {
+            //! Ajouter un commentaire à la BDD
             async submitForm() {
                 //? Importer la méthode getCurrentDateTime du composable useUtils.ts
                 const { getCurrentDateTime } = useUtils();
@@ -72,47 +73,38 @@
                 //? Vérifier si les saisies sont correctes
                 if (this.isEmpty.atLeastOne == false && this.isMailCorrect == true) {
                 
-                    let commentBody = {
+                    let body = {
                         author_name_comment:    this.newComment.authorName,
                         author_email_comment:   this.newComment.authorEmail,
                         date_comment:           getCurrentDateTime(),
                         content_comment:        this.newComment.content,
                         articleId:              this.articleId
                     }
-                    let commentBodyJson = JSON.stringify(commentBody);
-                    console.log(commentBodyJson);
-                    await fetch('https://127.0.0.1:8000/api/comment/add', {
-                        method:'POST',
-                        headers: {
-                            "Accept": "application/json",
-                            "Content-Type": "application/json"
-                        },
-                        body: commentBodyJson,
-                    })
-                    .then(async response => {
-                        if (response.ok) {
 
-                            //? Si la requête réussit
-                            const data = await response.json();
-                            console.log(data);
-                            } else {
-
-                            //? Si la requête échoue
-                            const errorMessage = await response.text();
-                            console.error(errorMessage);
-                            this.isError = true
-                            }
-                    })
+                    //? Appel de la méthode addComment() du composable useComment
+                    const { addComment }    = useComment();
+                    const response          = await addComment(this.body);
+                    
+                    //? En fonction du statut de la réponse, afficher le message d'erreur ou de succès correspondant
+                    if (response.status == 200) {
+                        this.isError = false;
+                    } else {
+                        this.isError = true;
+                    }
                     this.isFormSubmit = true;
                 }
             },
-            resetEmptyData() { //Remet tous les booléen de l'objet isEmpty à false
+
+            //! Remettre tous les booléen de l'objet isEmpty à false
+            resetEmptyData() { 
                 this.isEmpty.authorName =   false;
                 this.isEmpty.authorEmail =  false;
                 this.isEmpty.content =      false;
                 this.isEmpty.atLeastOne =   false;
             },
-            checkImputSubmit() { // Vérifie si tous les champs sont remplis
+
+            //! Vérifier si tous les champs sont remplis au moment de soumettre le formulaire
+            checkImputSubmit() { 
         
                 //? Réinitialiser les booléens
                 this.resetEmptyData();
@@ -131,7 +123,9 @@
                     this.isEmpty.atLeastOne =   true;
                 }
             },
-            checkImputKeyUp() { // Vérifie si le champs est remplis au moment où l'utilisateur saisi dans un champs
+
+            //! Vérifier si les champs sont remplis au moment où l'utilisateur saisit dans un champs
+            checkImputKeyUp() {
 
                 if (this.newComment.authorName != '') {
                     this.isEmpty.authorName = false;
@@ -143,7 +137,9 @@
                     this.isEmpty.content = false;
                 } 
             },
-            checkMailFormat() { // Vérifie si le format du mail est correct
+
+            //! Vérifie si le format du mail est correct
+            checkMailFormat() {
 
                 //? Réinitialiser le booléen
                 this.isMailCorrect = true;

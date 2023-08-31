@@ -194,7 +194,7 @@
                 //? Importer les fonction du composable useUtils
                 const { containUppercase }  = useUtils();
                 const { containLowercase }  = useUtils();
-                const { containNumbber }    = useUtils();
+                const { containNumber }     = useUtils();
                 const { isLongEnough }      = useUtils();
                 
                 //? Réinitialiser les message d'erreur
@@ -213,7 +213,7 @@
                     this.errorMessages.passwordLowercase = "Le mot de passe doit contenir au moins une minuscule"
                 }
 
-                if (!containNumbber(this.passwords.firstInput)) {
+                if (!containNumber(this.passwords.firstInput)) {
                     this.errorMessages.passwordNumber = "Le mot de passe doit contenir au moins un chiffre"
                 }
 

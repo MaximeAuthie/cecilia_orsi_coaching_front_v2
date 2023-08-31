@@ -100,6 +100,7 @@
             }
         },
         methods: {
+            //! Récupérer les catégories à afficher dans le formulaire via le store useArticlesStore
             getCategories() {
                 const categoryStore = useCategoriesStore();
                 const { verifyToken } = useAuthentification();
@@ -121,12 +122,16 @@
                     });
                 }
             },
+
+            //! Ajouter un mot clé à la liste kewords_list de this.articles
             addKeyword() {
                this.article.kewords_list.push({
                    id: '',
                    content_keywork: ''
                })
             },
+
+            //! Supprimer un mot clé à la liste kewords_list de this.articles
             deleteBannerText(id) {
                //? Rechercher l'objet dans le tableau pour récupérer son index
                const textToDelete = this.article.kewords_list.find(item => item.id == id);
@@ -135,6 +140,8 @@
                //? Suppression de l'objet dans le tableau
                this.article.kewords_list.splice(indexToDelete,1);
             },
+
+            //! Ajouter l'article dans la BDD
             async addArticle() {
                 const articleStore = useArticlesStore();
 
@@ -177,6 +184,8 @@
                     this.errorMessages.form             = responseBody.message;
                 }
             },
+
+            //! Vérifier la longueur du titre de l'article
             ckeckTitleLength() {
                 if (this.article.title_article.length >= 40) {
                     this.errorMessages.titleLength = 'La limite de 40 caractères est dépassée';
@@ -184,6 +193,8 @@
                     this.errorMessages.titleLength = '';
                 }
             },
+
+            //! Vérifier la longueur de la description de l'article
             ckeckDescriptionLength() {
                 if (this.article.description_article.length >= 160) {
                     this.errorMessages.description = 'La limite de 160 caractères est dépassée';
@@ -193,6 +204,7 @@
             }
         },
         mounted() {
+            //? Exécuter this.getCategories()
             this.getCategories();
         }
     }

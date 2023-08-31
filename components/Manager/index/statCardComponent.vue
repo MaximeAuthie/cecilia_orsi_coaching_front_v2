@@ -26,6 +26,7 @@ export default {
     }
 }
 </script>
+
 <style scoped>
     .stat_card {
         display: flex;

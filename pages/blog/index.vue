@@ -108,10 +108,8 @@
 </template>
 
 <script>
-
-import { usePagesStore } from '@/store/page';
-import { useArticlesStore } from '@/store/article';
-import { useCategoriesStore } from '@/store/category'
+    import { useArticlesStore } from '@/store/article';
+    import { useCategoriesStore } from '@/store/category'
 
     export default {
         data() {
@@ -128,7 +126,11 @@ import { useCategoriesStore } from '@/store/category'
             }
         },
         methods: {
+
+            //! Récupérer les articles à afficher via le store useArticlesStore
             getArticles() {
+
+                //? Importer le store useArticlesStore
                 const articleStore = useArticlesStore();
 
                 //? Vérifier si les articles sont toujours présents dans le store
@@ -154,6 +156,8 @@ import { useCategoriesStore } from '@/store/category'
                 }
 
             },
+
+            //! Récupérer les catégories à afficher via le store useCategoriesStore
             getCategories() {
                 const categoryStore = useCategoriesStore();
 
@@ -174,12 +178,18 @@ import { useCategoriesStore } from '@/store/category'
                     });
                 }
             },
+
+            //! Afficher ou non les catégories en fonction du choix de l'utilisateur
             showCategories() {
                 this.isCategoriesVisible = !this.isCategoriesVisible;
             },
+
+            //! Afficher ou non plus d'articles en fonction du choix de l'utilisateur
             showMoreArticles() {
 
             },
+
+            //! Modifier l'affichage des articles en fonction des choix de l'utilisateur
             filterByCategory(categoryName, isSelected) {
                 //? Déclarer la variable articleStore
                 const articleStore = useArticlesStore();
@@ -237,11 +247,12 @@ import { useCategoriesStore } from '@/store/category'
             } 
         },
         mounted() {
-            //? Exécution de la méthode récupérant les données de la page dans la BDD et qui les place dans l'objet this.pageData
+
+            //? Exécuter this.getArticles() et this.getCategories()
             this.getArticles();
             this.getCategories();
 
-            //?Vérifier le nombre d'articles pour afficher la barre "voir plus"
+            //?Vérifier le nombre d'articles pour afficher la barre "voir plus" ou non
             if (this.articles.length > 9) {
                 this.isMoreThenNineArticles = true;
             }

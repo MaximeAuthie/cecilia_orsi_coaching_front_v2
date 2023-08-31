@@ -1,3 +1,5 @@
+//! Middleware pour accéder aux pages de l'espace admin accessibles aux utilisateurs standards et aux administrateurs
+
 import { useUsersStore } from "@/store/user";
 
 export default defineNuxtRouteMiddleware((to, from) => {

@@ -8,9 +8,13 @@ export const useArticlesStore = defineStore('articles', {
         frontPageArticle: []
     }),
     actions: {
+        
+        //! Modifier les articles stockés dans this.article
         updateArticle(newArticles) {
             this.articles = newArticles;
-        },  
+        },
+
+        //! Appeler la fonction getAllArticles() du composable useArticle et stocker le retour dans this.articles
         async getAllArticles() {
             
             try {
@@ -19,7 +23,7 @@ export const useArticlesStore = defineStore('articles', {
                 const { getAllArticles }    = useArticle();
                 const articlesList          = await getAllArticles();
 
-                //? Stocker les données retournée dans le state this.articles
+                //? Stocker les données retournées dans le state this.articles
                 this.articles               = articlesList;
                 
                 //? Changer le format de date des propriétés date_article de this.articles
@@ -31,6 +35,8 @@ export const useArticlesStore = defineStore('articles', {
             }
             
         },
+
+        //! Appeler la fonction getValidatedArticles() du composable useArticle et stocker le retour dans this.validatedArticles
         async getValidatedArticles() {
             
             try {
@@ -60,25 +66,28 @@ export const useArticlesStore = defineStore('articles', {
             }
             
         },
+
+        //! Modifier les dates du state via la fonction formatDate() du composable useUtils
         formatArticlesDates(array) {
-            const { formatDate } = useUtils();
-            let arrayToFormat = array;
-   
+            const { formatDate }    = useUtils();
+            let arrayToFormat       = array;
+            
             if (arrayToFormat == 'articles') {
                 
                 //? On vérifie que le this.articles n'est pas vide
                 if (this.articles != '') {
 
-                    //? Parcourir this.articles pour modifier le format de date_article grâce à la méthode formatDate() du service Utils
+                    //? Parcourir this.articles pour modifier le format de date_article grâce à la méthode formatDate() du composable useUtils
                     this.articles.forEach(article => {
                         article.date_article = formatDate(article.date_article);
                     })
                 }
             } else if (arrayToFormat == 'validated-articles') {
+
                 //? On vérifie que le this.articles n'est pas vide
                 if (this.validatedArticles != '') {
                     
-                    //? Parcourir this.articles pour modifier le format de date_article grâce à la méthode formatDate() du service Utils
+                    //? Parcourir this.articles pour modifier le format de date_article grâce à la méthode formatDate() du composable useUtils
                     this.validatedArticles.forEach(article => {
                         article.date_article = formatDate(article.date_article);
                     })

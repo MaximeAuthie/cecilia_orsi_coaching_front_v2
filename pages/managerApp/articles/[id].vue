@@ -36,7 +36,7 @@
                <label for="status" class="admin_label">Mot clés pour SEO : </label>
                <div v-for="keyword in article.kewords_list" class="admin_content_form_bloc_banner_text">
                    <input v-model="keyword.content_keywork" type="text" class="admin_input_form">
-                   <svg @click="deleteBannerText(keyword.id)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" >
+                   <svg @click="deleteKeyword(keyword.id)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" >
                        <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
                    </svg>
                </div>
@@ -92,6 +92,7 @@
             }
         },
         methods: {
+            //! Récupérer les donnéess de l'article à afficher via le store useArticlesStore
             getArticle() {
                 const articleStore = useArticlesStore();
 
@@ -117,6 +118,8 @@
                         });
                 }    
             },
+
+            //! Récupérer les catégories à afficher dans l'interface administrateur via le store useCategoriesStore
             getCategories() {
                 const categorieStore = useCategoriesStore();
 
@@ -137,13 +140,17 @@
                     });
                 }
             },
+
+            //! Ajouter un mot clé à la liste kewords_list de this.articles
             addKeyword() {
                this.article.kewords_list.push({
                    id: '',
                    content_keywork: ''
                })
             },
-            deleteBannerText(id) {
+
+            //! Supprimer un mot clé à la liste kewords_list de this.articles
+            deleteKeyword(id) {
                //? Rechercher l'objet dans le tableau pour récupérer son index
                const textToDelete = this.article.kewords_list.find(item => item.id == id);
                const indexToDelete = this.article.kewords_list.indexOf(textToDelete);
@@ -151,6 +158,8 @@
                //? Suppression de l'objet dans le tableau
                this.article.kewords_list.splice(indexToDelete,1);
             },
+
+            //! Mettre à jour l'article dans la BDD
             async updateArticle() {
                 const articleStore = useArticlesStore();
 
@@ -193,6 +202,8 @@
                     this.errorMessages.form             = responseBody.message;
                 }
             },
+
+            //! Publier l'article dans la BDD
             async publishArticle() {
                 const articleStore = useArticlesStore();
                 
@@ -212,6 +223,8 @@
                     this.errorMessages.form             = responseBody.message;
                 }
             },
+
+            //! Vérifier la longueur du titre de l'article
             ckeckTitleLength() {
                 if (this.article.title_article.length >= 40) {
                     this.errorMessages.titleLength = 'La limite de 40 caractères est dépassée';
@@ -219,6 +232,8 @@
                     this.errorMessages.titleLength = '';
                 }
             },
+
+            //! Vérifier la longueur de la description de l'article
             ckeckDescriptionLength() {
                 if (this.article.description_article.length >= 160) {
                     this.errorMessages.description = 'La limite de 160 caractères est dépassée';
@@ -230,10 +245,10 @@
         mounted() {
             //? Récupération de l'id de l'article dans la route à l'ouverture de la page
             this.id = this.$route.params.id.toString();
+
+            //? Exécuter this.getArticles() et this.getCategories()
             this.getArticle();
             this.getCategories();
-
-            
         }
     }
 

@@ -26,38 +26,43 @@
             };
         },
         methods: {
+
+            //! Récupérer les articles à afficher dans l'interface administrateur via le store useArticlesStore;
             getArticles() {
                 const articleStore = useArticlesStore();
         
                 //? Vérifier si les catégories sont toujours présentes dans le store
                 if (articleStore.articles.length > 0) {
-                this.articles = articleStore.articles;
+                    this.articles = articleStore.articles;
                 } else {
                 //? Si les catégories ne sont pas déjà présents dans le store, effectuer l'appel API
-                articleStore.getAllArticles()
-                    .then(() => {
-                        this.articles = articleStore.articles;
-                    })
-        
-                    //? En cas d'erreur inattendue, capter l'erreur rencontrée
-                    .catch((error) => {
-                        console.error("Erreur lors de la récupération des catégories :", error);
-                    });
+                    articleStore.getAllArticles()
+                        .then(() => {
+                            this.articles = articleStore.articles;
+                        })
+            
+                        //? En cas d'erreur inattendue, capter l'erreur rencontrée
+                        .catch((error) => {
+                            console.error("Erreur lors de la récupération des catégories :", error);
+                        });
                 }
             },
-        updateArticle(id, name, color) {
-            this.$emit("update", id, name, color);
-            console.log("niv 2 activé" + this.name + this.color);
-        },
+
+            //! Emettre un évènement pour signaler que l'utilisateur a cliqué sur le bouton "modifier"
+            updateArticle(id, name, color) {
+                this.$emit("update", id, name, color);
+                console.log("niv 2 activé" + this.name + this.color);
+            },
         },
     
         mounted() {
+            //? Exécuter this.getArticles()
             this.getArticles();
-        
+            
+            //? Souscrire a useArticlesStore et récupérer la liste des nouveaux articles dans this.articles
             const articleStore = useArticlesStore();
             articleStore.$subscribe((state) => {
                 this.articles = articleStore.articles;
-                console.log("update store articles");
             });
         },
     };

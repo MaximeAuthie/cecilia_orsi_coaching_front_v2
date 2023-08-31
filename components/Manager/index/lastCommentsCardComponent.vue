@@ -29,34 +29,40 @@ export default {
         }
     },
     methods: {
+        //! Récupérer les commentaires à valider à afficher dans l'interface administrateur via le store useCommentsStore;
         getComments() {
-                const commentStore = useCommentsStore();
 
-                //? Vérifier si les articles sont toujours présents dans le store
-                if (commentStore.commentsToValidate.length > 0) {
-                    this.comments       = commentStore.commentsToValidate;
+            //? Importer useCommentsStore
+            const commentStore = useCommentsStore();
+
+            //? Vérifier si les commentaires sont toujours présents dans le store
+            if (commentStore.commentsToValidate.length > 0) {
+                this.comments       = commentStore.commentsToValidate;
+                this.comments.sort((a,b) => (a.id < b.id ? 1 : -1));
+            } else {
+
+            //? Si les commentaires ne sont pas déjà présents dans le store, effectuer l'appel API
+            commentStore.getCommentsToValidate()
+                .then(() => {
+                    this.comments   = commentStore.commentsToValidate;
                     this.comments.sort((a,b) => (a.id < b.id ? 1 : -1));
-                } else {
+                })
 
-                //? Si les articles ne sont pas déjà présents dans le store, effectuer l'appel API
-                commentStore.getCommentsToValidate()
-                    .then(() => {
-                        this.comments   = commentStore.commentsToValidate;
-                        this.comments.sort((a,b) => (a.id < b.id ? 1 : -1));
-                    })
-
-                    //? En cas d'erreur inattendue, capter l'erreur rencontrée
-                    .catch((error) => {
-                        console.error('Erreur lors de la récupération des articles :', error);
-                    });
-                }
-            },
+                //? En cas d'erreur inattendue, capter l'erreur rencontrée
+                .catch((error) => {
+                    console.error('Erreur lors de la récupération des articles :', error);
+                });
+            }
+        },
     },
     mounted() {
+
+        //? Exécuter this.getComments()
         this.getComments();
     }
 }
 </script>
+
 <style scoped>
     .last_comments_card {
         display: flex;

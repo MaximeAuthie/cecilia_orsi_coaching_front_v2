@@ -39,6 +39,8 @@
             }
         },
         mounted() {
+
+            //? Renseigner le lien de la page vers laquelle sera dirigé le visiteur en cliquant sur la tuile
             this.tileRoute = 'blog/article/' + this.id;
         }
     }

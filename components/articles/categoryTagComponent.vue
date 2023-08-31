@@ -20,6 +20,8 @@
         },
         emits: ['selectCategory'],
         methods : {
+
+            //! Emettre un évènement au composant parent pour lui signifier le choix d'une catégorie par l'utilisateur
             selectCategory() {
                 this.$emit('selectCategory', name);
             }

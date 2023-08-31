@@ -33,10 +33,13 @@
             },
         },
         methods: {
+            
+            //! Emettre un évènement quand l'utilisateur clique sur le bouton "modifier"
             updateCategory() {
                 this.$emit('update', this.id, this.name, this.color);
-                console.log("niv 1 activé, " + this.name + this.color);
             },
+
+            //! Supprimer la catégorie quand l'utilisateur clique sur le bouton "supprimer"
             async deleteCategory() {
                 const categorieStore = useCategoriesStore();
 
@@ -52,7 +55,6 @@
                     //? Appel de la méthode deleteCategory() du composable useCategory
                     const { deleteCategory }    = useCategory();
                     const response              = await deleteCategory(body);
-                    const responseBody          = await response.json();
 
                     //? En fonction du statut de la réponse, afficher le message d'erreur ou de succès correspondant
                     if (response.status == 200) {

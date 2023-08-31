@@ -42,20 +42,21 @@
             }
         },
         mounted() {
-            console.log("header chargé");
+            
+            //? Augmenter l'index du tableau this.messages pour faire défiler les messages de bannière
             this.interval = setInterval(async () => {
                     if (this.activeMessageIndex < this.messages.length - 1) {
                         this.activeMessageIndex ++;
                     } else {
                         this.activeMessageIndex = 0;
                     }
-                    console.log(this.activeMessageIndex +" - "+ this.messages.length);
-                    
+                
                     this.activeMessageText = this.messages[this.activeMessageIndex];
                 }, 4000)
-                console.log(this.imgUrl);
         },
         beforeUnmount() {
+
+            //? Arrêter le défilement des textes de la bannière en quittant la page
             clearInterval(this.interval);
         },
     };
@@ -86,7 +87,7 @@
         height: 85vh;
         width: 100%;
         background-color: #000000;
-        opacity: 0.40;
+        opacity: 0.50;
         z-index: -1;
     }
 

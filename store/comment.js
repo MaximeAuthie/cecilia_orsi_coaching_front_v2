@@ -6,6 +6,8 @@ export const useCommentsStore = defineStore('comments', {
         commentsToValidate: []
     }),
     actions: {
+
+        //! Appeler la fonction getValidatedComments() du composable useComment et stocker le retour dans this.comments
         async getModeratedComments() {
             try {
 
@@ -13,12 +15,18 @@ export const useCommentsStore = defineStore('comments', {
                 const { getModeratedComments }  = useComment();
                 const commentsList              = await getModeratedComments();
                 
-                //? Affecter le json de la réponse à this.articles
+                //? Stocker les données retournées dans le state this.comments
                 this.comments                   = commentsList;
  
                 //? Changer le format de date des propriétés date_comment de this.comments
-                this.formatCommentsDates();
-                
+                if (this.comments != '') {
+
+                    //? Parcourir this.comments pour modifier le format de date_article grâce à la méthode formatDate() du composable useUtils
+                    this.comments.forEach(comment => {
+                        const { formatDatetime } = useUtils();
+                        comment.date_comment = formatDatetime(comment.date_comment);
+                    })
+                }
             
             //? En cas d'erreur inattendue, capter l'erreur rencontrée et emettre une erreur dans la console
             } catch (error) {
@@ -26,6 +34,8 @@ export const useCommentsStore = defineStore('comments', {
             }
             
         },
+
+        //! Appeler la fonction commentsToValidate() du composable useComment et stocker le retour dans this.commentsToValidate
         async getCommentsToValidate() {
             
             try {
@@ -34,13 +44,13 @@ export const useCommentsStore = defineStore('comments', {
                 const { getCommentsToValidate }     = useComment();
                 const commentsList                  = await getCommentsToValidate();
 
-                //? Affecter le json de la réponse à this.articles
+                //? Stocker les données retournées dans le state this.commentsToValidate
                 this.commentsToValidate             = commentsList;
 
-                //? Changer le format de date des propriétés date_comment de this.comments
+                //? Changer le format de date des propriétés date_comment de this.commentsToValidate
                 if (this.commentsToValidate != '') {
 
-                    //? Parcourir this.comments pour modifier le format de date_article grâce à la méthode formatDate() du service Utils
+                    //? Parcourir this.commentsToValidate pour modifier le format de date_article grâce à la méthode formatDate() du composable useUtils
                     this.commentsToValidate.forEach(comment => {
                         const { formatDatetime } = useUtils();
                         comment.date_comment = formatDatetime(comment.date_comment);
@@ -52,17 +62,6 @@ export const useCommentsStore = defineStore('comments', {
                 console.error(error);
             }
             
-        },
-        formatCommentsDates() {
-            const { formatDatetime } = useUtils();
-            //? On vérifie que le this.comments n'est pas vide
-            if (this.comments != '') {
-
-                //? Parcourir this.comments pour modifier le format de date_article grâce à la méthode formatDate() du service Utils
-                this.comments.forEach(comment => {
-                    comment.date_comment = formatDatetime(comment.date_comment);
-                })
-            }
         }
     },
 });

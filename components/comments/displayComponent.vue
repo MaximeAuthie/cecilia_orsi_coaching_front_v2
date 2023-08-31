@@ -1,5 +1,5 @@
 <script setup>
-    //? Importer la méthode formatDatetime du composable useUtils.ts
+    //? Importer la méthode formatDatetime du composable useUtils.ts pour l'utiliser dans le template
    const { formatDatetime } = useUtils();
 </script>
 

@@ -1,3 +1,5 @@
+//! Layout appliqué sur la page de connexion
+
 <template>
     <ManagerHeaderComponent></ManagerHeaderComponent>
     <slot/>
@@ -6,6 +8,7 @@
 <script>
     export default {
         mounted() {
+
             //? Renseigner les balises HTML de <head> pour bloquer le SEO
             useHead({
                 title: 'Cécilia Orsi Coaching - Connexion',

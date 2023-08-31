@@ -29,9 +29,12 @@
             }
         },
         mounted() {
+
+            //? Récupérer le prénom de l'utilisateur au montage de la page
             const userStore = useUsersStore();
             this.user = userStore.firstName;
-
+            
+            //? Récupérer les statistiques de visite au montage de la page
             const statsStore = useStatsStore();
             this.stats = statsStore.stats;
         }

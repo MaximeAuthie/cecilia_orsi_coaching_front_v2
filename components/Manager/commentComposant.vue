@@ -62,6 +62,7 @@
             }
         },
         methods: {
+            //! Valider le commentaire quand l'utilisateur clique sur le bouton "valider"
             async validateComment() {
                 const userStore = useUsersStore();
 
@@ -83,6 +84,8 @@
                 }
 
             },
+
+            //! Rejeter le commentaire quand l'utilisateur clique sur le bouton "rejeter"
             async rejectComment() {
                 const userStore = useUsersStore();
 
@@ -103,10 +106,12 @@
                     this.$emit('error', 'Une erreur est survenue. Veuillez réessayer plus tard');
                 }
             },
+
+            //! Mettre à jour le store une fois la validation ou le rejet du commentaire fait
             updateStore() {
                 const store = useCommentsStore();
                 store.getCommentsToValidate();
-                store.getValidatedComments();
+                store.getModeratedComments();
             }
         }
     }

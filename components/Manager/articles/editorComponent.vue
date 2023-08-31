@@ -33,27 +33,27 @@
                 default: '',
             },
         },
-
         data() {
             return {
                 editor: null,
             }
         },
         watch: {
+            //! Changer le contenu de l'éditeur lorsque que la valeur saisie change
             modelValue(value) {
             
-            const isSame = this.editor.getHTML() === value
+                const isSame = this.editor.getHTML() === value
 
-            if (isSame) {
-                return
-            }
+                if (isSame) {
+                    return
+                }
 
-            this.editor.commands.setContent(value, false)
+                this.editor.commands.setContent(value, false)
             },
         },
-
-
         mounted() {
+
+            //? Créer une instance de TipTap Editor
             this.editor = new Editor({
                 content: this.modelValue,
                 extensions: [
@@ -72,6 +72,8 @@
         },
 
         beforeUnmount() {
+
+            //? Détruire l'instance de TipTap Editor au démontage du composant
             this.editor.destroy()
         },
     }

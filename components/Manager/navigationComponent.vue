@@ -88,6 +88,7 @@
             }
         },
         methods: {
+            //! Déconnecter l'utilisateur quand il clique sur "Déconnexion"
             logOut() {
                 const store = useUsersStore();
                 store.token = '';
@@ -95,8 +96,10 @@
             }
         },
         mounted() {
+            //? Importer le store useUsersStore
             const store = useUsersStore();
             
+            //? Vérifier le rôle de l'utilisateur pour ajuster l'affichage des menus en fonction de son rôle
             if (store.role === 'ROLE_ADMIN') {
                 this.isAdmin = true;
             }

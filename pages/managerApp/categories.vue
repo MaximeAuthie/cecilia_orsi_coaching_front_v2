@@ -56,6 +56,7 @@
             }
         },
         methods: {
+            //! Vérifier la longueur du nom de la catégorie
             ckeckNameLength() {
                 if (this.formData.name.length >= 15) {
                     this.errorMessages.nameLength = 'Le nom de la catégorie ne doit pas dépasser 15 caractères.';
@@ -63,6 +64,8 @@
                     this.errorMessages.nameLength = '';
                 }
             },
+
+            //! Ajouter une nouvelle catégorie à la BDD
             async addNewCategory() {
                 const categoryStore = useCategoriesStore();
 
@@ -88,6 +91,8 @@
                     }
                 }
             },
+
+            //! Mettre à jour une catégorie existante dans la BDD
             async updateCategory() {
                 const categoryStore = useCategoriesStore();
 
@@ -116,22 +121,30 @@
                     this.resetFetchedData();
                 }
             },
+
+            //! Fermer l'affichage de modification d'une catégorie
             cancelUpdate() {
                 this.resetMessages();
                 this.resetFetchedData();
             },
-            resetMessages() { //? Remettre les datas à leur état initial
+
+            //! Remettre les messages d'avertissement à leur état initial
+            resetMessages() { 
                 this.errorMessages.nameLength       = '';
                 this.errorMessages.colorFormat      = '';
                 this.errorMessages.form             = '';
                 this.formSuccessMessage             = ''
             },
-            resetFetchedData() { //? Réinitiliser des datas après update d'une catégorie
+
+            //! Réinitiliser des data() après update d'une catégorie
+            resetFetchedData() { 
                 this.categoryUpdate     = false;
                 this.formData.id        = 0,
                 this.formData.name      = '',
                 this.formData.color     = ''
             },
+
+            //! Vérifier si une message d'erreur est encore affiché
             checkErrorMessages() {
                 if (
                     this.errorMessages.form !='' 
@@ -143,8 +156,10 @@
                     return true;
                 }
             },
-            checkColorFormat() { //? Vérifier si le format de la couleur est correct
-                console.log("checkColorFormat lancé");
+
+            //! Vérifier si le format de la couleur est correct
+            checkColorFormat() { 
+                
                 //? Définir le regex pour le format mail
                 const pattern = new RegExp(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/);
 
@@ -159,14 +174,18 @@
                     }
                 }
             },
-            checkImputEmpty() { //? Vérifier si tous les champs sont bien complétés
+
+            //! Vérifier si tous les champs sont bien complétés
+            checkImputEmpty() { 
                 if (this.formData.name != '' && this.formData.color != '') {
                     this.errorMessages.form = "";
                 } else {
                     this.errorMessages.form = "Veuillez compléter tous les champs du formulaire.";
                 }
             },
-            activateUpdateCategory(id, name, color) { //? Réagir à l'évènement "update" du composant "ManagerCategoriesListComponent"
+            
+            //! Réagir à l'évènement "update" du composant "ManagerCategoriesListComponent"
+            activateUpdateCategory(id, name, color) { 
 
                 //? Réinitialiser les éventuels messages
                 this.resetMessages();

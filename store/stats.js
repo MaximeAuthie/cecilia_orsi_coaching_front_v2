@@ -1,27 +1,29 @@
 import { defineStore } from 'pinia';
 
 export const useStatsStore = defineStore('stats', {
-  state: () => ({
-    stats:      {}
-  }),
-  actions: {
-    async getVisitsStats() {
-            
-        try {
+    state: () => ({
+        stats:      {}
+    }),
+    actions: {
 
-            //? Appel de la méthode getVisitsStats() du composable useStat
-            const { getVisitsStats } = useStat();
-            const statsList = await getVisitsStats();
-            
-            //? Stocker les données retournée dans le state this.stats
-            this.stats  = statsList;
+        //! Appeler la fonction getVisitsStats() du composable useStat et stocker le retour dans this.stats
+        async getVisitsStats() {
+                
+            try {
 
-        //? En cas d'erreur inattendue, capter l'erreur rencontrée et emettre une erreur dans la console
-        } catch (error) {
-            console.error(error); 
-        }
-        
-        
+                //? Appel de la méthode getVisitsStats() du composable useStat
+                const { getVisitsStats }    = useStat();
+                const statsList             = await getVisitsStats();
+                
+                //? Stocker les données retournée dans le state this.stats
+                this.stats  = statsList;
+
+            //? En cas d'erreur inattendue, capter l'erreur rencontrée et emettre une erreur dans la console
+            } catch (error) {
+                console.error(error); 
+            }
+            
+            
+        },
     },
-  },
 });

@@ -42,6 +42,7 @@
         link: [{rel: 'icon', href: './assets/images/icone_tree.png'}]
     })
 </script>
+
 <template>
     <div v-if="pending" class="waiting_div">
         <div class="waiting_div_logo">

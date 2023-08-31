@@ -24,8 +24,11 @@
             }
         },
         mounted() {
+            
+            //? Importer le store useUsersStore
             const userStore = useUsersStore();
             
+            //? Vérifier si l'utilisateur est connecter pour afficher l'accès à myAccount ou non
             if (userStore.token != "") {
                 this.isUserLogedIn = true;
             } else {

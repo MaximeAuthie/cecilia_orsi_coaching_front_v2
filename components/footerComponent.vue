@@ -43,10 +43,6 @@
     </footer>
 </template>
 
-<script lang="ts">
-
-</script>
-
 <style scoped>
     footer {
         display: flex;

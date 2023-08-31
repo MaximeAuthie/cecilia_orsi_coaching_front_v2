@@ -1,6 +1,6 @@
 <template>
-    <div @click="clickOn" @mouseover="overOn" @mouseout="overOff" class="tag_div" :style="{backgroundColor: isClicked || isOver ? color : '#FFFFFF', borderColor: color}">
-        <div class="tag_title" :style="{color: isClicked || isOver ? '#FFFFFF' : color}">
+    <div @click="clickOn" @mouseover="overOn" @mouseout="overOff" class="tag_div" :style="{backgroundColor: isClicked || isHover ? color : '#FFFFFF', borderColor: color}">
+        <div class="tag_title" :style="{color: isClicked || isHover ? '#FFFFFF' : color}">
             {{ name }}
         </div>
     </div>
@@ -22,19 +22,25 @@
         data() {
             return {
                 isClicked:  false,
-                isOver:    false,
+                isHover:    false,
             }
         },
         methods : {
+
+            //! Emettre un évènement au composant parent pour lui signifier le choix d'une catégorie par l'utilisateur
             clickOn() {
                 this.isClicked =! this.isClicked;
                 this.$emit('select', this.name, this.isClicked);
             },
-            overOn() {
-                this.isOver = true;
+
+            //! Changer la valeur de this.isHover au survol de la catégorie
+            hoverOn() {
+                this.isHover = true;
             },
-            overOff() {
-                this.isOver = false;
+
+            //! Changer la valeur de this.isHover à la fin du survol de la catégorie
+            hoverOff() {
+                this.isHover = false;
             }
 
 
