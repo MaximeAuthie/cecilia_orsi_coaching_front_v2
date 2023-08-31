@@ -2,10 +2,15 @@ import { useUsersStore } from "@/store/user";
 
 export function useAuthentification() {
 
+    //! Vérifier si le jwt d'authentification stocké côté client est toujours valide et en obtenir un nouveau si jamais les conditions sont respectées (managerApp)
     async function verifyToken() {
-        const store = useUsersStore();
+
+        //? Récupérer l'adresse URL du serveur
+        const config    = useRuntimeConfig();
+        const serverUrl = config.public.serverUrl;
 
         //? Récupérer le token dans le store user pour l'utiliser dans le header de la requête
+        const store = useUsersStore();
         const token = store.token;
 
         //? Récupérer l'id de l'utilisateur dans le store user pour l'utiliser dans le body de la requête
@@ -19,7 +24,7 @@ export function useAuthentification() {
         try {
 
             //? Appeller l'api
-            const response = await $fetch('https://127.0.0.1:8000/api/user/jwt/check', {
+            const response = await fetch(serverUrl + 'api/user/jwt/check', {
                 method: 'PATCH',
                 headers: {
                     "Accept": "application/json",
@@ -31,8 +36,8 @@ export function useAuthentification() {
             });
             
             //? Retourner la réponse : ici un noouveau token (string)
-            const newToken = await response.toString();
-            store.token = newToken;
+            const newToken  = await response.toString();
+            store.token     = newToken;
             return newToken; 
 
         //? En cas d'erreur on met fin à la session

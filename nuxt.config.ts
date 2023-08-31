@@ -11,7 +11,7 @@ export default defineNuxtConfig({
     },
     runtimeConfig: {
         public: {
-            serverUrl: 'https://www.maximeauthie.fr/'
+            serverUrl: 'https://127.0.0.1:8000/'
         }
     }
 })

@@ -2,12 +2,17 @@ import { useUsersStore } from "@/store/user";
 
 export function useCategory() {
 
+    //! Récupérer toutes les catégories de la BDD (site vitrine)
     async function getAllCategories() {
 
         try {
+            
+            //? Récupérer l'adresse URL du serveur
+            const config    = useRuntimeConfig();
+            const serverUrl = config.public.serverUrl;
 
             //? Appeler l'api getAllCategories()
-            let response = await fetch('https://127.0.0.1:8000/api/category/all', {
+            let response = await fetch(serverUrl + 'api/category/all', {
                 method:'GET',
                 headers: {
                     "Accept": "application/json",
@@ -26,20 +31,24 @@ export function useCategory() {
         }      
     }
 
+    //! Ajouter une nouvelle catégorie dans la BDD (managerApp)
     async function addNewCategory(body:object) {
 
         try {
-            const userStore         = useUsersStore();
-            const { verifyToken }   = useAuthentification();
+            
+            //? Récupérer l'adresse URL du serveur
+            const config    = useRuntimeConfig();
+            const serverUrl = config.public.serverUrl;
 
             //? Transformer l'objet formData en json
             const bodyJson = JSON.stringify(body);
 
-            //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-            const jwt = await verifyToken();
+            //? Vérifier et récupérer le token pour l'identification via la fonction verifyToken du composable useAuthentification
+            const { verifyToken }   = useAuthentification();
+            const jwt               = await verifyToken();
 
             //? Exécuter l'appel API
-            const response = await fetch('https://127.0.0.1:8000/api/category/add', {
+            const response = await fetch(serverUrl + 'api/category/add', {
                 method:'POST',
                 headers: {
                     "Accept": "application/json",
@@ -52,6 +61,7 @@ export function useCategory() {
 
             //? Retourner la réponse
             if (response.status == 498) {
+                const userStore         = useUsersStore();
                 userStore.token = '';
                 navigateTo('/managerApp/logIn/expired-session');
             } else {
@@ -64,20 +74,24 @@ export function useCategory() {
         }
     }
 
+    //! Modifier une catégorie existante dans la BDD (managerApp)
     async function updateCategory(body:object) {
 
         try {
-            const userStore         = useUsersStore();
-            const { verifyToken }   = useAuthentification();
+            
+            //? Récupérer l'adresse URL du serveur
+            const config    = useRuntimeConfig();
+            const serverUrl = config.public.serverUrl;
 
             //? Transformer l'objet formData en json
             const bodyJson = JSON.stringify(body);
 
-            //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-            const jwt = await verifyToken();
+            //? Vérifier et récupérer le token pour l'identification via la fonction verifyToken() du composable useAuthentification
+            const { verifyToken }   = useAuthentification();
+            const jwt               = await verifyToken();
 
             //? Exécuter l'appel API
-            const response = await fetch('https://127.0.0.1:8000/api/category/update', {
+            const response = await fetch(serverUrl + 'api/category/update', {
                 method:'PATCH',
                 headers: {
                     "Accept": "application/json",
@@ -90,6 +104,7 @@ export function useCategory() {
 
             //? Retourner la réponse
             if (response.status == 498) {
+                const userStore = useUsersStore();
                 userStore.token = '';
                 navigateTo('/managerApp/logIn/expired-session'); 
             } else {
@@ -103,20 +118,24 @@ export function useCategory() {
         }
     }
 
+    //! Supprimer une catégorie existante dans la BDD (managerApp)
     async function deleteCategory(body:object) {
 
         try {
-            const userStore         = useUsersStore();
-            const { verifyToken }   = useAuthentification();
+
+            //? Récupérer l'adresse URL du serveur
+            const config    = useRuntimeConfig();
+            const serverUrl = config.public.serverUrl;
 
             //? Transformer l'objet formData en json
             const bodyJson = JSON.stringify(body);
 
-            //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-            const jwt = await verifyToken();
+            //? Vérifier et récupérer le token pour l'identification via la fonction verifyToken du composable useAuthentification
+            const { verifyToken }   = useAuthentification();
+            const jwt               = await verifyToken();
 
             //? Exécuter l'appel API
-            const response = await fetch('https://127.0.0.1:8000/api/category/delete', {
+            const response = await fetch(serverUrl + 'api/category/delete', {
                 method:'DELETE',
                 headers: {
                     "Accept": "application/json",
@@ -129,6 +148,7 @@ export function useCategory() {
 
             //? Retourner la réponse
             if (response.status == 498) {
+                const userStore = useUsersStore();
                 userStore.token = '';
                 navigateTo('/managerApp/logIn/expired-session'); 
             } else {

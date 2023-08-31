@@ -1,14 +1,18 @@
-import { useCommentsStore } from '@/store/comment';
 import { useUsersStore } from "@/store/user";
 
 export function useComment() {
 
+    //! Récupérer tous les commentaires déjà modérés de la BDD (site vitrine)
     async function getModeratedComments() {
 
         try {
 
+            //? Récupérer l'adresse URL du serveur
+            const config    = useRuntimeConfig();
+            const serverUrl = config.public.serverUrl;
+
             //? Appeler l'api getValidatedComments()
-            let response = await fetch('https://127.0.0.1:8000/api/comment/moderated', {
+            let response = await fetch(serverUrl + 'api/comment/moderated', {
                 method:'GET',
                 headers: {
                     "Accept": "application/json",
@@ -27,16 +31,21 @@ export function useComment() {
         }      
     }
 
+    //! Récupérer tous les commentaires pas encore modérés de la BDD (managerApp)
     async function getCommentsToValidate() {
 
         try {
 
-            //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-            const { verifyToken } = useAuthentification();
-            const jwt = await verifyToken();
+            //? Récupérer l'adresse URL du serveur
+            const config    = useRuntimeConfig();
+            const serverUrl = config.public.serverUrl;
+
+            //? Vérifier et récupérer le token pour l'identification via la fonction verifyToken() du composable useAuthentification
+            const { verifyToken }   = useAuthentification();
+            const jwt               = await verifyToken();
 
             //? Appeler l'api getCommentsToValidate()
-            let response = await fetch('https://127.0.0.1:8000/api/comment/toValidate', {
+            let response = await fetch(serverUrl + 'api/comment/toValidate', {
                 method:'GET',
                 headers: {
                     "Accept": "application/json",
@@ -56,20 +65,56 @@ export function useComment() {
         }      
     }
     
+    //! Ajouter un commentaire dans la BDD (site vitrine)
+    async function addComment(body:object) {
+        
+        try {
+
+            //? Récupérer l'adresse URL du serveur
+            const config    = useRuntimeConfig();
+            const serverUrl = config.public.serverUrl;
+
+            //? Transformer l'objet body en json
+            const bodyJson = JSON.stringify(body);
+
+            //? Exécuter l'appel API
+            const response = await fetch(serverUrl + 'api/comment/add', {
+                method:'POST',
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                },
+                body: bodyJson,
+            })
+
+            //? Retourner la réponse
+            return response;
+
+        //? En cas d'erreur, capter cette erreur et la retourner
+        } catch(error) {
+            console.error(error);      
+            return error;
+        }
+    }
+
+    //! Valider un commentaire dans la BDD (managerApp)
     async function validateComment(body:object) {
 
         try {
-            const userStore         = useUsersStore();
-            const { verifyToken }   = useAuthentification();
+            
+            //? Récupérer l'adresse URL du serveur
+            const config    = useRuntimeConfig();
+            const serverUrl = config.public.serverUrl;
 
             //? Transformer l'objet body en json
             const bodyJson = JSON.stringify(body);
             
-            //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-            const jwt = await verifyToken();
+            //? Vérifier et récupérer le token pour l'identification via la fonction verifyToken() du composable useAuthentification
+            const { verifyToken }   = useAuthentification();
+            const jwt               = await verifyToken();
 
             //? Exécuter l'appel API
-            const response = await fetch('https://127.0.0.1:8000/api/comment/validate', {
+            const response = await fetch(serverUrl + 'api/comment/validate', {
                     method:'PATCH',
                     headers: {
                         "Accept": "application/json",
@@ -82,6 +127,7 @@ export function useComment() {
 
             //? Retourner la réponse
             if (response.status == 498) {
+                const userStore = useUsersStore();
                 userStore.token = '';
                 navigateTo('/managerApp/logIn/expired-session'); 
             } else {
@@ -95,19 +141,24 @@ export function useComment() {
         }
     }
 
+    //! Rejeter un commentaire dans la BDD (managerApp)
     async function rejectComment(body:object) {
 
         try {
-            const userStore = useUsersStore();
-            const { verifyToken } = useAuthentification();
+
+            //? Récupérer l'adresse URL du serveur
+            const config    = useRuntimeConfig();
+            const serverUrl = config.public.serverUrl;
 
             //? Transformer l'objet body en json
             const bodyJson = JSON.stringify(body);
         
-            //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-            const jwt = await verifyToken();
+            //? Vérifier et récupérer le token pour l'identification via la fonction verifyToken() du composable useAuthentification
+            const { verifyToken }   = useAuthentification();
+            const jwt               = await verifyToken();
 
-            const response = await fetch('https://127.0.0.1:8000/api/comment/reject', {
+            //? Exécuter l'appel API
+            const response = await fetch(serverUrl + 'api/comment/reject', {
                 method:'PATCH',
                 headers: {
                     "Accept": "application/json",
@@ -120,6 +171,7 @@ export function useComment() {
 
             //? Retourner la réponse
             if (response.status == 498) {
+                const userStore = useUsersStore();
                 userStore.token = '';
                 navigateTo('/managerApp/logIn/expired-session'); 
             } else {

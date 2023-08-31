@@ -1,5 +1,6 @@
 export function useUtils() {
 
+    //! Vérifier si deux mots de passe sont identiques (managerApp)
     function isPasswordIdentical(passwordOne: string, passwordTwo: string) {
         
         if (passwordOne != '' && passwordTwo != '') {
@@ -12,7 +13,8 @@ export function useUtils() {
             return true;
         }
     }
-
+    
+    //! Vérifier si un mot de passe contient une majuscule (managerApp)
     function containUppercase(password: string) {
         //? Définir les pattern du regex
         const upperCasePattern = new RegExp(/[A-Z]/g);
@@ -25,6 +27,7 @@ export function useUtils() {
         }
     }
 
+    //! Vérifier si un mot de passe contient une minuscule (managerApp)
     function containLowercase(password: string) {
         //? Définir les pattern du regex
         const lowerCasePattern = new RegExp(/[a-z]/g);
@@ -37,7 +40,8 @@ export function useUtils() {
         }
     }
 
-    function containNumbber(password: string) {
+    //! Vérifier si un mot de passe contient un chiffre (managerApp)
+    function containNumber(password: string) {
         //? Définir les pattern du regex
         const numberPattern = new RegExp(/[0-9]/g);
 
@@ -49,6 +53,7 @@ export function useUtils() {
         }
     }
 
+    //! Vérifier si un mot de passe contient suffisamment de caractères (managerApp)
     function isLongEnough(password: string) {
 
         //? Vérifier si le mot de passe contient au moins 14 caractères
@@ -59,6 +64,7 @@ export function useUtils() {
         }
     }
 
+    //! Vérifier si une chaine de caractère respecte le format mail (managerApp)
     function isMailFormatCorrect(email: string) {
 
         console.log("ismail correct lancé");
@@ -79,6 +85,7 @@ export function useUtils() {
         }
     }
 
+    //! Renvoyer une date au format "dd/mm/aaaa" (site vitrine)
     function formatDate(imputDate:Date) {
         
         const date      = new Date(imputDate);
@@ -89,6 +96,7 @@ export function useUtils() {
         return day + '/' + month + '/' + year
     }
 
+    //! Renvoyer une date au format "dd/mm/aaaa hh:mm" (site vitrine)
     function formatDatetime(imputDate:Date) {
         const date      = new Date(imputDate);
         const day       = String(date.getDate()).padStart(2,'0');
@@ -122,7 +130,7 @@ export function useUtils() {
         isPasswordIdentical,
         containUppercase,
         containLowercase,
-        containNumbber,
+        containNumber,
         isLongEnough,
         isMailFormatCorrect,
         formatDate,

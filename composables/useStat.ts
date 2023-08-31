@@ -1,17 +1,20 @@
 export function useStat() {
-
+    
+    //! Récupérer les statistique de visite pour la page d'accueil (managerApp)
     async function getVisitsStats() {
 
         try {
 
-            //? Importer le composable permettant de vérifier le jwt
-            const { verifyToken } = useAuthentification();
+            //? Récupérer l'adresse URL du serveur
+            const config    = useRuntimeConfig();
+            const serverUrl = config.public.serverUrl;
 
-            //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-            const jwt = await verifyToken();
+            //? Vérifier et récupérer le token pour l'identification via la fonction verifyToken() du composable useAuthentification
+            const { verifyToken }   = useAuthentification();
+            const jwt               = await verifyToken();
 
-            //? Appeler l'api getVisitsStats()
-            let response = await fetch('https://127.0.0.1:8000/api/visit/stats', {
+            //? Exécuter l'appel API
+            let response = await fetch(serverUrl + 'api/visit/stats', {
                 method:'GET',
                 headers: {
                     "Accept": "application/json",
@@ -23,7 +26,6 @@ export function useStat() {
 
             //? Retourner la réponse
             const statsList = await response.json();
-            
             return statsList;
         
         //? En cas d'erreur, capter cette erreur et la retourner
@@ -31,8 +33,41 @@ export function useStat() {
             console.error(error);
         }      
     }
+
+     //! Ajouter une visite dans la BDD (site vitrine)
+     async function addVisit(body:object) {
+        
+        try {
+
+            //? Récupérer l'adresse URL du serveur
+            const config    = useRuntimeConfig();
+            const serverUrl = config.public.serverUrl;
+
+            //? Transformer l'objet body en json
+            const bodyJson = JSON.stringify(body);
+
+            //? Exécuter l'appel API
+            const response = await fetch(serverUrl + 'api/visit/add', {
+                method:'POST',
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                },
+                body: bodyJson,
+            })
+
+            //? Retourner la réponse
+            console.log(response);
+
+        //? En cas d'erreur, capter cette erreur et la retourner
+        } catch(error) {
+            console.error(error);      
+        }
+    }
     
     return {
-        getVisitsStats
+        getVisitsStats,
+        addVisit
     }
 }

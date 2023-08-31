@@ -1,13 +1,14 @@
 export function useIp() {
 
+    //! Récupérer l'adresse IP du client pour suivre sa visite en BDD (site vitrine)
     async function getPublicIp() {
        
         try {
-
-            //? Appeller l'api
-            const response = await $fetch('https://api.ipify.org');
             
-            //? Retourner la réponse : ici un noouveau token (string)
+            //? Exécuter l'appel API
+            const response = await fetch('https://api.ipify.org');
+            
+            //? Retourner la réponse : ici l'adresse IP publique du client (string)
             const publicIp = await response.toString();
             return publicIp; 
 

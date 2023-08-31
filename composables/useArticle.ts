@@ -2,16 +2,21 @@ import { useUsersStore } from "@/store/user";
 
 export function useArticle() {
 
+    //! Récupérer tous les articles de la BDD (managerApp)
     async function getAllArticles() {
             
-        try {
-            const { verifyToken } = useAuthentification();
+        try {    
 
-            //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
+            //? Vérifier et récupérer le token pour l'identification via la fonction verifyToken du composable useAuthentification
+            const { verifyToken } = useAuthentification();
             const jwt = await verifyToken();
+
+            //? Récupérer l'adresse URL du serveur
+            const config    = useRuntimeConfig();
+            const serverUrl = config.public.serverUrl;
             
-            //? Exxecuter l'appel API
-            const response = await $fetch('https://127.0.0.1:8000/api/article/all', {
+            //? Exécuter l'appel API
+            const response = await fetch(serverUrl + 'api/article/all', {
                 method:'GET',
                 headers: {
                     "Accept": "application/json",
@@ -31,12 +36,17 @@ export function useArticle() {
         }
     }
 
+    //! Récupérer tous les articles publiés de la BDD (site vitrine)
     async function getValidatedArticles() {
             
         try {
+
+            //? Récupérer l'adresse URL du serveur
+            const config    = useRuntimeConfig();
+            const serverUrl = config.public.serverUrl;
             
             //? Appeler l'api getAllArticles()
-            const response = await fetch('https://127.0.0.1:8000/api/article/validated/all', {
+            const response = await fetch(serverUrl + 'api/article/validated/all', {
                 method:'GET',
                 headers: {
                     "Accept": "application/json",
@@ -55,19 +65,24 @@ export function useArticle() {
         }
     }
 
+    //! Ajouter un article dans la BDD (managerApp)
     async function addArticle(body:object) {
+        
         try {
-            const userStore = useUsersStore();
-            const { verifyToken } = useAuthentification();
+
+            //? Récupérer l'adresse URL du serveur
+            const config    = useRuntimeConfig();
+            const serverUrl = config.public.serverUrl;
 
             //? Transformer l'objet body en json
             const bodyJson = JSON.stringify(body);
             
-            //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-            const jwt = await verifyToken();
+            //? Vérifier et récupérer le token pour l'identification via la fonction verifyToken() du composable useAuthentification
+            const { verifyToken }   = useAuthentification();
+            const jwt               = await verifyToken();
 
             //? Exécuter l'appel API
-            const response = await fetch('https://127.0.0.1:8000/api/article/add', {
+            const response = await fetch(serverUrl + 'api/article/add', {
                 method:'POST',
                 headers: {
                     "Accept": "application/json",
@@ -82,6 +97,7 @@ export function useArticle() {
             if (response.status == 200) {
                 return response;
             } else if (response.status == 498) {
+                const userStore = useUsersStore();
                 userStore.token = '';
                 navigateTo('/managerApp/logIn/expired-session'); 
             } else {
@@ -94,20 +110,25 @@ export function useArticle() {
             return error;
         }
     }
-    
+
+    //! Modifier un article existant dans la BDD (managerApp)
     async function updateArticle(body:object) {
+        
         try {
-            const userStore = useUsersStore();
-            const { verifyToken } = useAuthentification();
+
+            //? Récupérer l'adresse URL du serveur
+            const config    = useRuntimeConfig();
+            const serverUrl = config.public.serverUrl;
 
             //? Transformer l'objet body en json
             const bodyJson = JSON.stringify(body);
             
-            //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-            const jwt = await verifyToken();
+            //? Vérifier et récupérer le token pour l'identification via la fonction verifyToken() du composable useAuthentification
+            const { verifyToken }   = useAuthentification();
+            const jwt               = await verifyToken();
             
             //? Exécuter l'appel API
-            const response = await fetch('https://127.0.0.1:8000/api/article/update', {
+            const response = await fetch(serverUrl + 'api/article/update', {
                 method:'PATCH',
                 headers: {
                     "Accept": "application/json",
@@ -120,6 +141,7 @@ export function useArticle() {
 
             //? Retourner la réponse
             if (response.status == 498) {
+                const userStore = useUsersStore();
                 userStore.token = '';
                 navigateTo('/managerApp/logIn/expired-session'); 
             } else {
@@ -131,29 +153,31 @@ export function useArticle() {
             console.error(error);  
             return error;
         }
-        
-
     }
 
+    //! Publier un article existant dans la BDD (managerApp)
     async function publishArticle(id:number) {
 
         try {
-            const { verifyToken } = useAuthentification();
-            const userStore = useUsersStore();
+
+            //? Récupérer l'adresse URL du serveur
+            const config    = useRuntimeConfig();
+            const serverUrl = config.public.serverUrl;
 
             //? Définir le contenu du body de la requête
             const body = {
-                    id: id,
+                id: id,
             };
 
             //? Transformer l'objet body en json
             const bodyJson  = JSON.stringify(body);
 
-            //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-            const jwt = await verifyToken();
+            //? Vérifier et récupérer le token pour l'identification via la fonction verifyToken() du composable useAuthentification
+            const { verifyToken }   = useAuthentification();
+            const jwt               = await verifyToken();
 
             //? Exécuter l'appel API
-            const response = await fetch('https://127.0.0.1:8000/api/article/publish', {
+            const response = await fetch(serverUrl + 'api/article/publish', {
                 method:'PATCH',
                 headers: {
                         "Accept": "application/json",
@@ -166,6 +190,7 @@ export function useArticle() {
 
             //? Retourner la réponse
             if (response.status == 498) {
+                const userStore = useUsersStore();
                 userStore.token = '';
                 navigateTo('/managerApp/logIn/expired-session'); 
             } else {
@@ -179,19 +204,23 @@ export function useArticle() {
         }
     }
 
+    //! Désactiver un article existant dans la BDD (managerApp)
     async function disableArticle(body:object) {
         try {
-            const userStore = useUsersStore();
-            const { verifyToken } = useAuthentification();
+
+            //? Récupérer l'adresse URL du serveur
+            const config    = useRuntimeConfig();
+            const serverUrl = config.public.serverUrl;
 
             //? Transformer l'objet body en json
             const bodyJson = JSON.stringify(body);
             
-            //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-            const jwt = await verifyToken();
+            //? Vérifier et récupérer le token pour l'identification via la fonction verifyToken() du composable useAuthentification
+            const { verifyToken }   = useAuthentification();
+            const jwt               = await verifyToken();
             
             //? Exécuter l'appel API
-            const response = await fetch("https://127.0.0.1:8000/api/article/disable", {
+            const response = await fetch(serverUrl + "api/article/disable", {
                 method: "PATCH",
                 headers: {
                     "Accept": "application/json",
@@ -204,6 +233,7 @@ export function useArticle() {
 
             //? Retourner la réponse
             if (response.status == 498) {
+                const userStore = useUsersStore();
                 userStore.token = '';
                 navigateTo('/managerApp/logIn/expired-session'); 
             } else {
@@ -215,8 +245,6 @@ export function useArticle() {
             console.error(error);  
             return error;
         }
-        
-
     }
 
     return {

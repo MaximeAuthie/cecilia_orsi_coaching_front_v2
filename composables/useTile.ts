@@ -2,12 +2,17 @@ import { useUsersStore } from "@/store/user";
 
 export function useTile() {
 
+    //! Récupérer toutes les tuiles de la BDD (managerApp)
     async function getAllTiles() {
 
         try {
 
-            //? Appeler l'api getVisitsStats()
-            let response = await fetch('https://127.0.0.1:8000/api/tile/all', {
+            //? Récupérer l'adresse URL du serveur
+            const config    = useRuntimeConfig();
+            const serverUrl = config.public.serverUrl;
+
+            //? Exécuter l'appel API
+            let response = await fetch(serverUrl + 'api/tile/all', {
                 method:'GET',
                 headers: {
                     "Accept": "application/json",
@@ -25,21 +30,25 @@ export function useTile() {
             console.error(error);
         }      
     }
-    
+
+    //! Mettre à jour une tuile existante dans la BDD (managerApp)
     async function updateTile(body:object) {
 
         try {
-            const userStore         = useUsersStore();
-            const { verifyToken }   = useAuthentification();
+
+            //? Récupérer l'adresse URL du serveur
+            const config    = useRuntimeConfig();
+            const serverUrl = config.public.serverUrl;
 
             //? Transformer l'objet formData en json
             const bodyJson = JSON.stringify(body);
 
             //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-            const jwt = await verifyToken();
+            const { verifyToken }   = useAuthentification();
+            const jwt               = await verifyToken();
 
             //? Exécuter l'appel API
-            const response = await fetch('https://127.0.0.1:8000/api/tile/update', {
+            const response = await fetch(serverUrl + 'api/tile/update', {
                 method:'PATCH',
                 headers: {
                     "Accept": "application/json",
@@ -52,6 +61,7 @@ export function useTile() {
 
             //? Retourner la réponse
             if (response.status == 498) {
+                const userStore = useUsersStore();
                 userStore.token = '';
                 navigateTo('/managerApp/logIn/expired-session'); 
             } else {

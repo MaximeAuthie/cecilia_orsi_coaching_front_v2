@@ -1,14 +1,24 @@
 export function useContact() {
-
-    async function sendContactMail(contactData:Object) {
+    
+    //! Envoyer un mail de contact à l'administrateur du site (site vitrine)
+    async function sendContactMail(body:Object) {
         try {
+            
+            //? Récupérer l'adresse URL du serveur
+            const config    = useRuntimeConfig();
+            const serverUrl = config.public.serverUrl;
+
+            //? Instancier un object message vide
             let message:Object = {
                 code: 0,
                 text: ''
             };
 
-            const bodyJson   = JSON.stringify(contactData);
-            const response   = await fetch('https://127.0.0.1:8000/api/contact', {
+            //? Transformer l'objet contactData en json
+            const bodyJson   = JSON.stringify(body);
+
+            //? Exécuter l'appel API
+            const response   = await fetch(serverUrl + 'api/contact', {
                 method:'POST',
                 headers: {
                     "Accept": "application/json",
@@ -18,6 +28,7 @@ export function useContact() {
                 body: bodyJson,
             })
 
+            //? Vérifier la réponse et renvoyer l'objet message approprié
             switch (response.status) {
                 case 200 : 
                 message = {code: response.status, text: "Votre message a bien été envoyé"};
@@ -37,10 +48,8 @@ export function useContact() {
         } catch (error) {
             console.error(error); 
         }
-        
     }
   
-    
     return {
         sendContactMail
     }

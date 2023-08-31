@@ -1,19 +1,22 @@
 import { useUsersStore } from "@/store/user";
 
 export function useUser() {
-
+    
+    //! Récupérer tous les utilisateurs de la BDD (managerApp)
     async function getAllUsers(bodyJson:any) {
 
         try {
 
-            //? Importer le composable permettant de vérifier le jwt
-            const { verifyToken } = useAuthentification();
+            //? Récupérer l'adresse URL du serveur
+            const config    = useRuntimeConfig();
+            const serverUrl = config.public.serverUrl;
 
-            //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-            const jwt = await verifyToken();
+            //? Vérifier et récupérer le token pour l'identification via la fonction verifyToken() du composable useAuthentification
+            const { verifyToken }   = useAuthentification();
+            const jwt               = await verifyToken();
 
-            //? Appeler l'api getVisitsStats()
-            let response = await fetch('https://127.0.0.1:8000/api/user/active/all', {
+            //? Exécuter l'appel API
+            let response = await fetch(serverUrl + 'api/user/active/all', {
                 method:'PATCH',
                 headers: {
                     "Accept": "application/json",
@@ -33,13 +36,20 @@ export function useUser() {
             console.error(error);
         }      
     }
+
+    //! Identifier de l'utilisateur via login + mdp => envoyer un mail de double authentification (managerApp)
     async function logIn(body:object) {
         try {
+
+            //? Récupérer l'adresse URL du serveur
+            const config    = useRuntimeConfig();
+            const serverUrl = config.public.serverUrl;
+
             //? Transformer l'objet body en json
             const bodyJson = JSON.stringify(body);
 
             //? Exécuter l'appel API
-            const response = await fetch('https://localhost:8000/api/user/logIn', {
+            const response = await fetch(serverUrl + 'api/user/logIn', {
                 method:'PATCH',
                 headers: {
                     "Accept": "application/json",
@@ -58,18 +68,22 @@ export function useUser() {
             return error;
         }
     }
+
+    //! Récupérer le rôle et le nom de l'utilisateur pour adapter l'affichage de l'espace admin (managerApp)
     async function getRole(bodyJson:any) {
 
         try {
 
-            //? Importer le composable permettant de vérifier le jwt
-            const { verifyToken } = useAuthentification();
+            //? Récupérer l'adresse URL du serveur
+            const config    = useRuntimeConfig();
+            const serverUrl = config.public.serverUrl;
 
-            //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-            const jwt = await verifyToken();
+            //? Vérifier et récupérer le token pour l'identification via la fonction verifyToken() du composable useAuthentification
+            const { verifyToken }   = useAuthentification();
+            const jwt               = await verifyToken();
 
-            //? Appeler l'api getVisitsStats()
-            let response = await fetch('https://127.0.0.1:8000/api/user/role', {
+            //? Exécuter l'appel API
+            let response = await fetch(serverUrl + 'api/user/role', {
                 method:'PATCH',
                 headers: {
                     "Accept": "application/json",
@@ -87,20 +101,25 @@ export function useUser() {
             console.error(error);
         }      
     }
+
+    //! Ajouter un nouvel utilisateur dans la BDD (managerApp)
     async function addUser(body:object) {
 
         try {
-            const userStore = useUsersStore();
-            const { verifyToken } = useAuthentification();
+
+            //? Récupérer l'adresse URL du serveur
+            const config    = useRuntimeConfig();
+            const serverUrl = config.public.serverUrl;
 
             //? Transformer l'objet body en json
             const bodyJson = JSON.stringify(body);
             
-            //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-            const jwt = await verifyToken();
+            //? Vérifier et récupérer le token pour l'identification via la fonction verifyToken() du composable useAuthentification
+            const { verifyToken }   = useAuthentification();
+            const jwt               = await verifyToken();
 
             //? Exécuter l'appel API
-            const response = await fetch('https://127.0.0.1:8000/api/user/add', {
+            const response = await fetch(serverUrl + 'api/user/add', {
                 method:'POST',
                 headers: {
                     "Accept": "application/json",
@@ -113,6 +132,7 @@ export function useUser() {
 
             //? Retourner la réponse
             if (response.status == 498) {
+                const userStore = useUsersStore();
                 userStore.token = '';
                 navigateTo('/managerApp/logIn/expired-session'); 
             } else {
@@ -125,20 +145,25 @@ export function useUser() {
             return error;
         }
     }
+
+    //! Mettre à jour un utilisateur existant dans la BDD (managerApp)
     async function updateUser(body:object) {
 
         try {
-            const userStore = useUsersStore();
-            const { verifyToken } = useAuthentification();
+
+            //? Récupérer l'adresse URL du serveur
+            const config    = useRuntimeConfig();
+            const serverUrl = config.public.serverUrl;
 
             //? Transformer l'objet body en json
             const bodyJson = JSON.stringify(body);
             
-            //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-            const jwt = await verifyToken();
+            //? Vérifier et récupérer le token pour l'identification via la fonction verifyToken() du composable useAuthentification
+            const { verifyToken }   = useAuthentification();
+            const jwt               = await verifyToken();
 
             //? Exécuter l'appel API
-            const response = await fetch('https://127.0.0.1:8000/api/user/update', {
+            const response = await fetch(serverUrl + 'api/user/update', {
                 method:'PATCH',
                 headers: {
                     "Accept": "application/json",
@@ -151,6 +176,7 @@ export function useUser() {
 
             //? Retourner la réponse
             if (response.status == 498) {
+                const userStore = useUsersStore();
                 userStore.token = '';
                 navigateTo('/managerApp/logIn/expired-session'); 
             } else {
@@ -163,20 +189,25 @@ export function useUser() {
             return error;
         }
     }
+
+    //! Désactiver un utilisateur existant dans la BDD (managerApp)
     async function disableUser(body:object) {
 
         try {
-            const userStore = useUsersStore();
-            const { verifyToken } = useAuthentification();
+            
+            //? Récupérer l'adresse URL du serveur
+            const config    = useRuntimeConfig();
+            const serverUrl = config.public.serverUrl;
 
             //? Transformer l'objet body en json
             const bodyJson = JSON.stringify(body);
             
-            //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-            const jwt = await verifyToken();
+            //? Vérifier et récupérer le token pour l'identification via la fonction verifyToken() du composable useAuthentification
+            const { verifyToken }   = useAuthentification();
+            const jwt               = await verifyToken();
 
             //? Exécuter l'appel API
-            const response = await fetch('https://127.0.0.1:8000/api/user/disable', {
+            const response = await fetch(serverUrl + 'api/user/disable', {
                 method:'PATCH',
                 headers: {
                     "Accept": "application/json",
@@ -189,6 +220,7 @@ export function useUser() {
 
             //? Retourner la réponse
             if (response.status == 498) {
+                const userStore = useUsersStore();
                 userStore.token = '';
                 navigateTo('/managerApp/logIn/expired-session'); 
             } else {
@@ -201,20 +233,25 @@ export function useUser() {
             return error;
         }
     }
+
+    //! Récupérer les données du compte de l'utilisateur connecté dans la BDD pour les afficher dans myAccount (managerApp)
     async function getUserAccount(body:object) {
 
         try {
-            const userStore = useUsersStore();
-            const { verifyToken } = useAuthentification();
+
+            //? Récupérer l'adresse URL du serveur
+            const config    = useRuntimeConfig();
+            const serverUrl = config.public.serverUrl;
 
             //? Transformer l'objet body en json
             const bodyJson = JSON.stringify(body);
             
-            //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-            const jwt = await verifyToken();
+            //? Vérifier et récupérer le token pour l'identification via la fonction verifyToken() du composable useAuthentification
+            const { verifyToken }   = useAuthentification();
+            const jwt               = await verifyToken();
 
             //? Exécuter l'appel API
-            const response = await fetch('https://127.0.0.1:8000/api/user/account', {
+            const response = await fetch(serverUrl + 'api/user/account', {
                 method:'PATCH',
                 headers: {
                     "Accept": "application/json",
@@ -227,6 +264,7 @@ export function useUser() {
 
             //? Retourner la réponse
             if (response.status == 498) {
+                const userStore = useUsersStore();
                 userStore.token = '';
                 navigateTo('/managerApp/logIn/expired-session'); 
             } else {
@@ -239,20 +277,25 @@ export function useUser() {
             return error;
         }
     }
+
+    //! Mettre à jour les données du compte de l'utilisateur connecté dans la BDDs (managerApp)
     async function updateUserAccount(body:object) {
 
         try {
-            const userStore = useUsersStore();
-            const { verifyToken } = useAuthentification();
+
+            //? Récupérer l'adresse URL du serveur
+            const config    = useRuntimeConfig();
+            const serverUrl = config.public.serverUrl;
 
             //? Transformer l'objet body en json
             const bodyJson = JSON.stringify(body);
             
-            //? Récupérer le jwt pour le header de la requête via la fonction verifyToken() du composable useAuthentification
-            const jwt = await verifyToken();
+            //? Vérifier et récupérer le token pour l'identification via la fonction verifyToken() du composable useAuthentification
+            const { verifyToken }   = useAuthentification();
+            const jwt               = await verifyToken();
 
             //? Exécuter l'appel API
-            const response = await fetch('https://127.0.0.1:8000/api/user/account/update', {
+            const response = await fetch(serverUrl + 'api/user/account/update', {
                 method:'PATCH',
                 headers: {
                     "Accept": "application/json",
@@ -265,6 +308,7 @@ export function useUser() {
 
             //? Retourner la réponse
             if (response.status == 498) {
+                const userStore = useUsersStore();
                 userStore.token = '';
                 navigateTo('/managerApp/logIn/expired-session'); 
             } else {
