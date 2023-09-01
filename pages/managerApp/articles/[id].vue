@@ -29,7 +29,7 @@
             </div>
             <div class="admin_content_form_bloc">
                 <label for="description" class="admin_label">Description : </label>
-                <textarea v-model="article.description_article" @keyup="ckeckDescriptionLength"  type="text" name="description" :class=" errorMessages.description!='' ? 'bad_admin_textarea_form' : 'admin_textarea_form'"></textarea>
+                <textarea v-model ="article.description_article" @keyup="ckeckDescriptionLength"  type="text" name="description" :class=" errorMessages.description!='' ? 'bad_admin_textarea_form' : 'admin_textarea_form'"></textarea>
                 <span class="admin_error_message_form">{{ errorMessages.description }}</span>
             </div>
             <div class="admin_content_form_bloc">
@@ -70,7 +70,6 @@
 <script>
     import { useArticlesStore } from "@/store/article";
     import { useCategoriesStore } from '@/store/category';
-    import { useUsersStore } from "@/store/user";
     import ArticleEditor from '../../../components/Manager/articles/editorComponent.vue';
 
     export default {
@@ -197,7 +196,7 @@
                 if (response.status == 200) {
                     this.formSuccessMessage             = responseBody.message;
                     articleStore.getAllArticles();
-                    this.article.isPublished_article    = !this.article.isPublished_article;
+                    // this.article.isPublished_article    = !this.article.isPublished_article;
                 } else {
                     this.errorMessages.form             = responseBody.message;
                 }
