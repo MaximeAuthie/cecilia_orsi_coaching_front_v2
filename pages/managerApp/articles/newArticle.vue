@@ -20,15 +20,15 @@
         <div class="admin_content_form">
             <div class="admin_content_form_bloc">
                 <label for="title" class="admin_label">Titre (40 caractères maximum) * : </label>
-                <input v-model="article.title_article" @keyup="ckeckTitleLength" type="text" name="title" class="admin_input_form" :class=" errorMessages.titleLength!='' || errorMessages.titleEmpty!='' ? 'bad_admin_input_form' : 'admin_input_form'">
-                <span class="admin_error_message_form">{{ errorMessages.titleLength }}</span>
+                <input v-model="article.title_article" @keyup="ckeckTitleLength" type="text" name="title" class="admin_input_form" :class=" errorMessages.title!='' ? 'bad_admin_input_form' : 'admin_input_form'">
+                <span class="admin_error_message_form">{{ errorMessages.title }}</span>
             </div>
             <div class="admin_content_form_bloc">
-                <label for="url" class="admin_label">URL de la bannière (160 caractères maximum) : </label>
+                <label for="url" class="admin_label">URL de la bannière : </label>
                 <input v-model="article.banner_url_article" type="text" name="url" class="admin_input_form">
             </div>
             <div class="admin_content_form_bloc">
-                <label for="description" class="admin_label">Description : </label>
+                <label for="description" class="admin_label">Description (160 caractères maximum) : </label>
                 <textarea v-model="article.description_article" @keyup="ckeckDescriptionLength"  type="text" name="description" :class=" errorMessages.description!='' ? 'bad_admin_textarea_form' : 'admin_textarea_form'"></textarea>
                 <span class="admin_error_message_form">{{ errorMessages.description }}</span>
             </div>
@@ -56,7 +56,6 @@
             <div class="admin_content_filters_message">
                 <span v-if="errorMessages.form" class="admin_content_filters_message_error">{{ errorMessages.form }}</span>
                 <span v-if="errorMessages.titleEmpty" class="admin_content_filters_message_error">{{ errorMessages.titleEmpty }}</span>
-                <span v-if="formSuccessMessage" class="admin_content_filters_message_success">{{ formSuccessMessage }}</span>
             </div>
 
             <div class="admin_content_form_buttons_container">
@@ -71,7 +70,6 @@
 <script>
     import { useArticlesStore } from "@/store/article";
     import { useCategoriesStore } from '@/store/category';
-    import { useUsersStore } from "@/store/user";
     import ArticleEditor from '../../../components/Manager/articles/editorComponent.vue';
 
     export default {
@@ -89,11 +87,9 @@
                 },
                 categories:                 [],
                 selectedCategories:         [],
-                formSuccessMessage:         '',
                 errorMessages: {
                     form:                   '',
-                    titleEmpty:             '',
-                    titleLength:            '',
+                    title:                  '',
                     description:            ''
                 },
                 isError:                    true
@@ -147,19 +143,19 @@
 
                 //? Vérifier si le titre est au moins renseigné 
                 if (this.article.title_article == '') {
-                    this.errorMessages.titleEmpty = 'Veuillez renseigner au moins un titre pour cet article.';
+                    this.errorMessages.title = 'Veuillez renseigner au moins un titre pour cet article.';
+                    this.errorMessages.form = 'Veuillez renseigner tous les champs obligatoires du formulaire.';
                     return;
                 }
 
                 //? Vérifier si les longueurs de caractères pour titre et description sont respectées
-                if (this.errorMessages.titleLength!='' || this.errorMessages.description !="") {
+                if (this.errorMessages.title != '' || this.errorMessages.description != "") {
                     this.errorMessages.form = 'Veuillez respecter le nombre de caractères maximum pour le titre et/ou la description.';
                     return;
                 }
 
                 //? Réinitialiser les éventuels précédents messages d'erreurs
-                this.errorMessages.form =           '';
-                this.errorMessages.titleEmpty =     '';
+                this.errorMessages.form         = '';
 
                 //? Mettre à jour la liste des catégories de l'article
                 this.article.categories_list = [];
@@ -177,20 +173,20 @@
                 
                 //? En fonction du statut de la réponse, afficher le message d'erreur ou de succès correspondant
                 if (response.status == 200) {
-                    this.formSuccessMessage             = responseBody.message;
                     articleStore.getAllArticles();
-                    this.article.isPublished_article    = !this.article.isPublished_article;
+                    alert("L'article " + this.article.title_article + " à été créé avec succès." );
+                    navigateTo('/managerApp/articles');
                 } else {
-                    this.errorMessages.form             = responseBody.message;
+                    this.errorMessages.form = responseBody.message;
                 }
             },
 
             //! Vérifier la longueur du titre de l'article
             ckeckTitleLength() {
                 if (this.article.title_article.length >= 40) {
-                    this.errorMessages.titleLength = 'La limite de 40 caractères est dépassée';
+                    this.errorMessages.title = 'La limite de 40 caractères est dépassée';
                 } else {
-                    this.errorMessages.titleLength = '';
+                    this.errorMessages.title = '';
                 }
             },
 

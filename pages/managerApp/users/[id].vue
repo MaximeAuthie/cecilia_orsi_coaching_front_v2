@@ -30,7 +30,7 @@
             </div>
             <div class="admin_content_form_bloc">
                 <label for="email" class="admin_label">Adresse email* : </label>
-                <input v-model="user.email" @keyup="checkInputKeyUp" type="text" name="email" :class=" errorMessages.emailEmpty != '' || errorMessages.emailFormat != '' ? 'bad_admin_input_form' : 'admin_input_form'">
+                <input v-model="user.email" @keyup="checkMailFormat" type="text" name="email" :class=" errorMessages.emailEmpty != '' || errorMessages.emailFormat != '' ? 'bad_admin_input_form' : 'admin_input_form'">
                 <div class="admin_error_message_form">{{ errorMessages.emailEmpty }}</div>
                 <div class="admin_error_message_form">{{ errorMessages.emailFormat }}</div>
             </div>
@@ -115,6 +115,7 @@
         },
         methods: {
 
+            //! Récupérer les données de l'utilisateur
             getUser() {
                 const userStore = useUsersStore();
                 
@@ -132,11 +133,12 @@
 
                         //? En cas d'erreur inattendue, capter l'erreur rencontrée
                         .catch((error) => {
-                            console.error("Erreur lors de la récupération des utilisateurs :", error);
+                            console.error("Erreur lors de la récupération des données de l'utilisateurs :", error);
                         });
                 }    
             },
 
+            //! Vérifier si les input sont vides et générer les messages d'erreur correspondants quand le formulaire est soumis
             checkInputBeforeSubmit() {
 
                 //? Vérifier si chacun des champs obligatoires est bien complété
@@ -157,7 +159,8 @@
                     this.errorMessages.form             = "Veuillez remplir tous les champs obligatoires du formulaire"
                 }
             },
-            
+
+            //! Vérifier si les input sont vides et effacer les messages d'erreur correspondants pendant la saisie
             checkInputKeyUp() {
 
                 //? Vérfier si chacun des champs obligatoire à été complété après chaque frappe
@@ -172,12 +175,13 @@
                 }
             },
 
-            checkPasswordKeyUp() { //Vérifie si les champs sont remplis lors de la saisir et vérifie le format du password
+            //! Vérifier si les champs sont saisis, le format du password et si les deux password sont identique pendant la saisie
+            checkPasswordKeyUp() { 
                 const { isPasswordIdentical } = useUtils();
                 
                 //? Vérifie le remplissage des champs obligatoires à chaque frappe
                 this.checkInputKeyUp();
-
+                
                 //? Vérifie le format du mot de passe
                 this.checkPasswordFormat();
 
@@ -187,8 +191,38 @@
                 } else {
                     this.errorMessages.passwordIdentical = "Les deux mots de passe ne sont pas identiques";
                 }
+
+                //? Si, au moment de la saisie, les deux passwords sont vides, vider tous les messages d'erreur
+                if (this.passwords.firstInput == '' && this.passwords.secondInput == '') {
+                    this.errorMessages.passwordIdentical = "";
+                    this.errorMessages.passwordUppercase = "";
+                    this.errorMessages.passwordLowercase = "";
+                    this.errorMessages.passwordNumber    = "";
+                    this.errorMessages.passwordCaracters = "";
+                }
             },
 
+            //! Vérifier le format de l'adresse mail
+            checkMailFormat() {
+                //? Executer checkImputKeyUp pour vérifier si d'autre champs ont été saisis depuis
+                this.checkInputKeyUp();
+
+                //? Définir le regex pour le format mail
+                const pattern = new RegExp(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/i);
+
+                //? Vérifier le si le mail est saisi
+                if (this.user.email != '') {
+
+                    //? Vérifier si la saisie correspond au regex
+                    if (!pattern.test(this.user.email)) {
+                        this.errorMessages.emailFormat = "Le format de l'adresse email n'est pas correct";
+                    } else {
+                        this.errorMessages.emailFormat = "";
+                    }
+                }
+            },
+
+            //! Vérifier le format du mot de passe
             checkPasswordFormat() {
                 
                 //? Importer les fonction du composable useUtils
@@ -221,6 +255,8 @@
                     this.errorMessages.passwordCaracters = "Le mot de passe doit contenir au moins 14 caractères"
                 }
             },
+
+            //! Vérifier si un message d'erreur est encore affiché
             checkErrorMessages() {
                 if (
                     this.errorMessages.form !='' 
@@ -241,6 +277,8 @@
                 }
                       
             },
+
+            //! Mettre à jour l'utilisateur dans la BDD
             async updateUser() {
                 
                 const userStore = useUsersStore();
@@ -309,7 +347,6 @@
             this.getUser();
         }
     }
-
 
 </script>
 

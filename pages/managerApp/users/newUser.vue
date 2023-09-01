@@ -30,7 +30,7 @@
             </div>
             <div class="admin_content_form_bloc">
                 <label for="email" class="admin_label">Adresse email* : </label>
-                <input v-model="user.email" @keyup="checkInputKeyUp" type="text" name="email" :class=" errorMessages.emailEmpty != '' || errorMessages.emailFormat != '' ? 'bad_admin_input_form' : 'admin_input_form'">
+                <input v-model="user.email" @keyup="checkMailFormat" type="text" name="email" :class=" errorMessages.emailEmpty != '' || errorMessages.emailFormat != '' ? 'bad_admin_input_form' : 'admin_input_form'">
                 <div class="admin_error_message_form">{{ errorMessages.emailEmpty }}</div>
                 <div class="admin_error_message_form">{{ errorMessages.emailFormat }}</div>
             </div>
@@ -195,6 +195,8 @@
 
             //! Vérifier le format de l'adresse mail
             checkMailFormat() {
+                //? Executer checkImputKeyUp pour vérifier si d'autre champs ont été saisis depuis
+                this.checkInputKeyUp();
 
                 //? Définir le regex pour le format mail
                 const pattern = new RegExp(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/i);
