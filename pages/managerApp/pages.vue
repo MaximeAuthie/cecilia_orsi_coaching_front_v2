@@ -71,19 +71,18 @@
             }
         },
         methods: {
+            //! Récupérer les informations des pages du site vitrine via le store usePagesStore
             getPages() {
                 const pageStore = usePagesStore();
 
                 //? Vérifier si les articles sont toujours présents dans le store
                 if (pageStore.pages.length > 0) {
-                    console.log("store déjà plein")
                     this.pages           = pageStore.pages;
                 } else {
 
                 //? Si les articles ne sont pas déjà présents dans le store, effectuer l'appel API
                 pageStore.getAllPages()
                     .then(() => {
-                        console.log("store à remplir")
                         this.pages           = pageStore.pages;
                     })
 
@@ -93,18 +92,34 @@
                     });
                 }
             },
+
+            //! Changer les informations affichées dans le formulaire quand l'utilisateur change de page dans la liste déroulate
             displayPageData(event) {
                 const index = event.target.selectedIndex;
                 this.selectedPageData = this.pages[index];
                 this.errorMessages.form ='';
                 this.formSuccessMessage = '';
             },
+
+            //! Ajouter un texte de bannière dans l'objet this.selectedPageData
             addBannerText() {
                 this.selectedPageData.BannerTextsList.push({
                     id: '',
                     content_banner_text: ''
                 })
             },
+
+            //! Supprimer un texte de bannière dans l'objet this.selectedPageData
+            deleteBannerText(id) {
+                //? Rechercher l'objet dans le tableau pour récupérer son index
+                const textToDelete = this.selectedPageData.BannerTextsList.find(item => item.id == id);
+                const indexToDelete = this.selectedPageData.BannerTextsList.indexOf(textToDelete);
+
+                //? Suppression de l'objet dans le tableau
+                this.selectedPageData.BannerTextsList.splice(indexToDelete,1);
+            },
+
+            //! Vérifier si les input sont vides et générer les messages d'erreur correspondants quand le formulaire est soumis
             checkInputBeforeSubmit() {
                 if (this.selectedPageData.banner_url_page == '') {
                     this.errorMessages.bannerUrlEmpty   = "Veuillez renseigner une URL pour la bannière de la page";
@@ -115,6 +130,8 @@
                     this.errorMessages.form             = "Veuillez remplir tous les champs obligatoires du formulaire"
                 }
             },
+
+            //! Vérifier si un message d'erreur est encore affiché
             checkErrorMessages() {
                 if (
                     this.errorMessages.form                 != '' 
@@ -126,6 +143,8 @@
                     return true;
                 }
             },
+
+            //! Vérifier si les input sont vides et effacer les messages d'erreur correspondants pendant la saisie
             checkInputKeyUp() {
                 if (this.selectedPageData.banner_url_page != '') {
                     this.errorMessages.bannerUrlEmpty   = "";
@@ -134,6 +153,8 @@
                     this.errorMessages.bannerTextEmpty    = "";
                 }
             },
+
+            //! Mettre à jour la page dans la BDD
             async updatePage() {
 
                 const pageStore = usePagesStore();
@@ -144,7 +165,6 @@
 
                 //? Vérifier si les champs nécessaires sont bien renseignés
                 this.checkInputBeforeSubmit();
-                
 
                 if (this.checkErrorMessages()) {
                     //? Appel de la méthode updatePage() du composable usePage
@@ -161,16 +181,10 @@
                     }
                 }
             },
-            deleteBannerText(id) {
-                //? Rechercher l'objet dans le tableau pour récupérer son index
-                const textToDelete = this.selectedPageData.BannerTextsList.find(item => item.id == id);
-                const indexToDelete = this.selectedPageData.BannerTextsList.indexOf(textToDelete);
-
-                //? Suppression de l'objet dans le tableau
-                this.selectedPageData.BannerTextsList.splice(indexToDelete,1);
-            },
         },
         mounted() {
+            
+            //? Exécuter this.getPages()
             this.getPages();
         },
     }

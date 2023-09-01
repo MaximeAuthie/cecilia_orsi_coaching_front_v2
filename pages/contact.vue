@@ -9,8 +9,8 @@
     const serverUrl = config.public.serverUrl;
 
     //? Exécuter les appels api pour récupérer les données de la page et des tuile de la page côté serveur
-    const {data: pageData, pending}              = useFetch(serverUrl + 'api/page/title' + title);
-    const {data: tilesData}    = useFetch(serverUrl + 'api/tile' + title);
+    const {data: pageData, pending}     = useFetch(serverUrl + 'api/page/title' + title);
+    const {data: tilesData}             = useFetch(serverUrl + 'api/tile' + title);
     
     //? Renseigner les balises HTML de <head> pour le SEO côté serveur
     useHead({
@@ -107,6 +107,8 @@
             }
         },
         methods: {
+
+            //! Envoyer le contenu du formulaire au backend
             submitForm() {
                 //? Exécuter les fonction de vérification des saisies
                 this.checkImputSubmit();
@@ -138,7 +140,9 @@
                     })
                 }
             },
-            resetEmptyData() { //Remet tous les booléen de l'objet isEmpty à false
+
+            //! Remettre tous les booléen de l'objet isEmpty à false
+            resetEmptyData() { 
                 this.isEmpty.firstName =    false;
                 this.isEmpty.lastName =     false;
                 this.isEmpty.email =        false;
@@ -146,7 +150,9 @@
                 this.isEmpty.content =      false;
                 this.isEmpty.atLeastOne =   false;
             },
-            checkImputSubmit() { // Vérifie si tous les champs sont remplis
+
+            //! Vérifier si les input sont remplis et mettre les booléens à true quand le formulaire est soumis
+            checkImputSubmit() {
         
                 //? Réinitialiser les booléens
                 this.resetEmptyData();
@@ -173,7 +179,9 @@
                     this.isEmpty.atLeastOne =   true;
                 }
             },
-            checkImputKeyUp() { // Vérifie si le champs est remplis au moment où l'utilisateur saisi dans un champs
+
+            //! Vérifier si les input sont vides et mettre les booléens à false pendant la saisie
+            checkImputKeyUp() { 
 
                 if (this.formData.firstName != '') {
                     this.isEmpty.firstName = false;
@@ -191,7 +199,9 @@
                     this.isEmpty.content = false;
                 } 
             },
-            checkMailFormat() { // Vérifie si le format du mail est correct
+
+            //! Vérifier le format de l'adresse mail
+            checkMailFormat() {
 
                 //? Réinitialiser le booléen
                 this.isMailCorrect = true;

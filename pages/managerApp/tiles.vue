@@ -41,7 +41,6 @@
 
 <script>
     import { useTilesStore } from '@/store/tile';
-    import { useUsersStore } from "@/store/user";
 
     export default {
         data() {
@@ -55,6 +54,8 @@
             }
         },
         methods: {
+
+            //! Récupérer les informations des tuiles du site vitrine via le store usePagesStore
             getTiles() {
                 const tileStore = useTilesStore();
 
@@ -78,6 +79,8 @@
                     });
                 }
             },
+
+            //! Changer les informations affichées dans le formulaire quand l'utilisateur change de page dans la liste déroulate
             displayTileData(event) { 
                 const index = event.target.selectedIndex;
                 this.selectedTileData = this.tiles[index];
@@ -85,6 +88,8 @@
                 this.formErrorMessage ='';
                 this.formSuccessMessage = '';
             },
+
+            //! Vérifier la longueur du texte de la tuile
             ckeckTextLength() {
                 if (this.selectedTileData.title_tile.length >= 20) {
                     this.textErrorMessage = 'La limite de 20 caractères est dépassée';
@@ -92,6 +97,8 @@
                     this.textErrorMessage = '';
                 }
             },
+
+            //! Mettre à jour la tuile dans la BDD
             async updateTile() {
 
                 const tileStore = useTilesStore();
@@ -127,6 +134,8 @@
             }
         },
         mounted() {
+
+            //? Exécuter this.getPages()
             this.getTiles();
         },
     }

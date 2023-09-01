@@ -1,4 +1,5 @@
 <script setup>
+
     //? Récupérer le nom de la page pour l'utiliser dans l'appel api
     const route = useRoute();
     const title = route.fullPath;

@@ -41,8 +41,6 @@
         <div class="content">
             <section class="content_description" >
                 <div class="content_description_avatar" style="background-image: url('/_nuxt/assets/images/cecilia-orsi.png');"></div>
-
-                <!-- <div class="content_description_avatar" :style="{backgroundImage: 'url(' + pageData.img1_url_page + ')'}"></div> -->
                 <p>
                     Je m’appelle Cécilia Orsi, j’ai 31 ans je vis à Toulouse.<br>
                     <br>

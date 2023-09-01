@@ -105,6 +105,7 @@
         },
         methods: {
 
+            //! Récupérer les données du compte pour les afficher dans le formulaire via le store useArticlesStore
             async getUserAccount() {
                 const userStore = useUsersStore();
                 
@@ -126,6 +127,7 @@
                 }
             },
 
+            //! Vérifier si les input sont vides et générer les messages d'erreur correspondants quand le formulaire est soumis
             checkInputBeforeSubmit() {
 
                 //? Vérifier si chacun des champs obligatoires est bien complété
@@ -142,7 +144,8 @@
                     this.errorMessages.form             = "Veuillez remplir tous les champs obligatoires du formulaire"
                 }
             },
-            
+
+            //! Vérifier si les input sont vides et effacer les messages d'erreur correspondants pendant la saisie            
             checkInputKeyUp() {
 
                 //? Vérfier si chacun des champs obligatoire à été complété après chaque frappe
@@ -157,6 +160,7 @@
                 }
             },
 
+            //! Vérifier si les champs sont saisis, le format du password et si les deux password sont identique pendant la saisie
             checkPasswordKeyUp() { //Vérifie si les champs sont remplis lors de la saisir et vérifie le format du password
                 const { isPasswordIdentical } = useUtils();
                 
@@ -174,6 +178,7 @@
                 }
             },
 
+            //! Vérifier le format du mot de passe
             checkPasswordFormat() {
                 
                 //? Importer les fonction du composable useUtils
@@ -206,6 +211,8 @@
                     this.errorMessages.passwordCaracters = "Le mot de passe doit contenir au moins 14 caractères"
                 }
             },
+
+            //! Vérifier si un message d'erreur est encore affiché
             checkErrorMessages() {
                 if (
                     this.errorMessages.form !='' 
@@ -225,6 +232,8 @@
                 }
                       
             },
+
+            //! Mettre à jour les données du compte utilisateur dans le BDD
             async updateUserAccount() {
                 
                 const { verifyToken } = useAuthentification();

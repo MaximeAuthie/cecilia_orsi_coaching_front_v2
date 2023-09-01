@@ -127,7 +127,7 @@
                 }
             },
 
-            //! Récupérer les articles à afficehr dans les filtres via le store useArticlesStore
+            //! Récupérer les articles à afficher dans les filtres via le store useArticlesStore
             getArticles() {
                 const commentStore = useArticlesStore();
 
