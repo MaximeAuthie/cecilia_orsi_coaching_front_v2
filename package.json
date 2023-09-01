@@ -26,6 +26,7 @@
     "@tiptap/pm": "^2.0.4",
     "@tiptap/starter-kit": "^2.0.4",
     "@tiptap/vue-3": "^2.0.4",
+    "he": "^1.2.0",
     "pinia": "^2.1.6"
   }
 }
