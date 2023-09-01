@@ -97,7 +97,7 @@
 
                 //? Appel de la méthode rejectComment() du composable useComment
                 const { rejectComment } = useComment();
-                const response = await rejectComment(body);
+                const response          = await rejectComment(body);
                 
                 //? En fonction du statut de la réponse, afficher le message d'erreur ou de succès correspondant
                 if (response.status == 200) {
@@ -116,6 +116,7 @@
         }
     }
 </script>
+
 <style scoped>
     .comment_card {
         display: flex;

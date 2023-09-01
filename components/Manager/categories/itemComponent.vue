@@ -48,8 +48,8 @@
 
                     //? Définir le contenu du body de la requête
                     const body = {
-                        id: "pouet",
-                        name: this.name
+                        id:     this.id,
+                        name:   this.name
                     };
 
                     //? Appel de la méthode deleteCategory() du composable useCategory
