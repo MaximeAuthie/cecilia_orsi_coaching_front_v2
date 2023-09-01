@@ -53,7 +53,7 @@
             //? Récupération du token dans la route à l'ouverture de la page
             const userStore = useUsersStore();
             let token = this.$route.params.token.toString();
-
+            
             if (token == 'expired-token') {
                 this.errorMessage   = 'Le token a expiré. Merci de renouveller votre demande de connexion';
                 userStore.token     = 'expired-token';
@@ -70,10 +70,8 @@
 
                 //? Récupérer le jwt dans le paramètre
                 userStore.token = token.toString().split('!').slice(0, -1).join('!');
-
                 //? Récupérer l'id de l'utilisateur dans le paramètre
                 userStore.id = token.toString().split('!').pop();
-
                 //? Appel des méthodes get des autres stores pour précharcher les informations de tout l'espace admin
                 const statsStore = useStatsStore();
                 statsStore.getVisitsStats();

@@ -129,7 +129,6 @@ export function useCategory() {
 
             //? Transformer l'objet formData en json
             const bodyJson = JSON.stringify(body);
-
             //? Vérifier et récupérer le token pour l'identification via la fonction verifyToken du composable useAuthentification
             const { verifyToken }   = useAuthentification();
             const jwt               = await verifyToken();
@@ -145,7 +144,7 @@ export function useCategory() {
                 },
                 body: bodyJson,
             })
-
+            
             //? Retourner la réponse
             if (response.status == 498) {
                 const userStore = useUsersStore();
