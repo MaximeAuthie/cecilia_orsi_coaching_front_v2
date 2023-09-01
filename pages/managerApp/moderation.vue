@@ -69,10 +69,9 @@
                 const commentStore = useCommentsStore();
                 if (this.commentStatus === 'already-validate') {
                     this.comments = commentStore.comments.filter( comment => comment.article.id == this.article);
-                    this.comments.sort((a,b) => (a.id < b.id ? 1 : -1));
                 } else {
                     this.comments = commentStore.commentsToValidate.filter( comment => comment.article.id == this.article);
-                    this.comments.sort((a,b) => (a.id < b.id ? 1 : -1));
+                    // this.comments.sort((a,b) => (a.id < b.id ? 1 : -1));
                 }
                 this.displayComments = true;
             },
@@ -84,7 +83,6 @@
                //? Vérifier si les articles validés sont toujours présents dans le store, récupérer les données de l'article
                if (commentStore.comments.length > 0) {
                     this.comments                   = commentStore.comments;
-                    this.comments.sort((a,b) => (a.id < b.id ? 1 : -1));
                     this.isArticleLoaded            = true;
                 } else {
 
@@ -92,7 +90,6 @@
                 commentStore.getModeratedComments()
                     .then(() => {
                         this.comments            = commentStore.comments;
-                        this.comments.sort((a,b) => (a.id < b.id ? 1 : -1));
                     })
 
                     //? En cas d'erreur inattendue, capter l'erreur rencontrée
@@ -109,7 +106,6 @@
                //? Vérifier si les articles validé sont toujours présents dans le store, récupérer les données de l'article
                if (commentStore.comments.length > 0) {
                     this.comments               = commentStore.commentsToValidate;
-                    this.comments.sort((a,b) => (a.id < b.id ? 1 : -1));
                     this.isArticleLoaded        = true;
                 } else {
 
@@ -117,7 +113,6 @@
                 commentStore.getCommentsToValidate()
                     .then(() => {
                         this.comments               = commentStore.commentsToValidate;
-                        this.comments.sort((a,b) => (a.id < b.id ? 1 : -1));
                     })
 
                     //? En cas d'erreur inattendue, capter l'erreur rencontrée

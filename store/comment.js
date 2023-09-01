@@ -26,8 +26,11 @@ export const useCommentsStore = defineStore('comments', {
                         const { formatDatetime } = useUtils();
                         comment.date_comment = formatDatetime(comment.date_comment);
                     })
+
+                    //? Trier les commentaires par ordre antichronologique
+                    this.comments.sort((a,b) => (a.id < b.id ? 1 : -1));
                 }
-            
+
             //? En cas d'erreur inattendue, capter l'erreur rencontrée et emettre une erreur dans la console
             } catch (error) {
                 console.error(error);
@@ -55,6 +58,9 @@ export const useCommentsStore = defineStore('comments', {
                         const { formatDatetime } = useUtils();
                         comment.date_comment = formatDatetime(comment.date_comment);
                     })
+
+                    //? Trier les commentaires par ordre antichronologique
+                    this.commentsToValidate.sort((a,b) => (a.id < b.id ? 1 : -1));
                 }
                 
             //? En cas d'erreur inattendue, capter l'erreur rencontrée et emettre une erreur dans la console
