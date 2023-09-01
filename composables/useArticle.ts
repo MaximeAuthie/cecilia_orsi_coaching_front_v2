@@ -27,7 +27,7 @@ export function useArticle() {
             })
 
             //? Retourner la réponse
-            const articlesList = await response;
+            const articlesList = await response.json();
             return articlesList;
 
         //? En cas d'erreur inattendue, capter l'erreur rencontrée et emettre une erreur dans la console

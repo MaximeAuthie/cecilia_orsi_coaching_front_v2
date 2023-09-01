@@ -188,6 +188,7 @@ export function useComment() {
     return {
         getModeratedComments,
         getCommentsToValidate,
+        addComment,
         validateComment,
         rejectComment
     }

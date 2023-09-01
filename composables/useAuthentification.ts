@@ -36,7 +36,7 @@ export function useAuthentification() {
             });
             
             //? Retourner la réponse : ici un noouveau token (string)
-            const newToken  = await response.toString();
+            const newToken  = await response.json();
             store.token     = newToken;
             return newToken; 
 
