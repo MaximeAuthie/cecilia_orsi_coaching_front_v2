@@ -30,7 +30,7 @@
             </div>
             <div class="admin_content_form_bloc">
                 <label for="email" class="admin_label">Adresse email* : </label>
-                <input v-model="user.email" @keyup="checkInputKeyUp" type="text" name="email" :class=" errorMessages.emailEmpty != '' || errorMessages.emailFormat != '' ? 'bad_admin_input_form' : 'admin_input_form'">
+                <input v-model="user.email" @keyup="checkMailFormat" type="text" name="email" :class=" errorMessages.emailEmpty != '' || errorMessages.emailFormat != '' ? 'bad_admin_input_form' : 'admin_input_form'">
                 <div class="admin_error_message_form">{{ errorMessages.emailEmpty }}</div>
                 <div class="admin_error_message_form">{{ errorMessages.emailFormat }}</div>
             </div>
@@ -160,8 +160,28 @@
                 }
             },
 
+            //! Vérifier le format de l'adresse mail
+            checkMailFormat() {
+                //? Executer checkImputKeyUp pour vérifier si d'autre champs ont été saisis depuis
+                this.checkInputKeyUp();
+
+                //? Définir le regex pour le format mail
+                const pattern = new RegExp(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/i);
+
+                //? Vérifier le si le mail est saisi
+                if (this.user.email != '') {
+
+                    //? Vérifier si la saisie correspond au regex
+                    if (!pattern.test(this.user.email)) {
+                        this.errorMessages.emailFormat = "Le format de l'adresse email n'est pas correct";
+                    } else {
+                        this.errorMessages.emailFormat = "";
+                    }
+                }
+            },
+
             //! Vérifier si les champs sont saisis, le format du password et si les deux password sont identique pendant la saisie
-            checkPasswordKeyUp() { //Vérifie si les champs sont remplis lors de la saisir et vérifie le format du password
+            checkPasswordKeyUp() {
                 const { isPasswordIdentical } = useUtils();
                 
                 //? Vérifie le remplissage des champs obligatoires à chaque frappe
@@ -176,6 +196,15 @@
                 } else {
                     this.errorMessages.passwordIdentical = "Les deux mots de passe ne sont pas identiques";
                 }
+
+                //? Si, au moment de la saisie, les deux passwords sont vides, vider tous les messages d'erreur
+                if (this.passwords.firstInput == '' && this.passwords.secondInput == '') {
+                    this.errorMessages.passwordIdentical = "";
+                    this.errorMessages.passwordUppercase = "";
+                    this.errorMessages.passwordLowercase = "";
+                    this.errorMessages.passwordNumber    = "";
+                    this.errorMessages.passwordCaracters = "";
+                }
             },
 
             //! Vérifier le format du mot de passe
@@ -184,7 +213,7 @@
                 //? Importer les fonction du composable useUtils
                 const { containUppercase }  = useUtils();
                 const { containLowercase }  = useUtils();
-                const { containNumbber }    = useUtils();
+                const { containNumber }    = useUtils();
                 const { isLongEnough }      = useUtils();
                 
                 //? Réinitialiser les message d'erreur
@@ -203,7 +232,8 @@
                     this.errorMessages.passwordLowercase = "Le mot de passe doit contenir au moins une minuscule"
                 }
 
-                if (!containNumbber(this.passwords.firstInput)) {
+                if (!containNumber(this.passwords.firstInput)) {
+                    console.log("chiffre");
                     this.errorMessages.passwordNumber = "Le mot de passe doit contenir au moins un chiffre"
                 }
 
