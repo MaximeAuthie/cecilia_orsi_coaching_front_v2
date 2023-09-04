@@ -1,7 +1,7 @@
 <template>
     <div class="banner" :style="{backgroundImage: 'url(' + imgUrl + ')'}">
         <div class="banner_logo">
-            <img src="@/assets/images/logo_nav_header.png" alt="logo">
+            <img src="~/assets/images/logo_nav_header.png" alt="logo">
         </div>
         <div class="banner_message">
             <h1>{{ messages[activeMessageIndex].content_banner_text }}</h1>

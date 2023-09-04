@@ -2,12 +2,12 @@
     <header>
         <div class="header_logo" @click="closeBurgerMenu">
             <nuxt-link to="/">
-                <img src="@/assets/images/logo_header.png" alt="Cécilia Orsi Coaching">
+                <img src="~/assets/images/logo_header.png" alt="Cécilia Orsi Coaching">
             </nuxt-link>
         </div>
         <nav :class="actualClass">
             <div class="header_nav_logo">
-                <img src="@/assets/images/logo_nav_header.png" alt="">
+                <img src="~/assets/images/logo_nav_header.png" alt="">
             </div>
             <ul class="header_nav_list">
                 <li><nuxt-link @click="openBurgerMenu" to="/" :class="route=='/' ? 'header_nav_list_link_selected' : 'header_nav_list_link'">Accueil</nuxt-link></li>
