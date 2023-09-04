@@ -9,12 +9,12 @@ export function useIp() {
             const response = await fetch('https://api.ipify.org');
             
             //? Retourner la réponse : ici l'adresse IP publique du client (string)
-            const publicIp = await response.toString();
-            return publicIp; 
-
+            const publicIp = await response.text();
+            return publicIp;
+            
         //? En cas d'erreur on met fin à la session
         } catch (error) {
-            console.error(error); 
+            console.error(error);
         }
     }
     

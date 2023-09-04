@@ -76,7 +76,7 @@ export function useComment() {
 
             //? Transformer l'objet body en json
             const bodyJson = JSON.stringify(body);
-
+            
             //? Exécuter l'appel API
             const response = await fetch(serverUrl + 'api/comment/add', {
                 method:'POST',

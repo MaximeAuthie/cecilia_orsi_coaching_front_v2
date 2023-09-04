@@ -83,7 +83,7 @@
 
                     //? Appel de la méthode addComment() du composable useComment
                     const { addComment }    = useComment();
-                    const response          = await addComment(this.body);
+                    const response          = await addComment(body);
                     
                     //? En fonction du statut de la réponse, afficher le message d'erreur ou de succès correspondant
                     if (response.status == 200) {
