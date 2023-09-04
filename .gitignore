@@ -24,3 +24,4 @@ logs
 
 # Video files Cypress
 *.mp4
+/cypress/screenshots
