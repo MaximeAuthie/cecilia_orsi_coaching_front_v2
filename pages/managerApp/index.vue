@@ -19,7 +19,7 @@
 
 <script>
     import { useUsersStore } from "@/store/user";
-    import { useStatsStore } from '@/store/stats';
+    import { useVisitStore } from '@/store/visit';
 
     export default {
         data() {
@@ -35,8 +35,8 @@
             this.user = userStore.firstName;
             
             //? Récupérer les statistiques de visite au montage de la page
-            const statsStore = useStatsStore();
-            this.stats = statsStore.stats;
+            const visitsStore = useVisitStore();
+            this.stats = visitsStore.stats;
         }
     }
 </script>
@@ -56,4 +56,4 @@
         width:90%;
         margin-top: 5vh;
     }
-</style>
+</style>store/visit

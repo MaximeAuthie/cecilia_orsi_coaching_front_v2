@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 
-export const useStatsStore = defineStore('stats', {
+export const useVisitStore = defineStore('visit', {
     state: () => ({
         stats:      {}
     }),
@@ -12,7 +12,7 @@ export const useStatsStore = defineStore('stats', {
             try {
 
                 //? Appel de la méthode getVisitsStats() du composable useStat
-                const { getVisitsStats }    = useStat();
+                const { getVisitsStats }    = useVisit();
                 const statsList             = await getVisitsStats();
                 
                 //? Stocker les données retournée dans le state this.stats
