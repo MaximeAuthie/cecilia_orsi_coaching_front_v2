@@ -3,9 +3,10 @@
     const route = useRoute();
     const title = route.fullPath;
 
-    //? Récupérer l'adresse URL du serveur
+    //? Récupérer l'adresse URL du serveur et l'url de l'icone d'onglet
     const config    = useRuntimeConfig();
     const serverUrl = config.public.serverUrl;
+    const iconUrl = config.public.metaLinkIconUrl;
 
     //? Exécuter les appels api pour récupérer les données de la page et des tuile de la page côté serveur
     const {data: pageData, pending}     = useFetch(serverUrl + 'api/page/title' + title);
@@ -29,20 +30,12 @@
             {name: 'twitter:description', content: 'Retrouvez ici tous mes articles et venez commenter et échanger avec la communauté.'},
             {name: 'twitter:image', content: '/_nuxt/assets/images/logo_header.png'}
         ],
-        link: [{rel: 'icon', href: '/_nuxt/assets/images/icone_tree.png'}]
+        link: [{rel: 'icon', href: iconUrl}]
     })
 </script>
 
 <template>
-    <div v-if="pending" class="waiting_div">
-        <div class="waiting_div_logo">
-            <img src="~/assets/images/logo_loader.png" alt="logo">
-        </div>
-        <h2>Cécilia Orsi Coaching</h2>
-        <div class="waiting_div_loader">
-            <p>Chargement en cours...</p>
-        </div>
-    </div>
+    <LoaderComponent v-if="pending"></LoaderComponent>
     <div v-else>
         <BannerComponent :imgUrl="pageData.banner_url_page" :messages="pageData.BannerTextsList" :isMainButtonActive="pageData.isMainButtonActive_page" :isSecondButtonActive="pageData.isSecondaryButtonActive_page" ></BannerComponent>
         <div class="content">
@@ -72,6 +65,7 @@
                     <h5>A la une</h5>
                 </div>
                 <ArticlesFrontPageComponent
+                    v-if="articlesLoaded"
                     :id="frontPageArticle.id"
                     :title="frontPageArticle.title_article"
                     :bannerUrl="frontPageArticle.banner_url_article"
@@ -79,6 +73,7 @@
                 </ArticlesFrontPageComponent>
                 <div class="content_articles_list">
                     <ArticlesTileComponent v-for="article in articles"
+                        v-if="articlesLoaded"
                         :id="article.id"
                         :title="article.title_article"
                         :bannerUrl="article.banner_url_article"
@@ -122,7 +117,7 @@
                 isFilterActivate:          false,
                 frontPageArticle:           {},
                 articles:                   [],
-                pageDataDownload :          false
+                articlesLoaded :            false
             }
         },
         methods: {
@@ -137,7 +132,7 @@
                 if (articleStore.validatedArticles.length > 0) {
                     this.articles           = articleStore.validatedArticlesToShow;
                     this.frontPageArticle   = articleStore.frontPageArticle;
-                    this.loading            = false;
+                    this.articlesLoaded     = true;
                 } else {
 
                 //? Si les articles ne sont pas déjà présents dans le store, effectuer l'appel API
@@ -145,13 +140,13 @@
                     .then(() => {
                         this.articles           = articleStore.validatedArticlesToShow;
                         this.frontPageArticle   = articleStore.frontPageArticle;
-                        this.loading            = false;
+                        this.articlesLoaded     = true;
                     })
 
                     //? En cas d'erreur inattendue, capter l'erreur rencontrée
                     .catch((error) => {
                         console.error('Erreur lors de la récupération des articles :', error);
-                        this.loading            = false;
+                        this.articlesLoaded     = false;
                     });
                 }
 
@@ -263,10 +258,9 @@
 
 <style scoped>
     .content_categories {
-        margin-top: 5vh;
-        /* background-color: aqua; */
+        margin-top: 10vh;
+
     }
-    
     .content_categories_list {
         display: flex;
         flex-direction: column;
@@ -323,7 +317,6 @@
     }
 
     .content_articles_list {
-        /* width: 100%; */
         display: flex;
         flex-direction: row;
         justify-content:center;

@@ -13,7 +13,6 @@
             </div>
             <div class="article_div_summary">
                 <div v-html="summary" class="article_div_summary">
-                  
                 </div>
             </div>
      
@@ -79,7 +78,6 @@
         align-items: center;
         width: 100%;
         height: 360px;
-        /* background-color: antiquewhite; */
         margin-top: 5vh;
         margin-left: 0.95vw;
         margin-right: 0.95vw;
@@ -141,7 +139,6 @@
         align-items: center;
         justify-content: flex-start;
         width: 93%;
-        /* background-color: blueviolet; */
     }
     .article_div_summary {
         flex: 53%;
@@ -162,13 +159,14 @@
 
     @media screen and (min-width: 1210px) {
         .article_div {
-            width: 30%;
+            width: 310px;
+            margin-left: 0.5vw;
+            margin-right: 0.5vw;
         }
         .article_div_summary {
-
-        width: calc(100%-1vw);
-        padding-left: 0.5vw;
-        padding-right: 0.5vw;
-    }
+            width: calc(100%-1vw);
+            padding-left: 0.3vw;
+            padding-right: 0.3vw;
+        }
     }
 </style>
