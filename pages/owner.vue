@@ -40,7 +40,7 @@
         <BannerComponent :imgUrl="pageData.banner_url_page" :messages="pageData.BannerTextsList" :isMainButtonActive="pageData.isMainButtonActive_page" :isSecondButtonActive="pageData.isSecondaryButtonActive_page" ></BannerComponent>
         <div class="content">
             <section class="content_description" >
-                <div class="content_description_avatar" style="background-image: url('~/public/cecilia-orsi.png');"></div>
+                <div class="content_description_avatar" :style="{backgroundImage: 'url(' + pageData.img1_url_page +')'}"></div>
                 <p>
                     Je m’appelle Cécilia Orsi, j’ai 31 ans je vis à Toulouse.<br>
                     <br>

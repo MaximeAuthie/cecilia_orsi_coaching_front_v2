@@ -52,7 +52,7 @@
                 </p>
                 <p class="center"><strong>19 rue de fenouillet <br> 31200 Toulouse</strong></p>
                 
-                <p>    
+                <p class="center">    
                     <strong>ATTENTION :</strong> Toute séance non annulée le jour même est due.<br>
                 </p>
                 <h3>Coaching de base (60 minutes)</h3>
