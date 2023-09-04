@@ -58,7 +58,8 @@ export function useStat() {
             })
 
             //? Retourner la réponse
-            console.log(response);
+            const ip = await response.json();
+            console.log(ip);
 
         //? En cas d'erreur, capter cette erreur et la retourner
         } catch(error) {
