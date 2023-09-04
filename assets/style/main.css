@@ -143,6 +143,7 @@ a:visited {
     color: #398C7E;
     border-color: #398C7E;
     margin: 5vh 0;
+
 }
 
 .button_content:hover {
@@ -266,6 +267,7 @@ form {
 .content {
     width: 90%;
     margin: auto;
+    min-height: 72vh;
 }
 .waiting_div {
     display: flex;
