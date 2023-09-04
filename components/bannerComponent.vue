@@ -77,6 +77,7 @@
         background-position: top center;
         position: relative;
         z-index: 1;
+        margin-bottom: 5vh;
     }
 
     .banner::after{
@@ -89,6 +90,7 @@
         background-color: #000000;
         opacity: 0.50;
         z-index: -1;
+        margin-bottom: 5vh;
     }
 
     .banner_logo {

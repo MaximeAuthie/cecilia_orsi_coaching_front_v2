@@ -4,13 +4,14 @@
     const route = useRoute();
     const title = route.fullPath;
 
-    //? Récupérer l'adresse URL du serveur
+    //? Récupérer l'adresse URL du serveur et l'url de l'icone d'onglet
     const config    = useRuntimeConfig();
     const serverUrl = config.public.serverUrl;
+    const iconUrl = config.public.metaLinkIconUrl;
 
     //? Exécuter les appels api pour récupérer les données de la page et des tuile de la page côté serveur
     const {data: pageData, pending}     = useFetch(serverUrl + 'api/page/title' + title);
-    const {data: tilesData}             = useFetch(serverUrl + 'api/tile' + title);
+    const {data: tilesData}             = useFetch(serverUrl + 'api/tile/page' + title);
     
     //? Renseigner les balises HTML de <head> pour le SEO côté serveur
     useHead({
@@ -30,7 +31,7 @@
             {name: 'twitter:description', content: 'Prenez rendez-vous directement en ligne, par téléphone ou via le formulaire de contact.'},
             {name: 'twitter:image', content: '/_nuxt/assets/images/logo_header.png'}
         ],
-        link: [{rel: 'icon', href: '/_nuxt/assets/images/icone_tree.png'}]
+        link: [{rel: 'icon', href: iconUrl}]
     })
 </script>
 
@@ -40,7 +41,7 @@
         <BannerComponent :imgUrl="pageData.banner_url_page" :messages="pageData.BannerTextsList" :isMainButtonActive="pageData.isMainButtonActive_page" :isSecondButtonActive="pageData.isSecondaryButtonActive_page" ></BannerComponent>
         <div class="content">
             <section class="content_description">
-                <div class="content_description_images">
+                <div class="content_description_images_pack">
                     <div class="content_description_image" :style="{backgroundImage: 'url(' + pageData.img1_url_page + ')'}">
                         <h5>A la Villa Santé</h5>
                     </div>
@@ -48,11 +49,11 @@
                         <h5>En visio</h5>
                     </div>
                 </div>
-                    <p>
+                    <p class="center">
                         Les rendez-vous se déroulent en visio via zoom ou sur Toulouse à la Villa santé :
                     </p>
                     <p class="center"><strong>19 rue de fenouillet <br> 31200 Toulouse</strong></p>
-                    <p>    
+                    <p class="center">    
                         <strong>ATTENTION :</strong> Toute séance non annulée le jour même est due.<br>
                     </p>
                     <h3>Prise de rendez-vous en ligne</h3>
@@ -60,9 +61,8 @@
                         <iframe src="https://soins.calendoc.net/pro/4907/119973888727169/book/date/embedded"></iframe>
                     </div>
                     <h3>Prise de rendez-vous classique</h3>
-                    <p>
+                    <p class="center">
                         Vous avez des questions ou des demandes particulières concernant votre rendez-vous?<br>
-                        <br>
                         N’hésitez pas à utiliser notre formulaire de contact ou à ma joindre par téléphone
                     </p>
                     <div class="content_description_image_buttons">
@@ -80,9 +80,10 @@
 </template>
 
 <style scoped>
-    .content_description_images {
+    .content_description_images_pack {
         display: flex;
         flex-direction: column;
+        justify-content: space-between;
         align-items: center;
         width: 100%;
     }
@@ -102,6 +103,7 @@
 
     .content_description_appointment_module {
         width: 100%;
+        margin-bottom: 5vh;
     }
 
     .content_description_appointment_module iframe {
@@ -111,7 +113,7 @@
 
 
     @media screen and (min-width: 1210px) {
-        .content_description_images {
+        .content_description_images_pack {
             flex-direction: row;
             justify-content: space-around;
         }

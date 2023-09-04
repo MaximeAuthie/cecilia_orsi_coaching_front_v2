@@ -14,9 +14,10 @@
     //? Récupérer le nom de la page pour l'utiliser dans l'appel api
     const title = '/index';
 
-    //? Récupérer l'adresse URL du serveur
+    //? Récupérer l'adresse URL du serveur et l'url de l'icone d'onglet
     const config    = useRuntimeConfig();
     const serverUrl = config.public.serverUrl;
+    const iconUrl = config.public.metaLinkIconUrl;
 
     //? Exécuter les appels api pour récupérer les données de la page et des tuile de la page côté serveur
     const {data: pageData, pending}     = useFetch(serverUrl + 'api/page/title' + title);
@@ -40,7 +41,7 @@
             {name: 'twitter:description', content: 'Coach de vie certifiée intervenant en région Toulousaine. Accompagnement personnalisé pour atteindre un mieux-être et/ou réaliser ses objectifs.'},
             {name: 'twitter:image', content: '/_nuxt/assets/images/logo_header.png'}
         ],
-        link: [{rel: 'icon', href: '/_nuxt/assets/images/icone_tree.png'}]
+        link: [{rel: 'icon', href: iconUrl}]
     })
 </script>
 

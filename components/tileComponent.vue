@@ -84,11 +84,11 @@
 
     @media screen and (min-width: 1210px) {
         .tile_div {
-            width: 525px;
-            height: 35vh;
+            width: 480px;
+            height: 300px;
         }
         .tile_div_full_width {
-            width: 1100px;    
+            width: 1000px;    
         }
     }
 

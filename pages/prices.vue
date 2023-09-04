@@ -3,9 +3,10 @@
     const route = useRoute();
     const title = route.fullPath;
 
-    //? Récupérer l'adresse URL du serveur
+    //? Récupérer l'adresse URL du serveur et l'url de l'icone d'onglet
     const config    = useRuntimeConfig();
     const serverUrl = config.public.serverUrl;
+    const iconUrl = config.public.metaLinkIconUrl;
 
     //? Exécuter les appels api pour récupérer les données de la page et des tuile de la page côté serveur
     const {data: pageData, pending}     = useFetch(serverUrl + 'api/page/title' + title);
@@ -29,7 +30,7 @@
             {name: 'twitter:description', content: 'Détail des prestations que je propose, des tarifs et des réductions associés.'},
             {name: 'twitter:image', content: '/_nuxt/assets/images/logo_header.png'}
         ],
-        link: [{rel: 'icon', href: '/_nuxt/assets/images/icone_tree.png'}]
+        link: [{rel: 'icon', href: iconUrl}]
     })
 </script>
 
@@ -44,28 +45,29 @@
                     <h3>Le meilleur investissement que vous puissiez faire, c'est d'investir en vous-même.</h3>
                     <br>
                     <h3>Warren Buffet</h3>
+                    <div class="content_description_quote_bar"></div>
                 </div>
-                <div class="content_description_quote_bar"></div>
+                
                 <div class="content_description_image" :style="{backgroundImage: 'url(' + pageData.img1_url_page +')'}"></div>
-                <p>
+                <p class="content_description_adaptable_align">
                     Les rendez-vous se déroulent en visio via zoom ou sur Toulouse à la Villa santé :
                 </p>
-                <p class="center"><strong>19 rue de fenouillet <br> 31200 Toulouse</strong></p>
+                <p class="content_description_center"><strong>19 rue de fenouillet <br> 31200 Toulouse</strong></p>
                 
-                <p class="center">    
+                <p class="content_description_adaptable_align">    
                     <strong>ATTENTION :</strong> Toute séance non annulée le jour même est due.<br>
                 </p>
                 <h3>Coaching de base (60 minutes)</h3>
-                <p>
+                <p class="content_description_adaptable_align">
                     1 séance de coaching pour faire le point sur votre problématique, vous aider à éclaircir la situation et trouver des pistes d’amélioration en fonction de vos besoins. <br>
                     Vous pouvez choisir de prendre plusieurs séances ou de vous contenter d’une séance unique.
                 </p>
-                <p class="center"><strong>55€ tarif plein</strong><br>25€ pour les personnes pour les étudiants et personnes au RSA</p>
+                <p class="content_description_center"><strong>55€ tarif plein</strong><br>25€ pour les personnes pour les étudiants et personnes au RSA</p>
                 <h3>Coaching de suivi</h3>
-                <p>
+                <p class="content_description_adaptable_align">
                     5 séances d’une heure pour vous aider à atteindre un objectif, à dépasser vos blocages, prendre confiance en vous et connaître vos besoins et vos ressources.
                 </p>
-                <p class="center"><strong>260€ tarif plein</strong><br>115€ pour les personnes pour les étudiants et personnes au RSA</p>
+                <p class="content_description_center"><strong>260€ tarif plein</strong><br>115€ pour les personnes pour les étudiants et personnes au RSA</p>
                 <NuxtLink to="/appointment"><input class="button button_content" type="button" value="Prendre rendez-vous"></NuxtLink>
             </section>
             <section class="content_tiles">
@@ -77,11 +79,8 @@
 
 <style scoped>
 
-    h3 {
-        margin-top: 13vh;
-    }
     .content_description_quote {
-        margin-top: 3vh;
+        margin: 5vh 0;
     }
     .content_description_quote h3 {
         margin: 1vh 0;
@@ -94,5 +93,19 @@
         height: 2px;
         background-color: #8EBBA7;
         cursor: pointer;
+    }
+
+    .content_description_adaptable_align {
+        text-align: justify;
+    }
+
+    .content_description_center{
+        text-align: center;
+    }
+
+    @media screen and (min-width: 1210px) {
+        .content_description_adaptable_align {
+            text-align: center;
+        }
     }
 </style>

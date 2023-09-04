@@ -26,13 +26,17 @@
             //? Récupérer la route au moment du montage du layout pour la passer en props du composant ManagerNavigationComponent
             this.route = this.$route.path;
 
+            //? Récupérer l'url de l'icone d'onglet
+            const config    = useRuntimeConfig();
+            const iconUrl = config.public.metaLinkIconUrl;
+
             //? Renseigner les balises HTML de <head> pour bloquer le SEO
             useHead({
                 title: 'Cécilia Orsi Coaching - Espace administrateur',
                 meta: [
                     {name:'robots', content:'noindex, nofollow'},
                 ],
-                link: [{rel: 'icon', href: '/_nuxt/assets/images/icone_tree.png'}]
+                link: [{rel: 'icon', href: iconUrl}]
             })
         },
     }

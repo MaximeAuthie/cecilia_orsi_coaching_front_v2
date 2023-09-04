@@ -1,4 +1,4 @@
-export function useStat() {
+export function useVisit() {
     
     //! Récupérer les statistique de visite pour la page d'accueil (managerApp)
     async function getVisitsStats() {
@@ -59,7 +59,6 @@ export function useStat() {
 
             //? Retourner la réponse
             const ip = await response.json();
-            console.log(ip);
 
         //? En cas d'erreur, capter cette erreur et la retourner
         } catch(error) {

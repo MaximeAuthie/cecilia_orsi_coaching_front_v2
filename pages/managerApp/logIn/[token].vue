@@ -40,7 +40,7 @@
     import { useCategoriesStore } from '@/store/category'
     import { useCommentsStore } from '@/store/comment';
     import { useTilesStore } from '@/store/tile';
-    import { useStatsStore } from '@/store/stats';
+    import { useVisitsStore } from '@/store/visit';
 
     export default {
         data() {
@@ -70,11 +70,13 @@
 
                 //? Récupérer le jwt dans le paramètre
                 userStore.token = token.toString().split('!').slice(0, -1).join('!');
+                
                 //? Récupérer l'id de l'utilisateur dans le paramètre
                 userStore.id = token.toString().split('!').pop();
+
                 //? Appel des méthodes get des autres stores pour précharcher les informations de tout l'espace admin
-                const statsStore = useStatsStore();
-                statsStore.getVisitsStats();
+                const visitsStore = useVisitsStore();
+                visitsStore.getVisitsStats();
                 
                 const commentsStore = useCommentsStore();
                 commentsStore.getCommentsToValidate();

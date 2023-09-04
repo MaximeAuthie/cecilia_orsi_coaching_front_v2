@@ -25,9 +25,9 @@
                 const body = {
                     ip : publicIp
                 }
-console.log(body);
+
                 //? Appel de la méthode addVisit() du composable useStat
-                const { addVisit }    = useStat();
+                const { addVisit }    = useVisit();
                 addVisit(body);
             }
         },

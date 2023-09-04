@@ -1,7 +1,8 @@
 <template>
     <div class="display_comments_div">
         <h3>Commentaires</h3>
-        <CommentsDisplayComponent v-for="comment in comments" :id="comment.id" :author-name="comment.author_name_comment" :date="comment.date_comment" :content="comment.content_comment" ></CommentsDisplayComponent>
+        <CommentsDisplayComponent v-if="comments != ''" v-for="comment in comments" :id="comment.id" :author-name="comment.author_name_comment" :date="comment.date_comment" :content="comment.content_comment" ></CommentsDisplayComponent>
+        <p v-else class="center">Pas encore de commentaire à afficher</p>
         <div class="display_comments_div_form">
             <form v-if="!isFormSubmit" @submit.prevent="">
                 <h6>Poster un commentaire</h6>
@@ -168,6 +169,9 @@
         margin-bottom: 3vh;
     }
 
+    .display_comments_div_form {
+        margin-top: 7vh;
+    }
     .display_comments_div {
         display: block;
         width: 100;
