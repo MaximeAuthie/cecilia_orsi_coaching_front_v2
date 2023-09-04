@@ -4,9 +4,10 @@
     const route = useRoute();
     const id    = route.params.id;
 
-    //? Récupérer l'adresse URL du serveur
+    //? Récupérer l'adresse URL du serveur et l'url de l'icone d'onglet
     const config    = useRuntimeConfig();
     const serverUrl = config.public.serverUrl;
+    const iconUrl = config.public.metaLinkIconUrl;
 
     //? Exécuter les appels api pour récupérer les données de l'article et des commentaires de l'article côté serveur
     const {data:article, pending}   = await useFetch(serverUrl + 'api/article/id/' + id);
@@ -39,7 +40,7 @@
             {name: 'twitter:description', content: article.value.description_article},
             {name: 'twitter:image', content: './assets/images/logo_header.png'}
         ],
-        link: [{rel: 'icon', href: './assets/images/icone_tree.png'}]
+        link: [{rel: 'icon', href: iconUrl}]
     })
 </script>
 

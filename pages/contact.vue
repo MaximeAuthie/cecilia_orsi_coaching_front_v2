@@ -4,13 +4,14 @@
     const route = useRoute();
     const title = route.fullPath;
     
-    //? Récupérer l'adresse URL du serveur
+    //? Récupérer l'adresse URL du serveur et l'url de l'icone d'onglet
     const config    = useRuntimeConfig();
     const serverUrl = config.public.serverUrl;
+    const iconUrl = config.public.metaLinkIconUrl;
 
     //? Exécuter les appels api pour récupérer les données de la page et des tuile de la page côté serveur
     const {data: pageData, pending}     = useFetch(serverUrl + 'api/page/title' + title);
-    const {data: tilesData}             = useFetch(serverUrl + 'api/tile' + title);
+    const {data: tilesData}             = useFetch(serverUrl + 'api/tile/page' + title);
     
     //? Renseigner les balises HTML de <head> pour le SEO côté serveur
     useHead({
@@ -31,7 +32,7 @@
             {name: 'twitter:description', content: 'Vous avez des questions? Vous voulez en savoir plus ou prendre rendez-vous? Utilisez le formulaire de contact.'},
             {name: 'twitter:image', content: '/_nuxt/assets/images/logo_header.png'}
         ],
-        link: [{rel: 'icon', href: '/_nuxt/assets/images/icone_tree.png'}]
+        link: [{rel: 'icon', href: iconUrl}]
     })
 </script>
 

@@ -3,9 +3,10 @@
     const route = useRoute();
     const title = route.fullPath;
 
-    //? Récupérer l'adresse URL du serveur
+    //? Récupérer l'adresse URL du serveur et l'url de l'icone d'onglet
     const config    = useRuntimeConfig();
     const serverUrl = config.public.serverUrl;
+    const iconUrl = config.public.metaLinkIconUrl;
 
     //? Exécuter les appels api pour récupérer les données de la page et des tuile de la page côté serveur
     const {data: pageData, pending}     = useFetch(serverUrl + 'api/page/title' + title);
@@ -19,7 +20,7 @@
             {name:'robots', content:'noindex, nofollow'},
             {"http-equiv": 'Content-Language', content: 'fr'},
         ],
-        link: [{rel: 'icon', href: '/_nuxt/assets/images/icone_tree.png'}]
+        link: [{rel: 'icon', href: iconUrl}]
     })
 </script>
 
@@ -29,12 +30,12 @@
         <BannerComponent :imgUrl="pageData.banner_url_page" :messages="pageData.BannerTextsList" :isMainButtonActive="pageData.isMainButtonActive_page" :isSecondButtonActive="pageData.isSecondaryButtonActive_page" ></BannerComponent>
         <div class="content">
             <section class="content_description" >
-                <h2>Introduction</h2>
+                <h3>Introduction</h3>
                 <p>
                     Dans le cadre de son activité, la société <strong>Cécilia Orsi</strong>, dont le siège social est situé à Toulouse, est amenée à collecter et à traiter des informations dont certaines sont qualifiées de "données personnelles". 
                     Cécilia Orsi attache une grande importance au respect de la vie privée, et n’utilise que des donnes de manière responsable et confidentielle et dans une finalité précise.
                 </p>
-                <h2>Données personnelles</h2>
+                <h3>Données personnelles</h3>
                 <p>Sur le site web <strong>Cécilia Orsi</strong>, il y a 2 types de données susceptibles d’être recueillies :</p>
                     <ul>
                         <li><strong>Les données transmises directement :</strong></li>
@@ -46,24 +47,24 @@
                         Ces données sont utilisées exclusivement dans le cadre du site <strong>https://www.cecilia-orsi.fr/</strong> et <strong><u>ne seront jamais cédées à un tiers ni utilisées à d’autres fins que celles détaillées ci-dessus</u></strong>. 
                     </ul>
                 
-                <h2>Utilisation des données</h2>
+                <h3>Utilisation des données</h3>
                 <p>
                     Les données que vous nous transmettez directement sont utilisées uniquement dans le but de vous re-contacter et/ou dans le cadre de la demande que vous nous faites.
                 </p>
-                <h2>Base légale</h2>
+                <h3>Base légale</h3>
                 <p>
                     Les données personnelles ne sont collectées qu’après consentement obligatoire de l’utilisateur. Ce consentement est valablement recueilli (boutons et cases à cocher), libre, clair et sans équivoque.
                 </p>
-                <h2>Durée de conservation</h2>
+                <h3>Durée de conservation</h3>
                 <p>
                     Les données seront sauvegardées durant une durée maximale de 3 ans.
                 </p>
 
-                <h2>Cookies</h2>
+                <h3>Cookies</h3>
                 <p>
                     Aucun cookie n'est collecté ou installé par le site <strong>https://www.cecilia-orsi.fr/</strong>
                 </p>
-                <h2>Contact délégué à la protection des données</h2>
+                <h3>Contact délégué à la protection des données</h3>
                 <p>
                     Cécilia Orsi - <a class="content_description_link" href="mailto:contact@cecilia-orsi.fr">contact@cecilia-orsi.fr</a> ou 
                     <nuxt-link class="content_description_link" to="/privacyPolicy" target="_blank" rel="external">
