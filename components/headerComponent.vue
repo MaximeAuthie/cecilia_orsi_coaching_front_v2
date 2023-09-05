@@ -125,13 +125,13 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        max-width: 70%;
+        height: 25vh;
         margin-bottom: 5vh;
     }
 
     .header_nav_logo img {
-        max-width: 90%;
-        height: auto;
+        max-height: 90%;
+        width: auto;
     }
 
     .header_nav_close {
