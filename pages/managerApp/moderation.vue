@@ -71,7 +71,6 @@
                     this.comments = commentStore.comments.filter( comment => comment.article.id == this.article);
                 } else {
                     this.comments = commentStore.commentsToValidate.filter( comment => comment.article.id == this.article);
-                    // this.comments.sort((a,b) => (a.id < b.id ? 1 : -1));
                 }
                 this.displayComments = true;
             },

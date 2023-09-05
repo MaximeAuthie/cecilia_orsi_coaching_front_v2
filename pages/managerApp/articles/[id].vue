@@ -24,11 +24,11 @@
                 <span class="admin_error_message_form">{{ errorMessages.titleLength }}</span>
             </div>
             <div class="admin_content_form_bloc">
-                <label for="url" class="admin_label">URL de la bannière (160 caractères maximum) : </label>
+                <label for="url" class="admin_label">URL de la bannière : </label>
                 <input v-model="article.banner_url_article" type="text" name="url" class="admin_input_form">
             </div>
             <div class="admin_content_form_bloc">
-                <label for="description" class="admin_label">Description : </label>
+                <label for="description" class="admin_label">Description (160 caractères maximum) : </label>
                 <textarea v-model ="article.description_article" @keyup="ckeckDescriptionLength"  type="text" name="description" :class=" errorMessages.description!='' ? 'bad_admin_textarea_form' : 'admin_textarea_form'"></textarea>
                 <span class="admin_error_message_form">{{ errorMessages.description }}</span>
             </div>
