@@ -64,8 +64,8 @@
             <div class="admin_content_form_bloc">
                 <label for="role" class="admin_label">Rôle* : </label>
                 <select v-model="selectedRole" name="role" class="admin_select_form">
-                    <option value="ROLE_USER" class="admin_option">Utilisateur</option>
-                    <option value="ROLE_ADMIN" class="admin_option">Administrateur</option>
+                    <option value="ROLE_USER" class="admin_option">Utilisateur (pas d'accès à la gestion des utilisateur)</option>
+                    <option value="ROLE_ADMIN" class="admin_option">Administrateur (pas d'accès à la gestion des utilisateur)</option>
                 </select>
                 <span class="admin_error_message_form">{{ errorMessages.rolesEmpty }}</span>
             </div>
