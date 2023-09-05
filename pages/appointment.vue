@@ -4,10 +4,11 @@
     const route = useRoute();
     const title = route.fullPath;
 
-    //? Récupérer l'adresse URL du serveur et l'url de l'icone d'onglet
+    //? Récupérer l'adresse URL du serveur, l'url de l'icone d'onglet et le numéro de téléphone
     const config    = useRuntimeConfig();
     const serverUrl = config.public.serverUrl;
     const iconUrl = config.public.metaLinkIconUrl;
+    const phone = config.public.phoneNumber;
 
     //? Exécuter les appels api pour récupérer les données de la page et des tuile de la page côté serveur
     const {data: pageData, pending}     = useFetch(serverUrl + 'api/page/title' + title);
@@ -67,7 +68,7 @@
                     </p>
                     <div class="content_description_image_buttons">
                         <NuxtLink to="/contact"><input class="button button_content" type="button" value="Formulaire de contact"></NuxtLink>
-                        <NuxtLink to="tel:+33139380101"><input class="button button_content" type="button" value="Appel gratuit"></NuxtLink>
+                        <NuxtLink :to="'tel:' + phone"><input class="button button_content" type="button" value="Appel gratuit"></NuxtLink>
                     </div>
                     
                 
