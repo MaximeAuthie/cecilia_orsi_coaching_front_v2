@@ -45,15 +45,7 @@
 </script>
 
 <template>
-    <div v-if="pending" class="waiting_div">
-        <div class="waiting_div_logo">
-            <img src="~/assets/images/logo_loader.png" alt="logo">
-        </div>
-        <h2>Cécilia Orsi Coaching</h2>
-        <div class="waiting_div_loader">
-            <p>Chargement en cours...</p>
-        </div>
-    </div>
+    <LoaderComponent v-if="pending"></LoaderComponent>
     <div v-else>
         <div class="banner" :style="{backgroundImage: 'url(' + article.banner_url_article + ')'}">
             <NuxtLink to="/blog">
@@ -111,18 +103,18 @@
       height: 85vh;
       width: 100%;
       background-color: #000000;
-      opacity: 0.40;
+      opacity: 0.50;
       z-index: -1;
   }
     .banner_link {
         display: flex;
         flex-direction: row;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
         text-decoration:none;
         color: #FFFFFF;
-        width: 50vh;
-        font-size: 1.2em;
+        width: 98vw;
+        font-size: 1.3em;
         margin-top: 1vh;
     }
     .banner_link:hover {
@@ -152,14 +144,18 @@
       height: 30vh;
       width: 90%;
       margin-top: 5vh;
-      /* background-color: blueviolet; */
+  }
+
+  .banner_title h1 {
+    line-height: 1.3em;
+    font-size: 3em;
   }
 
   .banner_informations {
         font-size: 1.3em;
         color: #FFFFFF;
         margin-top: 15vh;
-        /* background-color: chartreuse; */
+        font-size: 1.5em;
   }
 
   .content_article {
@@ -190,6 +186,11 @@
           width: 90%;
           margin-top: 0;
       }
+
+      .banner_title h1 {
+        line-height: 1.3em;
+        font-size: 3.5em;
+    }
       .banner_informations {
         margin-top: 15vh;
         }
