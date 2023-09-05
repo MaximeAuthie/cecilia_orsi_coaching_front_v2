@@ -93,7 +93,7 @@
           border-radius: 2vh;
           margin: 1vh 0;
           padding: 1vh 1vh;
-          font-size: 0.4em;
+          font-size: 0.6em;
       }
       .article_item:hover {
         box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
