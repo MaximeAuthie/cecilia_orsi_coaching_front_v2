@@ -7,7 +7,7 @@
 
 <template>
     <div class="admin_content">
-    <h1>Gestion du contenu des pages</h1>
+    <h1>Gestion du contenu des tuiles</h1>
     <div class="admin_content_filters_bloc">
         <label for="page" class="admin_label">Tuile :</label>
         <select  v-model="selectedTileId" @change="displayTileData($event)" name="page" id="page" class="admin_select">
