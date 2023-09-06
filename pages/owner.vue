@@ -47,7 +47,7 @@
                     <br>
                     Ayant été anxieuse sociale pendant des années, je sais l’importance d’un accompagnement adéquat.
                     Suite à de nombreuses expériences professionnelles (la plupart dans le social et la petite enfance), passionnée de psychologie et de compréhension des comportements humains je décide d’aller plus loin dans mes envies et mes convictions. <br>
-                    J’entreprends un travail sur moi qui m’as permis de comprendre mon fonctionnement et de m’ouvrir à ce que j’aime le plus : comprendre et aider les autres.<br>
+                    J’entreprends un travail sur moi qui m’a permis de comprendre mon fonctionnement et de m’ouvrir à ce que j’aime le plus : comprendre et aider les autres.<br>
                     <br>
                     Ma première formation fût en psychologie et plus particulièrement en thérapies brèves (Thérapie cognitivo comportementale).<br>     
                     Une fois obtenue, j’ai par la suite entrepris une formation certifiante en coaching de vie.<br>
@@ -57,7 +57,7 @@
                     <br>
                     Mon approche est humaniste et j’utilise principalement l’analyse transactionnelle comme méthodologie de travail, cependant je m’adapte à vous et nous voyons ensemble ce qui vous convient le plus.<br>
                     <br>
-                    A bientôt!
+                    A bientôt !
                 </p>
                 <NuxtLink to="/appointment"><input class="button button_content" type="button" value="Prendre rendez-vous"></NuxtLink>
             </section>

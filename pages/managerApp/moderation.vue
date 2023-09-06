@@ -10,7 +10,7 @@
         <h1>Modération des commentaires</h1>
         <div class="admin_content_filters">
             <div class="admin_content_filters_bloc">
-                <label for="status" class="admin_label">Status :</label>
+                <label for="status" class="admin_label">Statut :</label>
                 <select v-model="commentStatus" name="status" id="status" class="admin_select">
                     <option value="to-validate" class="admin_option">A valider</option>
                     <option value="already-validate" class="admin_option">Déjà validés</option>
