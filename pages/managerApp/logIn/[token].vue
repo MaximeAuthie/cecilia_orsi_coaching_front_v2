@@ -19,8 +19,8 @@
         
 
         <div class="admin_content_filters_message">
-            <span v-if="successMessage" class="admin_content_filters_message_success">{{ successMessage }}</span>
-            <span v-if="errorMessage" class="admin_content_filters_message_error">{{ errorMessage }}</span>
+            <span v-if="successMessage" class="admin_content_filters_message_success" id="success_message">{{ successMessage }}</span>
+            <span v-if="errorMessage" class="admin_content_filters_message_error" id="error_message">{{ errorMessage }}</span>
         </div>
         <NuxtLink to="/managerApp/logIn">
             <div v-if="errorMessage" class="admin_content_link">
