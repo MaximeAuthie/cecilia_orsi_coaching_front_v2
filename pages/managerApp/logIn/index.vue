@@ -11,21 +11,21 @@
         <div class="admin_content_form">
             <div class="admin_content_form_bloc">
                 <label for="email" class="admin_label">Adresse email : </label>
-                <input v-model="authentificationData.email" @keyup="checkInputKeyUp" :class=" errorMessages.emailEmpty != ''  ? 'bad_admin_input_form' : 'admin_input_form'" type="text" name="email">
-                <span class="admin_error_message_form">{{ errorMessages.emailEmpty }}</span>
+                <input v-model="authentificationData.email" @keyup="checkInputKeyUp" :class=" errorMessages.emailEmpty != ''  ? 'bad_admin_input_form' : 'admin_input_form'" type="text" name="email" id="email">
+                <span class="admin_error_message_form" id="email_empty_msg">{{ errorMessages.emailEmpty }}</span>
             </div>
             <div class="admin_content_form_bloc">
                 <label for="password" class="admin_label">Mot de passe : </label>
-                <input v-model="authentificationData.password" @keyup="checkInputKeyUp" :class=" errorMessages.passwordEmpty != ''  ? 'bad_admin_input_form' : 'admin_input_form'" type="password" name="password">
-                <span class="admin_error_message_form">{{ errorMessages.passwordEmpty }}</span>
+                <input v-model="authentificationData.password" @keyup="checkInputKeyUp" :class=" errorMessages.passwordEmpty != ''  ? 'bad_admin_input_form' : 'admin_input_form'" type="password" name="password" id="password">
+                <span class="admin_error_message_form" id="password_empty_msg">{{ errorMessages.passwordEmpty }}</span>
             </div>
         </div>
         <div class="admin_content_filters_message">
-            <span v-if="errorMessages.form" class="admin_content_filters_message_error">{{ errorMessages.form }}</span>
-            <span v-if="formSuccessMessage" class="admin_content_filters_message_success">{{ formSuccessMessage }}</span>
+            <span v-if="errorMessages.form" class="admin_content_filters_message_error" id="error_message">{{ errorMessages.form }}</span>
+            <span v-if="formSuccessMessage" class="admin_content_filters_message_success" id="success_message">{{ formSuccessMessage }}</span>
         </div>
         <div class="admin_content_form_buttons">
-            <button @click="logIn" class="admin_button admin_button_main">Se connecter</button>
+            <button @click="logIn" class="admin_button admin_button_main" id="log_in">Se connecter</button>
         </div>
     </div>
 </template>
