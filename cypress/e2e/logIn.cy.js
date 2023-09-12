@@ -30,7 +30,7 @@ describe('logIn', () => {
   })
 
   it('email-inputs-empty', () => {
-    cy.visit('https://www.cecilia-orsi-coaching.com/logIn');
+    cy.visit('https://www.cecilia-orsi-coaching.com/managerApp/logIn');
     cy.wait(2000);
     cy.get('#password').type(password);
     cy.get('#log_in').click();
@@ -43,7 +43,7 @@ describe('logIn', () => {
   })
 
   it('password-inputs-empty', () => {
-    cy.visit('https://www.cecilia-orsi-coaching.com/logIn');
+    cy.visit('https://www.cecilia-orsi-coaching.com/managerApp/logIn');
     cy.wait(2000);
     cy.get('#email').type(email);
     cy.get('#log_in').click();
@@ -56,7 +56,7 @@ describe('logIn', () => {
   })
 
   it('wrong-email', () => {
-    cy.visit('https://www.cecilia-orsi-coaching.com/logIn');
+    cy.visit('https://www.cecilia-orsi-coaching.com/managerApp/logIn');
     cy.wait(2000);
     cy.get('#email').type('test.maxime@error.com');
     cy.get('#email').should('have.class', 'admin_input_form');
@@ -70,7 +70,7 @@ describe('logIn', () => {
   })
 
   it('wrong-password', () => {
-    cy.visit('https://www.cecilia-orsi-coaching.com/logIn');
+    cy.visit('https://www.cecilia-orsi-coaching.com/managerApp/logIn');
     cy.wait(2000);
     cy.get('#email').type(email);
     cy.get('#email').should('have.class', 'admin_input_form');
@@ -84,7 +84,7 @@ describe('logIn', () => {
   })
 
   it('disable-account', () => {
-    cy.visit('https://www.cecilia-orsi-coaching.com/logIn');
+    cy.visit('https://www.cecilia-orsi-coaching.com/managerApp/logIn');
     cy.wait(2000);
     cy.get('#email').type('test.test@test.com');
     cy.get('#password').type('ToulouseLotCantal09');
