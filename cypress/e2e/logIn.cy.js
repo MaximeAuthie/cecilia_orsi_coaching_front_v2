@@ -1,13 +1,11 @@
 Cypress.config('defaultCommandTimeout', 5000);
-const email     = process.env.ADMIN_EMAIL;
-const password  = process.env.ADMIN_PASSWORD;
 
 describe('logIn', () => {
   it('success', () => {
     cy.visit('https://www.cecilia-orsi-coaching.com/managerApp/logIn');
     cy.wait(2000);
-    cy.get('#email').type(email);
-    cy.get('#password').type(password);
+    cy.get('#email').type(Cypress.env('admin_email'));
+    cy.get('#password').type(Cypress.env('admin_password'));
     cy.get('#log_in').click();
     cy.get('#email').should('have.class', 'admin_input_form');
     cy.get('#email_empty_msg').should('contain', '');
@@ -32,7 +30,7 @@ describe('logIn', () => {
   it('email-inputs-empty', () => {
     cy.visit('https://www.cecilia-orsi-coaching.com/managerApp/logIn');
     cy.wait(2000);
-    cy.get('#password').type(password);
+    cy.get('#password').type(Cypress.env('admin_password'));
     cy.get('#log_in').click();
     cy.get('#email').should('have.class', 'bad_admin_input_form');
     cy.get('#email_empty_msg').should('contain', 'Veuillez saisir votre email de connexion');
@@ -45,7 +43,7 @@ describe('logIn', () => {
   it('password-inputs-empty', () => {
     cy.visit('https://www.cecilia-orsi-coaching.com/managerApp/logIn');
     cy.wait(2000);
-    cy.get('#email').type(email);
+    cy.get('#email').type(Cypress.env('admin_email'));
     cy.get('#log_in').click();
     cy.get('#email').should('have.class', 'admin_input_form');
     cy.get('#email_empty_msg').should('contain', '');
@@ -61,7 +59,7 @@ describe('logIn', () => {
     cy.get('#email').type('test.maxime@error.com');
     cy.get('#email').should('have.class', 'admin_input_form');
     cy.get('#email_empty_msg').should('contain', '');
-    cy.get('#password').type(password);
+    cy.get('#password').type(Cypress.env('admin_password'));
     cy.get('#password').should('have.class', 'admin_input_form');
     cy.get('#password_empty_msg').should('contain', '');
     cy.get('#log_in').click();
@@ -72,7 +70,7 @@ describe('logIn', () => {
   it('wrong-password', () => {
     cy.visit('https://www.cecilia-orsi-coaching.com/managerApp/logIn');
     cy.wait(2000);
-    cy.get('#email').type(email);
+    cy.get('#email').type(Cypress.env('admin_email'));
     cy.get('#email').should('have.class', 'admin_input_form');
     cy.get('#email_empty_msg').should('contain', '');
     cy.get('#password').type('Azerty1');
