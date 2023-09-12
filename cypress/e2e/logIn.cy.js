@@ -1,6 +1,8 @@
 Cypress.config('defaultCommandTimeout', 5000);
 
 describe('logIn', () => {
+
+  //? Test avec un formulaire complété correctement
   it('success', () => {
     cy.visit('https://www.cecilia-orsi-coaching.com/managerApp/logIn');
     cy.wait(2000);
@@ -15,6 +17,7 @@ describe('logIn', () => {
     cy.get('#error_message').should('not.exist');
   })
 
+  //? Test avec aucun input complété
   it('all-inputs-empty', () => {
     cy.visit('https://www.cecilia-orsi-coaching.com/managerApp/logIn');
     cy.wait(2000);
@@ -27,6 +30,7 @@ describe('logIn', () => {
     cy.get('#error_message').should('not.exist');
   })
 
+  //? Test avec l'imput email vide
   it('email-inputs-empty', () => {
     cy.visit('https://www.cecilia-orsi-coaching.com/managerApp/logIn');
     cy.wait(2000);
@@ -40,6 +44,7 @@ describe('logIn', () => {
     cy.get('#error_message').should('not.exist');
   })
 
+  //? Test avec l'imput password vide
   it('password-inputs-empty', () => {
     cy.visit('https://www.cecilia-orsi-coaching.com/managerApp/logIn');
     cy.wait(2000);
@@ -53,6 +58,7 @@ describe('logIn', () => {
     cy.get('#error_message').should('not.exist');
   })
 
+  //? Test avec une adresse email erronée
   it('wrong-email', () => {
     cy.visit('https://www.cecilia-orsi-coaching.com/managerApp/logIn');
     cy.wait(2000);
@@ -67,6 +73,7 @@ describe('logIn', () => {
     cy.get('#error_message').should('contain', 'Connexion refusée : l\'identifiant et/ou le mot de passe n\'est pas correct');
   })
 
+  //? Test avec un mot de passe erronée
   it('wrong-password', () => {
     cy.visit('https://www.cecilia-orsi-coaching.com/managerApp/logIn');
     cy.wait(2000);
@@ -81,6 +88,7 @@ describe('logIn', () => {
     cy.get('#error_message').should('contain', 'Connexion refusée : l\'identifiant et/ou le mot de passe n\'est pas correct');
   })
 
+  //? Test avec des identifiants corrects mais sur un compte désactivé
   it('disable-account', () => {
     cy.visit('https://www.cecilia-orsi-coaching.com/managerApp/logIn');
     cy.wait(2000);
