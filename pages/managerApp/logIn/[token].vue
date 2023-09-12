@@ -58,7 +58,7 @@
                 this.errorMessage   = 'Le token a expiré. Merci de renouveller votre demande de connexion';
                 userStore.token     = 'expired-token';
             } else if (token == 'invalid-token') {
-                this.errorMessage   = 'Une erreur est survenue: token invalide';
+                this.errorMessage   = 'Une erreur est survenue. Merci de vous reconnecter si vous souhaitez accéder à nouveau à l\'espace d\'administration.';
                 userStore.token     = 'invalid-token';
             } else if (token == 'expired-session') {
                 this.errorMessage   = 'Votre session a expirée. Merci de vous reconnecter si vous souhaitez accéder à nouveau à l\'espace d\'administration.';
