@@ -19,6 +19,11 @@
             {name: 'description', content: 'Mention légales'},
             {name:'robots', content:'noindex, nofollow'},
             {"http-equiv": 'Content-Language', content: 'fr'},
+            {property: 'og:title', content: 'Cécilia Orsi Coaching - Mention légales'},
+            {property: 'og:type', content: 'website'},
+            {property: 'og:url', content:'https://www.cecilia-orsi.fr/legalInformations'},
+            {property: 'og:image', content: '/_nuxt/assets/images/logo_header.png'},
+            {property: 'og:description', content: 'Mention légales du site Cécilia Orsi Coaching.'},
         ],
         link: [{rel: 'icon', href: iconUrl}]
     })
@@ -38,7 +43,9 @@
                     <br><br>
                     <strong>Identification de l'entreprise</strong> : Cécilia Orsi - SIREN : 84044525800014 - RCS ou RM : TOULOUSE
                     <br><br>
-                    <strong>Hébergeur</strong> : OVH SAS - 2 rue Kellermann - BP 80157 - 59053 Roubaix Cedex 1 - Téléphone : 1007
+                    <strong>Hébergeurs</strong> : <br>
+                    OVH SAS - 2 rue Kellermann - BP 80157 - 59053 Roubaix Cedex 1 - Téléphone : 1007 <br>
+                    Netlify – 610 22nd Street, Suite 315 CA 94107 San Francisco +1 844-899-7312
                     <br><br>
                     <strong>Délégué à la protection des données</strong> : Cécilia Orsi - contact@cecilia-orsi.fr
                     <br><br>

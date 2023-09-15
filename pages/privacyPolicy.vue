@@ -14,11 +14,16 @@
     
     //? Renseigner les balises HTML de <head> pour le SEO côté serveur
     useHead({
-        title: 'Cécilia Orsi Coaching - Qui je suis?',
+        title: 'Cécilia Orsi Coaching - Politique de confidentialité',
         meta: [
-            {name: 'description', content: 'Mention légales'},
+            {name: 'description', content: 'Politique de confidentialité'},
             {name:'robots', content:'noindex, nofollow'},
             {"http-equiv": 'Content-Language', content: 'fr'},
+            {property: 'og:title', content: 'Cécilia Orsi Coaching - Politique de confidentialité'},
+            {property: 'og:type', content: 'website'},
+            {property: 'og:url', content:'https://www.cecilia-orsi.fr/privacyPolicy'},
+            {property: 'og:image', content: '/_nuxt/assets/images/logo_header.png'},
+            {property: 'og:description', content: 'Politique de condidentialité du site Cécilia Orsi Coaching'},
         ],
         link: [{rel: 'icon', href: iconUrl}]
     })
