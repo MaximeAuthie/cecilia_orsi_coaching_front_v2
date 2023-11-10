@@ -57,17 +57,22 @@
                 <p class="content_description_adaptable_align">    
                     <strong>ATTENTION :</strong> Toute séance non annulée le jour même est due.<br>
                 </p>
-                <h3>Coaching de base (60 minutes)</h3>
                 <p class="content_description_adaptable_align">
-                    1 séance de coaching pour faire le point sur votre problématique, vous aider à éclaircir la situation et trouver des pistes d’amélioration en fonction de vos besoins. <br>
-                    Vous pouvez choisir de prendre plusieurs séances ou de vous contenter d’une séance unique.
+                    Il est aujourd'hui difficile de se faire aider sans payer le prix fort dans les métiers de l'accompagnement psychologique et du coaching. Hors, il est important pour moi de rencontrer chaque personne qui en a besoin, même sans avoir les moyens de régler 60€ la séance. 
                 </p>
-                <p class="content_description_center"><strong>55€ tarif plein</strong><br>25€ pour les étudiants et personnes au RSA</p>
-                <h3>Coaching de suivi</h3>
                 <p class="content_description_adaptable_align">
-                    5 séances d’une heure pour vous aider à atteindre un objectif, à dépasser vos blocages, prendre confiance en vous et connaître vos besoins et vos ressources.
+                    C'est pourquoi, j'ai choisis pour quelques mois de vous donner la possibilité d'un tarif "libre" qui se décline comme ceci : 
                 </p>
-                <p class="content_description_center"><strong>260€ tarif plein</strong><br>115€ pour les étudiants et personnes au RSA</p>
+                <h3>1h d'accompagnement en visio</h3>
+                <p class="content_description_adaptable_align">
+                    1 séance de coaching pour faire le point sur votre problématique, vous aider à éclaircir la situation et trouver des pistes d’amélioration en fonction de vos besoins.
+                </p>
+                <p class="content_description_center"><strong>Tarif libre</strong><br>Vous payez le montant qui vous semble juste et qui vous convient en fonction de votre situation financière.</p>
+                <h3>1h d'accompagnement au cabinet </h3>
+                <p class="content_description_adaptable_align">
+                    1 séance de coaching pour faire le point sur votre problématique, vous aider à éclaircir la situation et trouver des pistes d’amélioration en fonction de vos besoins. 
+                </p>
+                <p class="content_description_center"><strong>Tarif libre avec un minimum de 15€</strong><br>Vous payez le montant qui vous semble juste et qui vous convient en fonction de votre situation financière + 15€ pour couvrir les frais de location du cabinet</p>
                 <NuxtLink to="/appointment"><input class="button button_content" type="button" value="Prendre rendez-vous"></NuxtLink>
             </section>
             <section class="content_tiles">
