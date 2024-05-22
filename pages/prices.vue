@@ -48,11 +48,12 @@
                     <div class="content_description_quote_bar"></div>
                 </div>
                 
-                <div class="content_description_image" :style="{backgroundImage: 'url(' + pageData.img1_url_page +')'}"></div>
+                <!-- <div class="content_description_image" :style="{backgroundImage: 'url(' + pageData.img1_url_page +')'}"></div> -->
                 <p class="content_description_adaptable_align">
-                    Les rendez-vous se déroulent en visio via zoom ou sur Toulouse à la Villa santé :
+                    Les rendez-vous se déroulent uniquement en visio.
+                    <!-- Les rendez-vous se déroulent en visio via zoom ou sur Toulouse à la Villa santé : -->
                 </p>
-                <p class="content_description_center"><strong>19 rue de fenouillet <br> 31200 Toulouse</strong></p>
+                <!-- <p class="content_description_center"><strong>19 rue de fenouillet <br> 31200 Toulouse</strong></p> -->
                 
                 <p class="content_description_adaptable_align">    
                     <strong>ATTENTION :</strong> Toute séance non annulée le jour même est due.<br>
@@ -68,11 +69,11 @@
                     1 séance de coaching pour faire le point sur votre problématique, vous aider à éclaircir la situation et trouver des pistes d’amélioration en fonction de vos besoins.
                 </p>
                 <p class="content_description_center"><strong>Tarif libre</strong><br>Vous payez le montant qui vous semble juste et qui vous convient en fonction de votre situation financière.</p>
-                <h3>1h d'accompagnement au cabinet </h3>
+                <!-- <h3>1h d'accompagnement au cabinet </h3>
                 <p class="content_description_adaptable_align">
                     1 séance de coaching pour faire le point sur votre problématique, vous aider à éclaircir la situation et trouver des pistes d’amélioration en fonction de vos besoins. 
                 </p>
-                <p class="content_description_center"><strong>Tarif libre avec un minimum de 15€</strong><br>Vous payez le montant qui vous semble juste et qui vous convient en fonction de votre situation financière + 15€ pour couvrir les frais de location du cabinet</p>
+                <p class="content_description_center"><strong>Tarif libre avec un minimum de 15€</strong><br>Vous payez le montant qui vous semble juste et qui vous convient en fonction de votre situation financière + 15€ pour couvrir les frais de location du cabinet</p> -->
                 <NuxtLink to="/appointment"><input class="button button_content" type="button" value="Prendre rendez-vous"></NuxtLink>
             </section>
             <section class="content_tiles">
