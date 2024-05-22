@@ -43,17 +43,18 @@
         <div class="content">
             <section class="content_description">
                 <div class="content_description_images_pack">
-                    <div class="content_description_image" :style="{backgroundImage: 'url(' + pageData.img1_url_page + ')'}">
+                    <!-- <div class="content_description_image" :style="{backgroundImage: 'url(' + pageData.img1_url_page + ')'}">
                         <h5>A la Villa Santé</h5>
-                    </div>
+                    </div> -->
                     <div class="content_description_image" :style="{backgroundImage: 'url(' + pageData.img2_url_page + ')'}">
                         <h5>En visio</h5>
                     </div>
                 </div>
                     <p class="center">
-                        Les rendez-vous se déroulent en visio via zoom ou sur Toulouse à la Villa santé :
+                        Les rendez-vous se déroulent en visio via zoom.
+                        <!-- Les rendez-vous se déroulent en visio via zoom ou sur Toulouse à la Villa santé : -->
                     </p>
-                    <p class="center"><strong>19 rue de fenouillet <br> 31200 Toulouse</strong></p>
+                    <!-- <p class="center"><strong>19 rue de fenouillet <br> 31200 Toulouse</strong></p> -->
                     <p class="center">    
                         <strong>ATTENTION :</strong> Toute séance non annulée le jour même est due.<br>
                     </p>

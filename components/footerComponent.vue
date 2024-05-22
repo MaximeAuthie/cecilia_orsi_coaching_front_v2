@@ -10,7 +10,7 @@
     <footer>
         <nav class="footer_nav">
             <ul class="footer_nav_list">
-                <li class="footer_nav_list_item">
+                <!-- <li class="footer_nav_list_item">
                     <nuxt-link class="footer_nav_list_item_link" to="https://goo.gl/maps/is1UcE1G4ajw2Rtn9" target="_blank" rel="external">
                         <svg id="localisation_svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -21,7 +21,7 @@
                             31200 Toulouse
                         </div>
                     </nuxt-link>
-                </li>
+                </li> -->
                 <li class="footer_nav_list_item">
                     <nuxt-link class="footer_nav_list_item_link" :to="'tel:' + phone">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
