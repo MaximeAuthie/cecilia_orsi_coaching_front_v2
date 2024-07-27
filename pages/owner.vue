@@ -43,7 +43,7 @@
             <section class="content_description" >
                 <div class="content_description_avatar" :style="{backgroundImage: 'url(' + pageData.img1_url_page +')'}"></div>
                 <p>
-                    Je m’appelle Cécilia Orsi, j’ai 31 ans je vis à Toulouse.<br>
+                    Je m’appelle Cécilia Orsi, j’ai 33 ans et je vis à Figeac.<br>
                     <br>
                     Ayant été anxieuse sociale pendant des années, je sais l’importance d’un accompagnement adéquat.
                     Suite à de nombreuses expériences professionnelles (la plupart dans le social et la petite enfance), passionnée de psychologie et de compréhension des comportements humains je décide d’aller plus loin dans mes envies et mes convictions. <br>
