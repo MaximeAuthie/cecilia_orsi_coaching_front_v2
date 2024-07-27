@@ -33,6 +33,9 @@
         ],
         link: [{rel: 'icon', href: iconUrl}]
     })
+
+    const differenceSec = Date.now() - new Date(config.public.ownerBirthday);
+    const age = new Date(differenceSec)
 </script>
 
 <template>
@@ -43,7 +46,7 @@
             <section class="content_description" >
                 <div class="content_description_avatar" :style="{backgroundImage: 'url(' + pageData.img1_url_page +')'}"></div>
                 <p>
-                    Je m’appelle Cécilia Orsi, j’ai 33 ans et je vis à Figeac.<br>
+                    Je m’appelle Cécilia Orsi, j’ai {{Math.abs(age.getUTCFullYear() - 1970)}} ans et je vis à Figeac.<br>
                     <br>
                     Ayant été anxieuse sociale pendant des années, je sais l’importance d’un accompagnement adéquat.
                     Suite à de nombreuses expériences professionnelles (la plupart dans le social et la petite enfance), passionnée de psychologie et de compréhension des comportements humains je décide d’aller plus loin dans mes envies et mes convictions. <br>
